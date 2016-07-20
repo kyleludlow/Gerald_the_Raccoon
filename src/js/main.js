@@ -11,7 +11,7 @@
 	var rightPressed=false;       // are we pressing RIGHT arrow key?
 	var upPressed=false;          // are we pressing UP arrow key?
 	var downPressed=false;        // are we pressing DOWN arrow key?
-	var movementSpeed=20;         // the speed we are going to move, in pixels per frame
+	var movementSpeed=5;         // the speed we are going to move, in pixels per frame
 	var playerXSpeed=0;           // player horizontal speed, in pixels per frame
 	var playerYSpeed=0;           // player vertical speed, in pixels per frame
 
@@ -77,9 +77,39 @@ var playerClass = {
 	width: tileSize,
 	height: tileSize,
 	draw: function() {
-		console.log(canvas);
 		context.fillStyle = this.color;
 		context.fillRect(this.x, this.y, this.width, this.height);
+	},
+	update: function() {
+		// no friction or inertia at the moment, so at every frame initial speed is set to zero
+		playerXSpeed=0;
+		playerYSpeed=0;
+
+		// updating speed according to key pressed
+		if(rightPressed){
+			playerXSpeed=movementSpeed;
+		}
+		else{
+			if(leftPressed){
+				playerXSpeed=-movementSpeed;
+			}
+			else{
+				if(upPressed){
+					playerYSpeed=-movementSpeed;
+				}
+				else{
+					if(downPressed){
+						playerYSpeed=movementSpeed;
+					}
+				}
+			}
+		}
+
+		// updating player position
+
+		this.x +=playerXSpeed;
+		this.y +=playerYSpeed;
+
 	}
 };
 
@@ -116,35 +146,38 @@ var playerClass = {
 	// function to handle the game itself
 
 	function updateGame() {
+		//
+		// // no friction or inertia at the moment, so at every frame initial speed is set to zero
+		// playerXSpeed=0;
+		// playerYSpeed=0;
+		//
+		// // updating speed according to key pressed
+		// if(rightPressed){
+		// 	playerXSpeed=movementSpeed
+		// }
+		// else{
+		// 	if(leftPressed){
+		// 		playerXSpeed=-movementSpeed;
+		// 	}
+		// 	else{
+		// 		if(upPressed){
+		// 			playerYSpeed=-movementSpeed;
+		// 		}
+		// 		else{
+		// 			if(downPressed){
+		// 				playerYSpeed=movementSpeed;
+		// 			}
+		// 		}
+		// 	}
+		// }
+		//
+		// // updating player position
+		//
+		// playerXPos+=playerXSpeed;
+		// playerYPos+=playerYSpeed;
 
-		// no friction or inertia at the moment, so at every frame initial speed is set to zero
-		playerXSpeed=0;
-		playerYSpeed=0;
 
-		// updating speed according to key pressed
-		if(rightPressed){
-			playerXSpeed=movementSpeed
-		}
-		else{
-			if(leftPressed){
-				playerXSpeed=-movementSpeed;
-			}
-			else{
-				if(upPressed){
-					playerYSpeed=-movementSpeed;
-				}
-				else{
-					if(downPressed){
-						playerYSpeed=movementSpeed;
-					}
-				}
-			}
-		}
-
-		// updating player position
-
-		playerXPos+=playerXSpeed;
-		playerYPos+=playerYSpeed;
+		playerClass.update();
 
 		// check for horizontal collisions
 
