@@ -1,5 +1,5 @@
-var Maps =  {
-    level_1 : {
+var levels =  {
+    one : {
         map : 
         [        						
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -27,7 +27,7 @@ var Maps =  {
     }
 }
 
-exports.Maps = Maps;
+exports.levels = levels;
 
 /*
 

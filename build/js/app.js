@@ -184,10 +184,10 @@ var LevelChoice = function(choice) {
     var level = null; 
     switch (choice) {
         case 1:
-            level = maps.Maps.level_1;
+            level = maps.levels.one;
             break;
         default:
-            console.log('not working');
+            level = maps.levels.one;
     }
     return level;
 };                           
@@ -196,8 +196,8 @@ exports.LevelChoice = LevelChoice;
 
 
 },{"./maps":3}],3:[function(require,module,exports){
-var Maps =  {
-    level_1 : {
+var levels =  {
+    one : {
         map : 
         [        						
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -225,7 +225,7 @@ var Maps =  {
     }
 }
 
-exports.Maps = Maps;
+exports.levels = levels;
 
 /*
 
