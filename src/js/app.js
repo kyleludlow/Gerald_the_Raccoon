@@ -139,7 +139,7 @@
 		if(playerXSpeed>0){
 			if((levels.map[baseRow][baseCol+1] && !levels.map[baseRow][baseCol]) || (levels.map[baseRow+1][baseCol+1] && !levels.map[baseRow+1][baseCol] && rowOverlap)){
 				if (levels.map[baseRow][baseCol + 1] === 10) {
-					levels = levelManager.LevelChoice(levels.num + 1); 
+					levels = levelManager.LevelChoice(levels.num += 1); 
 				}
 				playerXPos=baseCol*tileSize;
 			}
@@ -149,7 +149,7 @@
 			if((!levels.map[baseRow][baseCol+1] && levels.map[baseRow][baseCol]) || (!levels.map[baseRow+1][baseCol+1] && levels.map[baseRow+1][baseCol] && rowOverlap)){
 				console.log("V1 ", levels.map[baseRow][baseCol])
 				if (levels.map[baseRow + 1][baseCol] === 10) {
-					levels = levelManager.LevelChoice(levels.num + 1); 
+					levels = levelManager.LevelChoice(levels.num += 1); 
 				}
 				playerXPos=(baseCol+1)*tileSize;
 			}
@@ -166,7 +166,7 @@
 			if((levels.map[baseRow+1][baseCol] && !levels.map[baseRow][baseCol]) || (levels.map[baseRow+1][baseCol+1] && !levels.map[baseRow][baseCol+1] && colOverlap)){
 				
 				if (levels.map[baseRow + 1][baseCol] === 10) {
-					levels = levelManager.LevelChoice(levels.num + 1); 
+					levels = levelManager.LevelChoice(levels.num += 1); 
 				}
 				playerYPos = baseRow*tileSize;
 			}
@@ -175,7 +175,7 @@
 		if(playerYSpeed<0){
 			if((!levels.map[baseRow+1][baseCol] && levels.map[baseRow][baseCol]) || (!levels.map[baseRow+1][baseCol+1] && levels.map[baseRow][baseCol+1] && colOverlap)){
 				if (levels.map[baseRow][baseCol] === 10) {
-					levels = levelManager.LevelChoice(levels.num + 1); 
+					levels = levelManager.LevelChoice(levels.num += 1); 
 				}
 				playerYPos = (baseRow+1)*tileSize;
 			}
