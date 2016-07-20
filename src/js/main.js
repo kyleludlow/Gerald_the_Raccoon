@@ -134,6 +134,48 @@ var playerClass = {
 		playerClass.draw();
 	}
 
+
+function collisionDetection() {
+	var baseCol = Math.floor(playerClass.x/tileSize);
+	var baseRow = Math.floor(playerClass.y/tileSize);
+	var colOverlap = playerClass.x%tileSize;
+	var rowOverlap = playerClass.y%tileSize;
+
+	if(playerXSpeed>0){
+		if((level[baseRow][baseCol+1] && !level[baseRow][baseCol]) || (level[baseRow+1][baseCol+1] && !level[baseRow+1][baseCol] && rowOverlap)){
+			playerClass.x=baseCol*tileSize;
+		}
+	}
+
+	if(playerXSpeed<0){
+		if((!level[baseRow][baseCol+1] && level[baseRow][baseCol]) || (!level[baseRow+1][baseCol+1] && level[baseRow+1][baseCol] && rowOverlap)){
+			playerClass.x=(baseCol+1)*tileSize;
+		}
+	}
+
+	// check for vertical collisions
+
+	baseCol = Math.floor(playerClass.x/tileSize);
+	baseRow = Math.floor(playerClass.y/tileSize);
+	colOverlap = playerClass.x%tileSize;
+	rowOverlap = playerClass.y%tileSize;
+
+	if(playerYSpeed>0){
+		if((level[baseRow+1][baseCol] && !level[baseRow][baseCol]) || (level[baseRow+1][baseCol+1] && !level[baseRow][baseCol+1] && colOverlap)){
+			playerClass.y = baseRow*tileSize;
+		}
+	}
+
+	if(playerYSpeed<0){
+		if((!level[baseRow+1][baseCol] && level[baseRow][baseCol]) || (!level[baseRow+1][baseCol+1] && level[baseRow][baseCol+1] && colOverlap)){
+			playerClass.y = (baseRow+1)*tileSize;
+		}
+	}
+}
+
+
+
+
 	// this function will do its best to make stuff work at 60FPS - please notice I said "will do its best"
 
 	window.requestAnimFrame = (function(callback) {
@@ -143,79 +185,18 @@ var playerClass = {
 		};
 	})();
 
+
+
+
 	// function to handle the game itself
 
 	function updateGame() {
-		//
-		// // no friction or inertia at the moment, so at every frame initial speed is set to zero
-		// playerXSpeed=0;
-		// playerYSpeed=0;
-		//
-		// // updating speed according to key pressed
-		// if(rightPressed){
-		// 	playerXSpeed=movementSpeed
-		// }
-		// else{
-		// 	if(leftPressed){
-		// 		playerXSpeed=-movementSpeed;
-		// 	}
-		// 	else{
-		// 		if(upPressed){
-		// 			playerYSpeed=-movementSpeed;
-		// 		}
-		// 		else{
-		// 			if(downPressed){
-		// 				playerYSpeed=movementSpeed;
-		// 			}
-		// 		}
-		// 	}
-		// }
-		//
-		// // updating player position
-		//
-		// playerXPos+=playerXSpeed;
-		// playerYPos+=playerYSpeed;
 
-
+		// updates player position
 		playerClass.update();
 
-		// check for horizontal collisions
-
-		var baseCol = Math.floor(playerXPos/tileSize);
-		var baseRow = Math.floor(playerYPos/tileSize);
-		var colOverlap = playerXPos%tileSize;
-		var rowOverlap = playerYPos%tileSize;
-
-		if(playerXSpeed>0){
-			if((level[baseRow][baseCol+1] && !level[baseRow][baseCol]) || (level[baseRow+1][baseCol+1] && !level[baseRow+1][baseCol] && rowOverlap)){
-				playerXPos=baseCol*tileSize;
-			}
-		}
-
-		if(playerXSpeed<0){
-			if((!level[baseRow][baseCol+1] && level[baseRow][baseCol]) || (!level[baseRow+1][baseCol+1] && level[baseRow+1][baseCol] && rowOverlap)){
-				playerXPos=(baseCol+1)*tileSize;
-			}
-		}
-
-		// check for vertical collisions
-
-		baseCol = Math.floor(playerXPos/tileSize);
-		baseRow = Math.floor(playerYPos/tileSize);
-		colOverlap = playerXPos%tileSize;
-		rowOverlap = playerYPos%tileSize;
-
-		if(playerYSpeed>0){
-			if((level[baseRow+1][baseCol] && !level[baseRow][baseCol]) || (level[baseRow+1][baseCol+1] && !level[baseRow][baseCol+1] && colOverlap)){
-				playerYPos = baseRow*tileSize;
-			}
-		}
-
-		if(playerYSpeed<0){
-			if((!level[baseRow+1][baseCol] && level[baseRow][baseCol]) || (!level[baseRow+1][baseCol+1] && level[baseRow][baseCol+1] && colOverlap)){
-				playerYPos = (baseRow+1)*tileSize;
-			}
-		}
+		// checks for collisions and positions player accordingly
+		collisionDetection();
 
 		// rendering level
 
