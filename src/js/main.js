@@ -71,16 +71,17 @@
 	}, false);
 
 var playerClass = {
-	color: '"#00ff00"',
+	color: '#00ff00',
 	x: playerXPos,
 	y: playerYPos,
 	width: tileSize,
 	height: tileSize,
 	draw: function() {
-		canvas.fillStyle = this.color;
-		canvas.fillRect(this.x, this.y, this.width, this.height);
+		console.log(canvas);
+		context.fillStyle = this.color;
+		context.fillRect(this.x, this.y, this.width, this.height);
 	}
-}
+};
 
 
 	// function to display the level
@@ -98,8 +99,9 @@ var playerClass = {
 			}
 		}
 		// player = green box
-		context.fillStyle = "#00ff00";
-		context.fillRect(playerXPos,playerYPos,tileSize,tileSize);
+		// context.fillStyle = "#00ff00";
+		// context.fillRect(playerXPos,playerYPos,tileSize,tileSize);
+		playerClass.draw();
 	}
 
 	// this function will do its best to make stuff work at 60FPS - please notice I said "will do its best"
