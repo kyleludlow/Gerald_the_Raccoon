@@ -6,6 +6,9 @@ var LevelChoice = function(choice) {
         case 1:
             level = maps.levels.one;
             break;
+        case 2:
+            level = maps.levels.two;
+            break;
         default:
             level = maps.levels.one;
     }

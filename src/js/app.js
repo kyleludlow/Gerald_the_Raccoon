@@ -2,15 +2,17 @@
 
 	var canvas = document.getElementById("canvas");   // the canvas where game will be drawn
 	var context = canvas.getContext("2d");            // canvas context
-	var levelManager = require('./levelManager').LevelChoice(1);
+	var levelManager = require('./levelManager');
+	var levels = levelManager.LevelChoice(1);
 
-	console.log(levelManager);
 
-	var levelCols = levelManager.map[0].length;							// level width, in tiles
-	var levelRows = levelManager.map.length;							// level height, in tiles
+	// console.log(levelManager);
+
+	var levelCols = levels.map[0].length;							// level width, in tiles
+	var levelRows = levels.map.length;							// level height, in tiles
 	var tileSize = 32;							// tile size, in pixels
-	var playerCol = levelManager.playerCol;                                  // player starting column
-	var playerRow = levelManager.playerRow;                                  // player starting row
+	var playerCol = levels.playerCol;                                  // player starting column
+	var playerRow = levels.playerRow;                                  // player starting row
 	var leftPressed = false;                            // are we pressing LEFT arrow key?
 	var rightPressed = false;                           // are we pressing RIGHT arrow key?
 	var upPressed = false;                              // are we pressing UP arrow key?
@@ -28,7 +30,7 @@
 	// simple WASD listeners
 
 	document.addEventListener("keydown", function(e){
-		console.log(e.keyCode);
+		// console.log(e.keyCode);
 		switch(e.keyCode){
 			case 65:
 				leftPressed=true;
@@ -68,10 +70,14 @@
 		// clear the canvas
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		// walls = red boxes
-		context.fillStyle = "#ff0000";
 		for(i=0;i<levelRows;i++){
 			for(j=0;j<levelCols;j++){
-				if(levelManager.map[i][j]==1){
+				if(levels.map[i][j]==1){
+					context.fillStyle = "#ff0000";
+					context.fillRect(j*tileSize,i*tileSize,tileSize,tileSize);
+				}
+				else if (levels.map[i][j] === 10) {
+					context.fillStyle = "#000000";
 					context.fillRect(j*tileSize,i*tileSize,tileSize,tileSize);
 				}
 			}
@@ -131,13 +137,20 @@
 		var rowOverlap = playerYPos%tileSize;
 
 		if(playerXSpeed>0){
-			if((levelManager.map[baseRow][baseCol+1] && !levelManager.map[baseRow][baseCol]) || (levelManager.map[baseRow+1][baseCol+1] && !levelManager.map[baseRow+1][baseCol] && rowOverlap)){
+			if((levels.map[baseRow][baseCol+1] && !levels.map[baseRow][baseCol]) || (levels.map[baseRow+1][baseCol+1] && !levels.map[baseRow+1][baseCol] && rowOverlap)){
+				if (levels.map[baseRow][baseCol + 1] === 10) {
+					levels = levelManager.LevelChoice(levels.num + 1); 
+				}
 				playerXPos=baseCol*tileSize;
 			}
 		}
 
 		if(playerXSpeed<0){
-			if((!levelManager.map[baseRow][baseCol+1] && levelManager.map[baseRow][baseCol]) || (!levelManager.map[baseRow+1][baseCol+1] && levelManager.map[baseRow+1][baseCol] && rowOverlap)){
+			if((!levels.map[baseRow][baseCol+1] && levels.map[baseRow][baseCol]) || (!levels.map[baseRow+1][baseCol+1] && levels.map[baseRow+1][baseCol] && rowOverlap)){
+				console.log("V1 ", levels.map[baseRow][baseCol])
+				if (levels.map[baseRow + 1][baseCol] === 10) {
+					levels = levelManager.LevelChoice(levels.num + 1); 
+				}
 				playerXPos=(baseCol+1)*tileSize;
 			}
 		}
@@ -150,13 +163,20 @@
 		rowOverlap = playerYPos%tileSize;
 
 		if(playerYSpeed>0){
-			if((levelManager.map[baseRow+1][baseCol] && !levelManager.map[baseRow][baseCol]) || (levelManager.map[baseRow+1][baseCol+1] && !levelManager.map[baseRow][baseCol+1] && colOverlap)){
+			if((levels.map[baseRow+1][baseCol] && !levels.map[baseRow][baseCol]) || (levels.map[baseRow+1][baseCol+1] && !levels.map[baseRow][baseCol+1] && colOverlap)){
+				
+				if (levels.map[baseRow + 1][baseCol] === 10) {
+					levels = levelManager.LevelChoice(levels.num + 1); 
+				}
 				playerYPos = baseRow*tileSize;
 			}
 		}
 
 		if(playerYSpeed<0){
-			if((!levelManager.map[baseRow+1][baseCol] && levelManager.map[baseRow][baseCol]) || (!levelManager.map[baseRow+1][baseCol+1] && levelManager.map[baseRow][baseCol+1] && colOverlap)){
+			if((!levels.map[baseRow+1][baseCol] && levels.map[baseRow][baseCol]) || (!levels.map[baseRow+1][baseCol+1] && levels.map[baseRow][baseCol+1] && colOverlap)){
+				if (levels.map[baseRow][baseCol] === 10) {
+					levels = levelManager.LevelChoice(levels.num + 1); 
+				}
 				playerYPos = (baseRow+1)*tileSize;
 			}
 		}
