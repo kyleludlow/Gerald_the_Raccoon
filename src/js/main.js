@@ -12,8 +12,6 @@
 	var upPressed=false;          // are we pressing UP arrow key?
 	var downPressed=false;        // are we pressing DOWN arrow key?
 	var movementSpeed=5;         // the speed we are going to move, in pixels per frame
-	var playerXSpeed=0;           // player horizontal speed, in pixels per frame
-	var playerYSpeed=0;           // player vertical speed, in pixels per frame
 
 	var level = [        						// the 11x9 level - 1=wall, 0=empty space
 		[1,1,1,1,1,1,1,1,1,1,1],
@@ -76,30 +74,32 @@ var playerClass = {
 	y: playerYPos,
 	width: tileSize,
 	height: tileSize,
+	xSpeed: 0,					// player horizontal speed, in pixels per frame
+	ySpeed: 0,					// player vertical speed, in pixels per frame
 	draw: function() {
 		context.fillStyle = this.color;
 		context.fillRect(this.x, this.y, this.width, this.height);
 	},
 	update: function() {
 		// no friction or inertia at the moment, so at every frame initial speed is set to zero
-		playerXSpeed=0;
-		playerYSpeed=0;
+		this.xSpeed=0;
+		this.ySpeed=0;
 
 		// updating speed according to key pressed
 		if(rightPressed){
-			playerXSpeed=movementSpeed;
+			this.xSpeed=movementSpeed;
 		}
 		else{
 			if(leftPressed){
-				playerXSpeed=-movementSpeed;
+				this.xSpeed=-movementSpeed;
 			}
 			else{
 				if(upPressed){
-					playerYSpeed=-movementSpeed;
+					this.ySpeed=-movementSpeed;
 				}
 				else{
 					if(downPressed){
-						playerYSpeed=movementSpeed;
+						this.ySpeed=movementSpeed;
 					}
 				}
 			}
@@ -107,8 +107,8 @@ var playerClass = {
 
 		// updating player position
 
-		this.x +=playerXSpeed;
-		this.y +=playerYSpeed;
+		this.x +=this.xSpeed;
+		this.y +=this.ySpeed;
 
 	}
 };
@@ -128,45 +128,44 @@ var playerClass = {
 				}
 			}
 		}
-		// player = green box
-		// context.fillStyle = "#00ff00";
-		// context.fillRect(playerXPos,playerYPos,tileSize,tileSize);
 		playerClass.draw();
 	}
 
 
 function collisionDetection() {
+
+	// check for horizontal player collision
 	var baseCol = Math.floor(playerClass.x/tileSize);
 	var baseRow = Math.floor(playerClass.y/tileSize);
 	var colOverlap = playerClass.x%tileSize;
 	var rowOverlap = playerClass.y%tileSize;
 
-	if(playerXSpeed>0){
+	if(playerClass.xSpeed>0){
 		if((level[baseRow][baseCol+1] && !level[baseRow][baseCol]) || (level[baseRow+1][baseCol+1] && !level[baseRow+1][baseCol] && rowOverlap)){
 			playerClass.x=baseCol*tileSize;
 		}
 	}
 
-	if(playerXSpeed<0){
+	if(playerClass.xSpeed<0){
 		if((!level[baseRow][baseCol+1] && level[baseRow][baseCol]) || (!level[baseRow+1][baseCol+1] && level[baseRow+1][baseCol] && rowOverlap)){
 			playerClass.x=(baseCol+1)*tileSize;
 		}
 	}
 
-	// check for vertical collisions
+	// check for vertical player collisions
 
 	baseCol = Math.floor(playerClass.x/tileSize);
 	baseRow = Math.floor(playerClass.y/tileSize);
 	colOverlap = playerClass.x%tileSize;
 	rowOverlap = playerClass.y%tileSize;
 
-	if(playerYSpeed>0){
+	if(playerClass.ySpeed>0){
 		if((level[baseRow+1][baseCol] && !level[baseRow][baseCol]) || (level[baseRow+1][baseCol+1] && !level[baseRow][baseCol+1] && colOverlap)){
 			playerClass.y = baseRow*tileSize;
 		}
 	}
 
-	if(playerYSpeed<0){
+	if(playerClass.ySpeed<0){
 		if((!level[baseRow+1][baseCol] && level[baseRow][baseCol]) || (!level[baseRow+1][baseCol+1] && level[baseRow][baseCol+1] && colOverlap)){
 			playerClass.y = (baseRow+1)*tileSize;
 		}
