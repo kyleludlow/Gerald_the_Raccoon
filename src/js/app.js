@@ -5,15 +5,15 @@
 	var levelCols=11;							// level width, in tiles
 	var levelRows=9;							// level height, in tiles
 	var tileSize=32;							// tile size, in pixels
-	var playerCol=5;                                  // player starting column
-	var playerRow=4;                                  // player starting row
-	var leftPressed=false;                            // are we pressing LEFT arrow key?
-	var rightPressed=false;                           // are we pressing RIGHT arrow key?
-	var upPressed=false;                              // are we pressing UP arrow key?
-	var downPressed=false;                            // are we pressing DOWN arrow key?
-	var movementSpeed=20;                              // the speed we are going to move, in pixels per frame
-	var playerXSpeed=0;                               // player horizontal speed, in pixels per frame
-	var playerYSpeed=0;                               // player vertical speed, in pixels per frame
+	var playerCol=5;              // player starting column
+	var playerRow=4;              // player starting row
+	var leftPressed=false;        // are we pressing LEFT arrow key?
+	var rightPressed=false;       // are we pressing RIGHT arrow key?
+	var upPressed=false;          // are we pressing UP arrow key?
+	var downPressed=false;        // are we pressing DOWN arrow key?
+	var movementSpeed=20;         // the speed we are going to move, in pixels per frame
+	var playerXSpeed=0;           // player horizontal speed, in pixels per frame
+	var playerYSpeed=0;           // player vertical speed, in pixels per frame
 
 	var level = [        						// the 11x9 level - 1=wall, 0=empty space
 		[1,1,1,1,1,1,1,1,1,1,1],
@@ -27,11 +27,11 @@
 		[1,1,1,1,1,1,1,1,1,1,1]
 	];
 
-	var playerYPos=playerRow*tileSize;				// converting Y player position from tiles to pixels
-	var playerXPos=playerCol*=tileSize;               // converting X player position from tiles to pixels
+	var playerYPos=playerRow*tileSize;		// converting Y player position from tiles to pixels
+	var playerXPos=playerCol*=tileSize;   // converting X player position from tiles to pixels
 
-	canvas.width=tileSize*levelCols;                   // canvas width. Won't work without it even if you style it from CSS
-	canvas.height=tileSize*levelRows;                   // canvas height. Same as before
+	canvas.width=tileSize*levelCols;   // canvas width. Won't work without it even if you style it from CSS
+	canvas.height=tileSize*levelRows;  // canvas height. Same as before
 
 	// simple WASD listeners
 
@@ -69,6 +69,19 @@
 				break;
 		}
 	}, false);
+
+var playerClass = {
+	color: '"#00ff00"',
+	x: playerXPos,
+	y: playerYPos,
+	width: tileSize,
+	height: tileSize,
+	draw: function() {
+		canvas.fillStyle = this.color;
+		canvas.fillRect(this.x, this.y, this.width, this.height);
+	}
+}
+
 
 	// function to display the level
 
@@ -149,7 +162,7 @@
 				playerXPos=(baseCol+1)*tileSize;
 			}
 		}
-    
+
 		// check for vertical collisions
 
 		baseCol = Math.floor(playerXPos/tileSize);
