@@ -2,28 +2,20 @@
 
 	var canvas = document.getElementById("canvas");   // the canvas where game will be drawn
 	var context = canvas.getContext("2d");            // canvas context
-	var levelCols=11;							// level width, in tiles
-	var levelRows=9;							// level height, in tiles
-	var tileSize=32;							// tile size, in pixels
-	var playerCol=5;              // player starting column
-	var playerRow=4;              // player starting row
-	var leftPressed=false;        // are we pressing LEFT arrow key?
-	var rightPressed=false;       // are we pressing RIGHT arrow key?
-	var upPressed=false;          // are we pressing UP arrow key?
-	var downPressed=false;        // are we pressing DOWN arrow key?
-	var movementSpeed=5;         // the speed we are going to move, in pixels per frame
 
-	var level = [        						// the 11x9 level - 1=wall, 0=empty space
-		[1,1,1,1,1,1,1,1,1,1,1],
-		[1,1,0,0,0,0,0,0,0,1,1],
-		[1,0,0,0,0,0,0,0,0,0,1],
-		[1,0,0,0,1,0,1,0,0,0,1],
-		[1,0,0,0,0,0,0,0,0,0,1],
-		[1,0,0,0,1,0,1,0,0,0,1],
-		[1,0,0,0,0,0,0,0,0,0,1],
-		[1,1,0,0,0,0,0,0,0,1,1],
-		[1,1,1,1,1,1,1,1,1,1,1]
-	];
+	var levelManager = require('./levelManager');
+	var levels = levelManager.LevelChoice(1);
+
+	var levelCols = levels.map[0].length;				// level width, in tiles
+	var levelRows = levels.map.length;					// level height, in tiles
+	var tileSize = 32;												  // tile size, in pixels
+	var playerCol = levels.playerCol;          // player starting column
+	var playerRow = levels.playerRow;          // player starting row
+	var leftPressed = false;                   // are we pressing LEFT arrow key?
+	var rightPressed = false;                  // are we pressing RIGHT arrow key?
+	var upPressed = false;                     // are we pressing UP arrow key?
+	var downPressed = false;                  // are we pressing DOWN arrow key?
+	var movementSpeed = 5;                    // the speed we are going to move, in pixels per frame
 
 	var playerYPos=playerRow*tileSize;		// converting Y player position from tiles to pixels
 	var playerXPos=playerCol*=tileSize;   // converting X player position from tiles to pixels
@@ -34,7 +26,7 @@
 	// simple WASD listeners
 
 	document.addEventListener("keydown", function(e){
-		console.log(e.keyCode);
+		// console.log(e.keyCode);
 		switch(e.keyCode){
 			case 65:
 				leftPressed=true;
@@ -106,31 +98,11 @@ var playerClass = {
 		}
 
 		// updating player position
-
 		this.x +=this.xSpeed;
 		this.y +=this.ySpeed;
 
 	}
 };
-
-
-	// function to display the level
-
-	function renderLevel(){
-		// clear the canvas
-		context.clearRect(0, 0, canvas.width, canvas.height);
-		// walls = red boxes
-		context.fillStyle = "#ff0000";
-		for(i=0;i<levelRows;i++){
-			for(j=0;j<levelCols;j++){
-				if(level[i][j]==1){
-					context.fillRect(j*tileSize,i*tileSize,tileSize,tileSize);
-				}
-			}
-		}
-		playerClass.draw();
-	}
-
 
 function collisionDetection() {
 
@@ -140,17 +112,26 @@ function collisionDetection() {
 	var colOverlap = playerClass.x%tileSize;
 	var rowOverlap = playerClass.y%tileSize;
 
-	if(playerClass.xSpeed>0){
-		if((level[baseRow][baseCol+1] && !level[baseRow][baseCol]) || (level[baseRow+1][baseCol+1] && !level[baseRow+1][baseCol] && rowOverlap)){
-			playerClass.x=baseCol*tileSize;
+		if(playerClass.xSpeed>0){
+			if((levels.map[baseRow][baseCol+1] && !levels.map[baseRow][baseCol]) || (levels.map[baseRow+1][baseCol+1] && !levels.map[baseRow+1][baseCol] && rowOverlap)){
+				if (levels.map[baseRow][baseCol + 1] === 10) {
+					levels = levelManager.LevelChoice(levels.num += 1);
+				}
+				playerClass.x=baseCol*tileSize;
+			}
 		}
-	}
 
-	if(playerClass.xSpeed<0){
-		if((!level[baseRow][baseCol+1] && level[baseRow][baseCol]) || (!level[baseRow+1][baseCol+1] && level[baseRow+1][baseCol] && rowOverlap)){
-			playerClass.x=(baseCol+1)*tileSize;
+
+		if(playerClass.xSpeed<0){
+			if((!levels.map[baseRow][baseCol+1] && levels.map[baseRow][baseCol]) || (!levels.map[baseRow+1][baseCol+1] && levels.map[baseRow+1][baseCol] && rowOverlap)){
+				console.log("V1 ", levels.map[baseRow][baseCol])
+				if (levels.map[baseRow + 1][baseCol] === 10) {
+					levels = levelManager.LevelChoice(levels.num += 1);
+				}
+				playerClass.x=(baseCol+1)*tileSize;
+			}
 		}
-	}
+
 
 	// check for vertical player collisions
 
@@ -159,24 +140,51 @@ function collisionDetection() {
 	colOverlap = playerClass.x%tileSize;
 	rowOverlap = playerClass.y%tileSize;
 
-	if(playerClass.ySpeed>0){
-		if((level[baseRow+1][baseCol] && !level[baseRow][baseCol]) || (level[baseRow+1][baseCol+1] && !level[baseRow][baseCol+1] && colOverlap)){
-			playerClass.y = baseRow*tileSize;
+
+		if(playerClass.ySpeed>0){
+			if((levels.map[baseRow+1][baseCol] && !levels.map[baseRow][baseCol]) || (levels.map[baseRow+1][baseCol+1] && !levels.map[baseRow][baseCol+1] && colOverlap)){
+
+				if (levels.map[baseRow + 1][baseCol] === 10) {
+					levels = levelManager.LevelChoice(levels.num += 1);
+				}
+				playerClass.y = baseRow*tileSize;
+			}
 		}
-	}
+
 
 	if(playerClass.ySpeed<0){
-		if((!level[baseRow+1][baseCol] && level[baseRow][baseCol]) || (!level[baseRow+1][baseCol+1] && level[baseRow][baseCol+1] && colOverlap)){
+		if((!levels.map[baseRow+1][baseCol] && levels.map[baseRow][baseCol]) || (!levels.map[baseRow+1][baseCol+1] && levels.map[baseRow][baseCol+1] && colOverlap)){
+			if (levels.map[baseRow][baseCol] === 10) {
+				levels = levelManager.LevelChoice(levels.num += 1);
+			}
 			playerClass.y = (baseRow+1)*tileSize;
 		}
 	}
-}
+};
 
 
+	// function to display the level
+	function renderLevel(){
+		// clear the canvas
+		context.clearRect(0, 0, canvas.width, canvas.height);
+		// walls = red boxes
+		for(i=0;i<levelRows;i++){
+			for(j=0;j<levelCols;j++){
+				if(levels.map[i][j]==1){
+					context.fillStyle = "#ff0000";
+					context.fillRect(j*tileSize,i*tileSize,tileSize,tileSize);
+				}
+				else if (levels.map[i][j] === 10) {
+					context.fillStyle = "#000000";
+					context.fillRect(j*tileSize,i*tileSize,tileSize,tileSize);
+				}
+			}
+		}
+		playerClass.draw();
+	}
 
 
 	// this function will do its best to make stuff work at 60FPS - please notice I said "will do its best"
-
 	window.requestAnimFrame = (function(callback) {
 		return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
 		function(callback) {
@@ -185,10 +193,7 @@ function collisionDetection() {
 	})();
 
 
-
-
 	// function to handle the game itself
-
 	function updateGame() {
 
 		// updates player position
