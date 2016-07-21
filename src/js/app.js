@@ -26,7 +26,7 @@ var tileset = require('./tileset');
 	canvas.width=tileSize*levelCols;   // canvas width. Won't work without it even if you style it from CSS
 	canvas.height=tileSize*levelRows;  // canvas height. Same as before
 
-
+	var makeProjectile = require('./projectile').makeProjectile;
 
 
 	// simple WASD listeners
@@ -81,58 +81,6 @@ var tileset = require('./tileset');
 			Math.floor(x * tileSize), Math.floor(y * tileSize), tileSize, tileSize
 		);
 	}
-
-
-	function Projectile(I) {
-	  I.active = true;
-
-		// defaults x an y velocity for shooting upward
-	  I.xVelocity = 0;
-	  I.yVelocity = -I.speed;
-
-		I.width = 3;
-	  I.height = 3;
-	  I.color = "#8A2BE2";
-
-		// adjusts x and y velocity to change projectile direction per facing direction
-		switch (I.facing) {
-			case 'up':
-				break;
-			case 'right':
-				I.xVelocity = I.speed;
-				I.yVelocity = 0;
-				break;
-			case 'down':
-			I.xVelocity = 0;
-			I.yVelocity = I.speed;
-				break;
-			case 'left':
-			I.xVelocity = -I.speed;
-			I.yVelocity = 0;
-				break;
-			default:
-				console.log('projectile aiming broke');
-		}
-
-	  I.inBounds = function() {
-	    return I.x >= 0 && I.x <= canvas.width &&
-	      I.y >= 0 && I.y <= canvas.height;
-	  };
-
-	  I.draw = function() {
-	    context.fillStyle = this.color;
-	    context.fillRect(this.x, this.y, this.width, this.height);
-	  };
-
-	  I.update = function() {
-	    I.x += I.xVelocity;
-	    I.y += I.yVelocity;
-
-	    I.active = I.active && I.inBounds();
-	  };
-
-	  return I;
-	};
 
 
 var playerProjectiles = [];
@@ -195,12 +143,12 @@ var playerClass = {
 	shoot: function() {
 		var projectilePosition = this.midpoint();
 
-  	playerProjectiles.push(Projectile({
+  	playerProjectiles.push(makeProjectile({
     	speed: 5,
     	x: projectilePosition.x,
     	y: projectilePosition.y,
 			facing: this.facing
-  	}));
+  	}, canvas));
 	},
 	midpoint: function() {
 		return {
