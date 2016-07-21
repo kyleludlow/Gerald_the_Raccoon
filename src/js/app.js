@@ -223,11 +223,11 @@ var playerClass = {
 		// check for projectiles
 
 		playerProjectiles.forEach(function(projectile) {
-    	projectile.update();
-  	});
-  	playerProjectiles = playerProjectiles.filter(function(projectile) {
-    	return projectile.active;
-  	});
+			projectile.update();
+		});
+		playerProjectiles = playerProjectiles.filter(function(projectile) {
+			return projectile.active;
+		});
 
 
 		// checks for collisions and positions player accordingly
