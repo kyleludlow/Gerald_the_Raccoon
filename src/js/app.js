@@ -8,6 +8,8 @@ var tileset = require('./tileset');
 	var levelManager = require('./levelManager');
 	var levels = levelManager.LevelChoice(1);
 
+	var collisionManager = require('./collision.manager');
+
 	var levelCols = levels.map[0].length;				// level width, in tiles
 	var levelRows = levels.map.length;					// level height, in tiles
 	var tileSize = 32;												  // tile size, in pixels
@@ -158,63 +160,6 @@ var playerClass = {
 	}
 };
 
-function collisionDetection() {
-
-	// check for horizontal player collision
-	var baseCol = Math.floor(playerClass.x/tileSize);
-	var baseRow = Math.floor(playerClass.y/tileSize);
-	var colOverlap = playerClass.x%tileSize;
-	var rowOverlap = playerClass.y%tileSize;
-
-		if(playerClass.xSpeed>0){
-			if((levels.map[baseRow][baseCol+1] && !levels.map[baseRow][baseCol]) || (levels.map[baseRow+1][baseCol+1] && !levels.map[baseRow+1][baseCol] && rowOverlap)){
-				if (levels.map[baseRow][baseCol + 1] === 10) {
-					levels = levelManager.LevelChoice(levels.num += 1);
-				}
-				playerClass.x=baseCol*tileSize;
-			}
-		}
-
-
-		if(playerClass.xSpeed<0){
-			if((!levels.map[baseRow][baseCol+1] && levels.map[baseRow][baseCol]) || (!levels.map[baseRow+1][baseCol+1] && levels.map[baseRow+1][baseCol] && rowOverlap)){
-				console.log("V1 ", levels.map[baseRow][baseCol])
-				if (levels.map[baseRow + 1][baseCol] === 10) {
-					levels = levelManager.LevelChoice(levels.num += 1);
-				}
-				playerClass.x=(baseCol+1)*tileSize;
-			}
-		}
-
-	// check for vertical player collisions
-
-	baseCol = Math.floor(playerClass.x/tileSize);
-	baseRow = Math.floor(playerClass.y/tileSize);
-	colOverlap = playerClass.x%tileSize;
-	rowOverlap = playerClass.y%tileSize;
-
-
-		if(playerClass.ySpeed>0){
-			if((levels.map[baseRow+1][baseCol] && !levels.map[baseRow][baseCol]) || (levels.map[baseRow+1][baseCol+1] && !levels.map[baseRow][baseCol+1] && colOverlap)){
-
-				if (levels.map[baseRow + 1][baseCol] === 10) {
-					levels = levelManager.LevelChoice(levels.num += 1);
-				}
-				playerClass.y = baseRow*tileSize;
-			}
-		}
-
-
-	if(playerClass.ySpeed<0){
-		if((!levels.map[baseRow+1][baseCol] && levels.map[baseRow][baseCol]) || (!levels.map[baseRow+1][baseCol+1] && levels.map[baseRow][baseCol+1] && colOverlap)){
-			if (levels.map[baseRow][baseCol] === 10) {
-				levels = levelManager.LevelChoice(levels.num += 1);
-			}
-			playerClass.y = (baseRow+1)*tileSize;
-		}
-	}
-};
-
 
 	// function to display the level
 	function renderLevel(){
@@ -266,8 +211,15 @@ function collisionDetection() {
 
 
 		// checks for collisions and positions player accordingly
-		collisionDetection();
-
+		var collisionParams = {
+			playerClass: playerClass,
+			tileSize: tileSize,
+			levels: levels
+		}
+		var exit = collisionManager.collisionDetection(collisionParams);
+		if (exit) {
+			levels = levelManager.LevelChoice(levels.num += 1);
+		}
 		// rendering level
 		renderLevel();
 
