@@ -33,7 +33,11 @@ body {
       margin-bottom: 0.3em; }
     .intro-screen .intro-wrapper img {
       height: 130px;
-      width: 130px; }
+      width: 130px;
+      margin: 0 2em; }
+    .intro-screen .intro-wrapper .chase {
+      width: 186px;
+      height: 160px; }
     .intro-screen .intro-wrapper button {
       animation: playFlash 1s infinite;
       background-color: transparent;
