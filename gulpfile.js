@@ -55,6 +55,11 @@ gulp.task('images', function() {
     .pipe(gulp.dest('build/img'));
 });
 
+gulp.task('fonts', function() {
+  return gulp.src('src/fonts/*')
+    .pipe(gulp.dest('build/fonts'));
+})
+
 // Watch task
 gulp.task('watch', function() {
   gulp.watch('src/js/**/**/*.js', ['scripts']);
@@ -76,7 +81,7 @@ gulp.task('serve', function() {
 
 
 // Default task
-gulp.task('dev', ['html', 'scripts', 'sass', 'watch', 'serve', 'images', 'spec']);
+gulp.task('dev', ['html', 'scripts', 'sass', 'fonts', 'watch', 'serve', 'images', 'spec']);
 
 // Build task
 gulp.task('build', ['sass', 'html', 'scripts', 'styles', 'images', 'spec']);

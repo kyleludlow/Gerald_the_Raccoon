@@ -1,7 +1,11 @@
+@import 'fonts';
+
 body {
   background-color: '#000';
   margin: 0px;
 }
+
+@import 'intro';
 
 .game-canvas {
   background: url('../img/grasstile.png');
