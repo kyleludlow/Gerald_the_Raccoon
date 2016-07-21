@@ -1,3 +1,4 @@
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var tileset = require('./tileset');
 
 (function(){
@@ -208,3 +209,48 @@ var tileset = require('./tileset');
 	//updateGame();
 
 })();
+
+},{"./tileset":2}],2:[function(require,module,exports){
+var Tileset = function(options){
+	this.onspriteload = options.onspriteload || function(){};
+	this.onReadyCb = options.onReady || function(){};
+	this.tileSpec = options.tileSpec || {};
+
+	this.sprite = new Image();
+	this.sprite.onload = this.onSpriteLoad.bind(this);
+	this.spriteLoaded = false;
+	this.sprite.src = options.spritePath;
+
+	$.getJSON(options.specPath, this.onSpecLoad.bind(this));
+};
+
+Tileset.prototype.onSpriteLoad = function(e){
+	this.spriteLoaded = true;
+  console.log('sprite loaded', this.sprite);
+	this.onReady();
+};
+
+Tileset.prototype.onSpecLoad = function(data){
+	this.specLoaded = true;
+	this.tileSpec = data;
+  console.log('spec loaded', this.tileSpec);
+	this.onReady();
+};
+
+Tileset.prototype.onReady = function(){
+	if(this.specLoaded && this.spriteLoaded){
+		this.onReadyCb();
+	}
+};
+
+Tileset.prototype.getSprite = function(){
+	return this.sprite;
+};
+
+Tileset.prototype.getTileSpec = function(){
+	return this.tileSpec;
+};
+
+	exports.Tileset = Tileset;
+
+},{}]},{},[1]);

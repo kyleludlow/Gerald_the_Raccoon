@@ -27,7 +27,7 @@ gulp.task('html', function() {
 
 // JavaScript build task, removes whitespace and concatenates all files
 gulp.task('scripts', function() {
-  return browserify('src/js/main.js')
+  return browserify('src/js/app.js')
     .bundle()
     .pipe(source('app.js'))
     .pipe(buffer())
@@ -40,6 +40,12 @@ gulp.task('styles', function() {
   return gulp.src('src/css/*.css')
     .pipe(concat('styles.css'))
     .pipe(gulp.dest('build/css'));
+});
+
+// Styles build task, concatenates all the files
+gulp.task('spec', function() {
+  return gulp.src('src/spec/*.json')
+    .pipe(gulp.dest('build/spec'));
 });
 
 // Image optimization task
@@ -70,7 +76,7 @@ gulp.task('serve', function() {
 
 
 // Default task
-gulp.task('dev', ['html', 'scripts', 'sass', 'watch', 'serve']);
+gulp.task('dev', ['html', 'scripts', 'sass', 'watch', 'serve', 'images', 'spec']);
 
 // Build task
-gulp.task('build', ['sass', 'html', 'scripts', 'styles', 'images']);
+gulp.task('build', ['sass', 'html', 'scripts', 'styles', 'images', 'spec']);
