@@ -4,7 +4,7 @@ var tileset = require('./tileset');
 
 	var canvas = document.getElementById("canvas");   // the canvas where game will be drawn
 	var context = canvas.getContext("2d");            // canvas context
-
+	var levelRenderer = require('./levelRenderer');
 	var levelManager = require('./levelManager');
 	var levels = levelManager.LevelChoice(1);
 
@@ -76,13 +76,13 @@ var tileset = require('./tileset');
 
 
 
-	function drawTile(sprite, singleTileSpec, x, y) {
-		context.drawImage(
-			sprite,
-			singleTileSpec.x, singleTileSpec.y, tileSize, tileSize,
-			Math.floor(x * tileSize), Math.floor(y * tileSize), tileSize, tileSize
-		);
-	}
+function drawTile(sprite, singleTileSpec, x, y) {
+	context.drawImage(
+		sprite,
+		singleTileSpec.x, singleTileSpec.y, tileSize, tileSize,
+		Math.floor(x * tileSize), Math.floor(y * tileSize), tileSize, tileSize
+	);
+}
 
 
 var playerProjectiles = [];
@@ -145,12 +145,12 @@ var playerClass = {
 	shoot: function() {
 		var projectilePosition = this.midpoint();
 
-  	playerProjectiles.push(makeProjectile({
-    	speed: 5,
-    	x: projectilePosition.x,
-    	y: projectilePosition.y,
-			facing: this.facing
-  	}, canvas));
+		playerProjectiles.push(makeProjectile({
+			speed: 5,
+			x: projectilePosition.x,
+			y: projectilePosition.y,
+				facing: this.facing
+		}, canvas));
 	},
 	midpoint: function() {
 		return {
@@ -162,26 +162,27 @@ var playerClass = {
 
 
 	// function to display the level
-	function renderLevel(){
-		// clear the canvas
-		context.clearRect(0, 0, canvas.width, canvas.height);
-		// walls = red boxes
-		for(i=0;i<levelRows;i++){
-			for(j=0;j<levelCols;j++){
-				if(levels.map[i][j] !== 0 && levels.map[i][j] < 10){
-					drawTile(bgTileset.sprite, bgTileset.tileSpec[levels.map[i][j]], j, i);
-				}
-				else if (levels.map[i][j] === 10) {
-					context.fillStyle = "#000000";
-					context.fillRect(j*tileSize,i*tileSize,tileSize,tileSize);
-				}
-			}
-		}
-		playerClass.draw();
-		playerProjectiles.forEach(function(projectile) {
-			projectile.draw();
-		});
-	}
+
+	// function renderLevel(){
+	// 	// clear the canvas
+	// 	context.clearRect(0, 0, canvas.width, canvas.height);
+	// 	// walls = red boxes
+	// 	for(i=0;i<levelRows;i++){
+	// 		for(j=0;j<levelCols;j++){
+	// 			if(levels.map[i][j] !== 0 && levels.map[i][j] < 10){
+	// 				drawTile(bgTileset.sprite, bgTileset.tileSpec[levels.map[i][j]], j, i);
+	// 			}
+	// 			else if (levels.map[i][j] === 10) {
+	// 				context.fillStyle = "#000000";
+	// 				context.fillRect(j*tileSize,i*tileSize,tileSize,tileSize);
+	// 			}
+	// 		}
+	// 	}
+	// 	playerClass.draw();
+	// 	playerProjectiles.forEach(function(projectile) {
+	// 		projectile.draw();
+	// 	});
+	// }
 
 
 	// this function will do its best to make stuff work at 60FPS - please notice I said "will do its best"
@@ -191,47 +192,6 @@ var playerClass = {
 			window.setTimeout(callback, 1000/60);
 		};
 	})();
-
-
-	// function to handle the game itself
-	function updateGame() {
-
-		// updates player position
-		playerClass.update();
-
-
-		// check for projectiles
-
-		playerProjectiles.forEach(function(projectile) {
-    	projectile.update();
-  	});
-  	playerProjectiles = playerProjectiles.filter(function(projectile) {
-    	return projectile.active;
-  	});
-
-
-		// checks for collisions and positions player accordingly
-		var collisionParams = {
-			playerClass: playerClass,
-			tileSize: tileSize,
-			levels: levels
-		}
-		var exit = collisionManager.collisionDetection(collisionParams);
-		if (exit) {
-			levels = levelManager.LevelChoice(levels.num += 1);
-		}
-		// rendering level
-		renderLevel();
-
-		// update the game in about 1/60 seconds
-
-		requestAnimFrame(function() {
-			updateGame();
-		});
-	}
-
-	//retrieves information about which image to use
-	//and what positions to pull out specific tiles
 
 	function loadCheck() {
 		tilesets--;
@@ -253,6 +213,56 @@ var playerClass = {
 			specPath: '../spec/sprite.json',//TODO
 			onReady: loadCheck
 	});
+
+	// function to handle the game itself
+	function updateGame() {
+
+		// updates player position
+		playerClass.update();
+
+		// check for projectiles
+
+		playerProjectiles.forEach(function(projectile) {
+    	projectile.update();
+  	});
+  	playerProjectiles = playerProjectiles.filter(function(projectile) {
+    	return projectile.active;
+  	});
+
+
+		// checks for collisions and positions player accordingly
+		var collisionParams = {
+			playerClass: playerClass,
+			tileSize: tileSize,
+			levels: levels
+		}
+		var exit = collisionManager.collisionDetection(collisionParams);
+		if (exit) {
+			levels = levelManager.LevelChoice(levels.num += 1);
+		}
+		// rendering 
+		let renderOptions = {
+			context: context, 
+			levelRows: levelRows, 
+			levelCols: levelCols, 
+			levels: levels, 
+			playerClass: playerClass, 
+			playerProjectiles: playerProjectiles,
+			bgTileset: bgTileset
+		}
+		levelRenderer.renderLevel(renderOptions);
+
+		// update the game in about 1/60 seconds
+
+		requestAnimFrame(function() {
+			updateGame();
+		});
+	}
+
+	//retrieves information about which image to use
+	//and what positions to pull out specific tiles
+
+	
 
 	//updateGame();
 
