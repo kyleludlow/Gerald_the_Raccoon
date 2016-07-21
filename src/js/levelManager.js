@@ -9,6 +9,12 @@ var LevelChoice = function(choice) {
         case 2:
             level = maps.levels.two;
             break;
+        case 3:
+            level = maps.levels.three;
+            break;
+        case 4:
+            level = maps.levels.four;
+            break;
         default:
             level = maps.levels.one;
     }
