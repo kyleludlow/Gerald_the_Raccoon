@@ -1,7 +1,7 @@
 .intro-screen {
     background-color: #000;
     color: #fff;
-    font-family: 'Slackey', cursive;
+    font-family: 'bearpawregular', cursive;
     height: 100vh;
     left: 0;
     position: absolute;
@@ -14,10 +14,15 @@
         position: absolute;
         top: 50%;
         transform: translate(-50%, -60%);
+        width: 100%;
 
         h1 {
-            color: #ffb74d;
-            font-size: 3.2em;
+            // color: #ffb74d;
+            color: #ff5722;
+            font-size: 5.2em;
+            font-weight: 100;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.3em;
         }
 
         img {

@@ -7,9 +7,12 @@
       var header = 'Gerald The Raccoon';
       for (var i = 0; i < header.length; i++) {
         var span = document.createElement('span');
-        var letter = document.createTextNode(header[i])
+        var letter = document.createTextNode(header[i]);
         span.classList = 'wobble';
         span.appendChild(letter);
+        if (span.textContent === " ") {
+          span.style.padding = "0.3em";
+        }
         span.style.animationDuration = (Math.random() * (1.5 - 0.5 + 1) + 0.5) + 's';
         document.querySelector('.intro-wrapper h1').appendChild(span);
       }
