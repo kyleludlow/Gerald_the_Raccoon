@@ -73,11 +73,33 @@
 	function Projectile(I) {
 	  I.active = true;
 
+		// defaults x an y velocity for shooting upward
 	  I.xVelocity = 0;
 	  I.yVelocity = -I.speed;
-	  I.width = 3;
+
+		I.width = 3;
 	  I.height = 3;
 	  I.color = "#8A2BE2";
+
+		// adjusts x and y velocity to change projectile direction per facing direction
+		switch (I.facing) {
+			case 'up':
+				break;
+			case 'right':
+				I.xVelocity = I.speed;
+				I.yVelocity = 0;
+				break;
+			case 'down':
+			I.xVelocity = 0;
+			I.yVelocity = I.speed;
+				break;
+			case 'left':
+			I.xVelocity = -I.speed;
+			I.yVelocity = 0;
+				break;
+			default:
+				console.log('projectile aiming broke');
+		}
 
 	  I.inBounds = function() {
 	    return I.x >= 0 && I.x <= canvas.width &&
@@ -110,6 +132,7 @@ var playerClass = {
 	height: tileSize,
 	xSpeed: 0,					// player horizontal speed, in pixels per frame
 	ySpeed: 0,					// player vertical speed, in pixels per frame
+	facing: 'up',
 	draw: function() {
 		context.fillStyle = this.color;
 		context.fillRect(this.x, this.y, this.width, this.height);
@@ -127,18 +150,22 @@ var playerClass = {
 		// updating speed according to key pressed
 		if(rightPressed){
 			this.xSpeed=movementSpeed;
+			this.facing = 'right';
 		}
 		else{
 			if(leftPressed){
 				this.xSpeed=-movementSpeed;
+				this.facing = 'left';
 			}
 			else{
 				if(upPressed){
 					this.ySpeed=-movementSpeed;
+					this.facing = 'up';
 				}
 				else{
 					if(downPressed){
 						this.ySpeed=movementSpeed;
+						this.facing = 'down';
 					}
 				}
 			}
@@ -155,7 +182,8 @@ var playerClass = {
   	playerProjectiles.push(Projectile({
     	speed: 5,
     	x: projectilePosition.x,
-    	y: projectilePosition.y
+    	y: projectilePosition.y,
+			facing: this.facing
   	}));
 	},
 	midpoint: function() {
