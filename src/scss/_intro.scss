@@ -1,0 +1,69 @@
+.intro-screen {
+    background-color: #000;
+    color: #fff;
+    font-family: 'Slackey', cursive;
+    height: 100vh;
+    left: 0;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 100vw;
+
+    .intro-wrapper {
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -60%);
+
+        h1 {
+            
+            color: #ffb74d;
+            font-size: 3.2em;
+        }
+
+        img {
+            height: 130px;
+            width: 130px;
+        }
+
+        button {
+            animation: playFlash 1s infinite;
+            background-color: transparent;
+            border: none;
+            color: rgb(39, 199, 39);
+            cursor: pointer;
+            display: block;
+            font-family: 'Slackey', cursive;
+            font-size: 2em;
+            padding: 1em;
+            margin: 0 auto;
+        }
+    }
+}
+
+.wobble {
+    display: inline-block;
+    animation-name: wobble;
+    animation-iteration-count: infinite;
+}
+
+@keyframes playFlash {
+    0% { opacity: 1 }
+    50% { opacity: 0.3 }
+    100% { opacity: 1 }
+}
+
+@keyframes wobble {
+    0% {
+        transform: rotate(0);
+    }
+    33% {
+        transform: rotate(-5deg);
+    }
+    66% {
+        transform: rotate(5deg);
+    }
+    100% {
+        transform: rotate(0);
+    }
+}
