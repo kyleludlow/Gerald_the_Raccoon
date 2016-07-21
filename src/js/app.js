@@ -87,6 +87,8 @@ var tileset = require('./tileset');
 			}
 		}
 		// player = green box
+
+		// drawTile(charTileset.sprite, charTileset.tileSpec[1], playerXPos, playerYPos);
 		context.fillStyle = "#00ff00";
 		context.fillRect(playerXPos,playerYPos,tileSize,tileSize);
 	}
@@ -97,22 +99,19 @@ var tileset = require('./tileset');
 			singleTileSpec.x, singleTileSpec.y, tileSize, tileSize,
 			Math.floor(x * tileSize), Math.floor(y * tileSize), tileSize, tileSize
 		);
-		// context.fillRect(
-		// 	x*tileSize, y*tileSize, tileSize, tileSize
-		// );
 	}
 
 	// this function will do its best to make stuff work at 60FPS - please notice I said "will do its best"
 
 	window.requestAnimFrame = (function(callback) {
 		console.log('starting');
-		console.log('sprite', bgTileset.sprite);
-		console.log('spec', bgTileset.tileSpec);
+		//console.log('sprite', bgTileset.sprite);
+		//console.log('spec', bgTileset.tileSpec);
 		return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
 		function(callback) {
 			window.setTimeout(callback, 1000/60);
 		};
-	});
+	})();
 
 	// function to handle the game itself
 
@@ -157,12 +156,14 @@ var tileset = require('./tileset');
 		if(playerXSpeed>0){
 			if((level[baseRow][baseCol+1] && !level[baseRow][baseCol]) || (level[baseRow+1][baseCol+1] && !level[baseRow+1][baseCol] && rowOverlap)){
 				playerXPos=baseCol*tileSize;
+				console.log('+x collision');
 			}
 		}
 
 		if(playerXSpeed<0){
 			if((!level[baseRow][baseCol+1] && level[baseRow][baseCol]) || (!level[baseRow+1][baseCol+1] && level[baseRow+1][baseCol] && rowOverlap)){
 				playerXPos=(baseCol+1)*tileSize;
+				console.log('-x collision');
 			}
 		}
 
@@ -176,17 +177,18 @@ var tileset = require('./tileset');
 		if(playerYSpeed>0){
 			if((level[baseRow+1][baseCol] && !level[baseRow][baseCol]) || (level[baseRow+1][baseCol+1] && !level[baseRow][baseCol+1] && colOverlap)){
 				playerYPos = baseRow*tileSize;
+				console.log('+y collision');
 			}
 		}
 
 		if(playerYSpeed<0){
 			if((!level[baseRow+1][baseCol] && level[baseRow][baseCol]) || (!level[baseRow+1][baseCol+1] && level[baseRow][baseCol+1] && colOverlap)){
 				playerYPos = (baseRow+1)*tileSize;
+				console.log('-y collision');
 			}
 		}
 
 		// rendering level
-
 		renderLevel();
 
 		// update the game in about 1/60 seconds
@@ -199,11 +201,26 @@ var tileset = require('./tileset');
 	//retrieves information about which image to use
 	//and what positions to pull out specific tiles
 
+	function loadCheck() {
+		tilesets--;
+		if (tilesets === 0) {
+			updateGame();
+		}
+	}
+
+	var tilesets = 2;
+
 	bgTileset = new tileset.Tileset({
 			spritePath: '../img/walls.png',
 			specPath: '../spec/gaunt.json',
-			onReady: updateGame
-		});
+			onReady: loadCheck
+	});
+
+	charTileset = new tileset.Tileset({
+			spritePath: '../img/animals.gif',
+			specPath: '../spec/gaunt.json',//TODO
+			onReady: loadCheck
+	});
 
 	//updateGame();
 
