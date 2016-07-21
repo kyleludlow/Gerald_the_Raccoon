@@ -14,7 +14,7 @@ var tileset = require('./tileset');
 	var rightPressed=false;                           // are we pressing RIGHT arrow key?
 	var upPressed=false;                              // are we pressing UP arrow key?
 	var downPressed=false;                            // are we pressing DOWN arrow key?
-	var movementSpeed=20;                              // the speed we are going to move, in pixels per frame
+	var movementSpeed=2;                              // the speed we are going to move, in pixels per frame
 	var playerXSpeed=0;                               // player horizontal speed, in pixels per frame
 	var playerYSpeed=0;                               // player vertical speed, in pixels per frame
 
@@ -31,7 +31,7 @@ var tileset = require('./tileset');
 	];
 
 	var playerYPos=playerRow*tileSize;				// converting Y player position from tiles to pixels
-	var playerXPos=playerCol*=tileSize;               // converting X player position from tiles to pixels
+	var playerXPos=playerCol*tileSize;               // converting X player position from tiles to pixels
 
 	canvas.width=tileSize*levelCols;                   // canvas width. Won't work without it even if you style it from CSS
 	canvas.height=tileSize*levelRows;                   // canvas height. Same as before
@@ -89,9 +89,10 @@ var tileset = require('./tileset');
 		}
 		// player = green box
 
-		// drawTile(charTileset.sprite, charTileset.tileSpec[1], playerXPos, playerYPos);
-		context.fillStyle = "#00ff00";
-		context.fillRect(playerXPos,playerYPos,tileSize,tileSize);
+		drawTile(charTileset.sprite, charTileset.tileSpec[1], playerXPos/tileSize, playerYPos/tileSize);
+		//drawTile(bgTileset.sprite, bgTileset.tileSpec[2], playerCol, playerRow);
+		// context.fillStyle = "#00ff00";
+		// context.fillRect(playerXPos,playerYPos,tileSize,tileSize);
 	}
 
 	function drawTile(sprite, singleTileSpec, x, y) {
@@ -219,7 +220,7 @@ var tileset = require('./tileset');
 
 	charTileset = new tileset.Tileset({
 			spritePath: '../img/animals.gif',
-			specPath: '../spec/gaunt.json',//TODO
+			specPath: '../spec/sprite.json',//TODO
 			onReady: loadCheck
 	});
 
