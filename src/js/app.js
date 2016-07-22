@@ -5,10 +5,11 @@ var tileset = require('./tileset');
 	var canvas = document.getElementById("canvas");   // the canvas where game will be drawn
 	var context = canvas.getContext("2d");            // canvas context
 	var levelRenderer = require('./levelRenderer');
+	var renderer = null;
 	var levelManager = require('./levelManager');
 	var levels = levelManager.LevelChoice(1);
 
-	var collisionManager = require('./collision.manager');
+	var collisionManager = require('./collisionManager');
 
 	var levelCols = levels.map[0].length;				// level width, in tiles
 	var levelRows = levels.map.length;					// level height, in tiles
@@ -22,14 +23,13 @@ var tileset = require('./tileset');
 	var spacePressed = false;                  // are we pressing space key?
 	var movementSpeed = 5;                    // the speed we are going to move, in pixels per frame
 
-	var playerYPos=playerRow*tileSize;		// converting Y player position from tiles to pixels
-	var playerXPos=playerCol*tileSize;   // converting X player position from tiles to pixels
+	var playerYPos = playerRow * tileSize;		// converting Y player position from tiles to pixels
+	var playerXPos = playerCol * tileSize;   // converting X player position from tiles to pixels
 
 	canvas.width=tileSize*levelCols;   // canvas width. Won't work without it even if you style it from CSS
 	canvas.height=tileSize*levelRows;  // canvas height. Same as before
 
 	var makeProjectile = require('./projectile').makeProjectile;
-
 
 	// simple WASD listeners
 
@@ -73,17 +73,13 @@ var tileset = require('./tileset');
 		}
 	}, false);
 
-
-
-
-function drawTile(sprite, singleTileSpec, x, y) {
-	context.drawImage(
-		sprite,
-		singleTileSpec.x, singleTileSpec.y, tileSize, tileSize,
-		Math.floor(x * tileSize), Math.floor(y * tileSize), tileSize, tileSize
-	);
-}
-
+// function drawTile(sprite, singleTileSpec, x, y) {
+// 	context.drawImage(
+// 		sprite,
+// 		singleTileSpec.x, singleTileSpec.y, tileSize, tileSize,
+// 		Math.floor(x * tileSize), Math.floor(y * tileSize), tileSize, tileSize
+// 	);
+// };
 
 var playerProjectiles = [];
 
@@ -96,13 +92,13 @@ var playerClass = {
 	xSpeed: 0,					// player horizontal speed, in pixels per frame
 	ySpeed: 0,					// player vertical speed, in pixels per frame
 	facing: 'up',
-	draw: function() {
-
-		drawTile(charTileset.sprite, charTileset.tileSpec[1], this.x/this.width, this.y/this.height);
-
-		// context.fillStyle = this.color;
-		// context.fillRect(this.x, this.y, this.width, this.height);
-	},
+	// draw: function() {
+	//
+	// 	drawTile(charTileset.sprite, charTileset.tileSpec[1], this.x/this.width, this.y/this.height);
+	//
+	// 	// context.fillStyle = this.color;
+	// 	// context.fillRect(this.x, this.y, this.width, this.height);
+	// },
 	update: function() {
 		// no friction or inertia at the moment, so at every frame initial speed is set to zero
 		this.xSpeed=0;
@@ -114,22 +110,22 @@ var playerClass = {
 		}
 
 		// updating speed according to key pressed
-		if(rightPressed){
+		if (rightPressed){
 			this.xSpeed=movementSpeed;
 			this.facing = 'right';
 		}
-		else{
-			if(leftPressed){
+		else {
+			if (leftPressed) {
 				this.xSpeed=-movementSpeed;
 				this.facing = 'left';
 			}
-			else{
+			else {
 				if(upPressed){
 					this.ySpeed=-movementSpeed;
 					this.facing = 'up';
 				}
-				else{
-					if(downPressed){
+				else {
+					if (downPressed) {
 						this.ySpeed=movementSpeed;
 						this.facing = 'down';
 					}
@@ -196,6 +192,19 @@ var playerClass = {
 	function loadCheck() {
 		tilesets--;
 		if (tilesets === 0) {
+			var renderOptions = {
+				canvas: canvas,
+				context: context,
+				levelRows: levelRows,
+				levelCols: levelCols,
+				levels: levels,
+				playerClass: playerClass,
+				playerProjectiles: playerProjectiles,
+				bgTileset: bgTileset,
+				charTileset: charTileset,
+				tileSize: tileSize
+			};
+			renderer = new levelRenderer.Renderer(renderOptions);
 			updateGame();
 		}
 	}
@@ -216,41 +225,32 @@ var playerClass = {
 
 	// function to handle the game itself
 	function updateGame() {
-
 		// updates player position
 		playerClass.update();
 
 		// check for projectiles
 
-		playerProjectiles.forEach(function(projectile) {
-			projectile.update();
-		});
-		playerProjectiles = playerProjectiles.filter(function(projectile) {
-			return projectile.active;
-		});
-
+		// playerProjectiles.forEach(function(projectile) {
+		// 	projectile.update();
+		// });
+		// playerProjectiles = playerProjectiles.filter(function(projectile) {
+		// 	return projectile.active;
+		// });
 
 		// checks for collisions and positions player accordingly
-		var collisionParams = {
-			playerClass: playerClass,
-			tileSize: tileSize,
-			levels: levels
-		}
-		var exit = collisionManager.collisionDetection(collisionParams);
-		if (exit) {
-			levels = levelManager.LevelChoice(levels.num += 1);
-		}
-		// rendering 
-		let renderOptions = {
-			context: context, 
-			levelRows: levelRows, 
-			levelCols: levelCols, 
-			levels: levels, 
-			playerClass: playerClass, 
-			playerProjectiles: playerProjectiles,
-			bgTileset: bgTileset
-		}
-		levelRenderer.renderLevel(renderOptions);
+		// var collisionParams = {
+		// 	playerClass: playerClass,
+		// 	tileSize: tileSize,
+		// 	levels: levels
+		// };
+
+		// var exit = collisionManager.collisionDetection(collisionParams);
+
+		// if (exit) {
+		// 	levels = levelManager.LevelChoice(levels.num += 1);
+		// }
+		// rendering
+		renderer.render();
 
 		// update the game in about 1/60 seconds
 
@@ -259,10 +259,6 @@ var playerClass = {
 		});
 	}
 
-	//retrieves information about which image to use
-	//and what positions to pull out specific tiles
-
-	
 
 	//updateGame();
 
