@@ -1,244 +1,94 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var tileset = require('./tileset');
-
 (function(){
 
 	var canvas = document.getElementById("canvas");   // the canvas where game will be drawn
 	var context = canvas.getContext("2d");            // canvas context
-
+	var levelRenderer = require('./levelRenderer');
+	var renderer = null;
 	var levelManager = require('./levelManager');
 	var levels = levelManager.LevelChoice(1);
+
+	var tileset = require('./tileset');
+	var player = require('./player');
+
+	var collisionManager = require('./collisionManager');
 
 	var levelCols = levels.map[0].length;				// level width, in tiles
 	var levelRows = levels.map.length;					// level height, in tiles
 	var tileSize = 32;												  // tile size, in pixels
 	var playerCol = levels.playerCol;          // player starting column
 	var playerRow = levels.playerRow;          // player starting row
-	var leftPressed = false;                   // are we pressing LEFT arrow key?
-	var rightPressed = false;                  // are we pressing RIGHT arrow key?
-	var upPressed = false;                     // are we pressing UP arrow key?
-	var downPressed = false;                  // are we pressing DOWN arrow key?
-	var spacePressed = false;                  // are we pressing space key?
+	var keyPresses = {
+		leftPressed: false,                   // are we pressing LEFT arrow key?
+		rightPressed: false,                  // are we pressing RIGHT arrow key?
+		upPressed: false,                    // are we pressing UP arrow key?
+		downPressed: false,                  // are we pressing DOWN arrow key?
+		spacePressed: false,                  // are we pressing space key?
+	};
+
 	var movementSpeed = 5;                    // the speed we are going to move, in pixels per frame
 
-	var playerYPos=playerRow*tileSize;		// converting Y player position from tiles to pixels
-	var playerXPos=playerCol*tileSize;   // converting X player position from tiles to pixels
+	var playerYPos = playerRow * tileSize;		// converting Y player position from tiles to pixels
+	var playerXPos = playerCol * tileSize;   // converting X player position from tiles to pixels
 
-	canvas.width=tileSize*levelCols;   // canvas width. Won't work without it even if you style it from CSS
-	canvas.height=tileSize*levelRows;  // canvas height. Same as before
+	canvas.width = tileSize * levelCols;   // canvas width. Won't work without it even if you style it from CSS
+	canvas.height = tileSize * levelRows;  // canvas height. Same as before
 
 	var makeProjectile = require('./projectile').makeProjectile;
 
-
 	// simple WASD listeners
 
-	document.addEventListener("keydown", function(e){
+	document.addEventListener("keydown", function(e) {
 		// console.log(e.keyCode);
 		switch(e.keyCode){
 			case 65:
-				leftPressed=true;
+				keyPresses.leftPressed = true;
 				break;
 			case 87:
-				upPressed=true;
+				keyPresses.upPressed = true;
 				break;
 			case 68:
-				rightPressed=true;
+				keyPresses.rightPressed = true;
 				break;
 			case 83:
-				downPressed=true;
+				keyPresses.downPressed = true;
 				break;
 			case 32:
-				spacePressed=true;
+				keyPresses.spacePressed = true;
 				break;
 		}
 	}, false);
 
-	document.addEventListener("keyup", function(e){
+	document.addEventListener("keyup", function(e) {
 		switch(e.keyCode){
 			case 65:
-				leftPressed=false;
+				keyPresses.leftPressed = false;
 				break;
 			case 87:
-				upPressed=false;
+				keyPresses.upPressed = false;
 				break;
 			case 68:
-				rightPressed=false;
+				keyPresses.rightPressed = false;
 				break;
 			case 83:
-				downPressed=false;
+				keyPresses.downPressed = false;
 				break;
 			case 32:
-				spacePressed=false;
+				keyPresses.spacePressed = false;
 		}
 	}, false);
 
+	//creates gerald and makes him shoot stuff
 
+	var playerOptions = {
+		keyPresses: keyPresses,
+		movementSpeed: movementSpeed,
+		playerXPos: playerXPos,
+		playerYPos: playerYPos,
+		tileSize: tileSize
+	};
 
-
-	function drawTile(sprite, singleTileSpec, x, y) {
-		context.drawImage(
-			sprite,
-			singleTileSpec.x, singleTileSpec.y, tileSize, tileSize,
-			Math.floor(x * tileSize), Math.floor(y * tileSize), tileSize, tileSize
-		);
-	}
-
-
-var playerProjectiles = [];
-
-var playerClass = {
-	color: '#00ff00',
-	x: playerXPos,
-	y: playerYPos,
-	width: tileSize,
-	height: tileSize,
-	xSpeed: 0,					// player horizontal speed, in pixels per frame
-	ySpeed: 0,					// player vertical speed, in pixels per frame
-	facing: 'up',
-	draw: function() {
-
-		drawTile(charTileset.sprite, charTileset.tileSpec[1], this.x/this.width, this.y/this.height);
-
-		// context.fillStyle = this.color;
-		// context.fillRect(this.x, this.y, this.width, this.height);
-	},
-	update: function() {
-		// no friction or inertia at the moment, so at every frame initial speed is set to zero
-		this.xSpeed=0;
-		this.ySpeed=0;
-
-		// shoot projectile if space pressed
-		if (spacePressed){
-			this.shoot();
-		}
-
-		// updating speed according to key pressed
-		if(rightPressed){
-			this.xSpeed=movementSpeed;
-			this.facing = 'right';
-		}
-		else{
-			if(leftPressed){
-				this.xSpeed=-movementSpeed;
-				this.facing = 'left';
-			}
-			else{
-				if(upPressed){
-					this.ySpeed=-movementSpeed;
-					this.facing = 'up';
-				}
-				else{
-					if(downPressed){
-						this.ySpeed=movementSpeed;
-						this.facing = 'down';
-					}
-				}
-			}
-		}
-
-		// updating player position
-		this.x +=this.xSpeed;
-		this.y +=this.ySpeed;
-
-	},
-	shoot: function() {
-		var projectilePosition = this.midpoint();
-
-  	playerProjectiles.push(makeProjectile({
-    	speed: 5,
-    	x: projectilePosition.x,
-    	y: projectilePosition.y,
-			facing: this.facing
-  	}, canvas));
-	},
-	midpoint: function() {
-		return {
-			x: this.x + this.width/2,
-			y: this.y + this.height/2
-		};
-	}
-};
-
-function collisionDetection() {
-
-	// check for horizontal player collision
-	var baseCol = Math.floor(playerClass.x/tileSize);
-	var baseRow = Math.floor(playerClass.y/tileSize);
-	var colOverlap = playerClass.x%tileSize;
-	var rowOverlap = playerClass.y%tileSize;
-
-		if(playerClass.xSpeed>0){
-			if((levels.map[baseRow][baseCol+1] && !levels.map[baseRow][baseCol]) || (levels.map[baseRow+1][baseCol+1] && !levels.map[baseRow+1][baseCol] && rowOverlap)){
-				if (levels.map[baseRow][baseCol + 1] === 10) {
-					levels = levelManager.LevelChoice(levels.num += 1);
-				}
-				playerClass.x=baseCol*tileSize;
-			}
-		}
-
-
-		if(playerClass.xSpeed<0){
-			if((!levels.map[baseRow][baseCol+1] && levels.map[baseRow][baseCol]) || (!levels.map[baseRow+1][baseCol+1] && levels.map[baseRow+1][baseCol] && rowOverlap)){
-				console.log("V1 ", levels.map[baseRow][baseCol])
-				if (levels.map[baseRow + 1][baseCol] === 10) {
-					levels = levelManager.LevelChoice(levels.num += 1);
-				}
-				playerClass.x=(baseCol+1)*tileSize;
-			}
-		}
-
-	// check for vertical player collisions
-
-	baseCol = Math.floor(playerClass.x/tileSize);
-	baseRow = Math.floor(playerClass.y/tileSize);
-	colOverlap = playerClass.x%tileSize;
-	rowOverlap = playerClass.y%tileSize;
-
-
-		if(playerClass.ySpeed>0){
-			if((levels.map[baseRow+1][baseCol] && !levels.map[baseRow][baseCol]) || (levels.map[baseRow+1][baseCol+1] && !levels.map[baseRow][baseCol+1] && colOverlap)){
-
-				if (levels.map[baseRow + 1][baseCol] === 10) {
-					levels = levelManager.LevelChoice(levels.num += 1);
-				}
-				playerClass.y = baseRow*tileSize;
-			}
-		}
-
-
-	if(playerClass.ySpeed<0){
-		if((!levels.map[baseRow+1][baseCol] && levels.map[baseRow][baseCol]) || (!levels.map[baseRow+1][baseCol+1] && levels.map[baseRow][baseCol+1] && colOverlap)){
-			if (levels.map[baseRow][baseCol] === 10) {
-				levels = levelManager.LevelChoice(levels.num += 1);
-			}
-			playerClass.y = (baseRow+1)*tileSize;
-		}
-	}
-};
-
-
-	// function to display the level
-	function renderLevel(){
-		// clear the canvas
-		context.clearRect(0, 0, canvas.width, canvas.height);
-		// walls = red boxes
-		for(i=0;i<levelRows;i++){
-			for(j=0;j<levelCols;j++){
-				if(levels.map[i][j] !== 0 && levels.map[i][j] < 10){
-					drawTile(bgTileset.sprite, bgTileset.tileSpec[levels.map[i][j]], j, i);
-				}
-				else if (levels.map[i][j] === 10) {
-					context.fillStyle = "#000000";
-					context.fillRect(j*tileSize,i*tileSize,tileSize,tileSize);
-				}
-			}
-		}
-		playerClass.draw();
-		playerProjectiles.forEach(function(projectile) {
-			projectile.draw();
-		});
-	}
-
+	var playerClass = new player.Player(playerOptions);
 
 	// this function will do its best to make stuff work at 60FPS - please notice I said "will do its best"
 	window.requestAnimFrame = (function(callback) {
@@ -248,43 +98,21 @@ function collisionDetection() {
 		};
 	})();
 
-
-	// function to handle the game itself
-	function updateGame() {
-
-		// updates player position
-		playerClass.update();
-
-
-		// check for projectiles
-
-		playerProjectiles.forEach(function(projectile) {
-    	projectile.update();
-  	});
-  	playerProjectiles = playerProjectiles.filter(function(projectile) {
-    	return projectile.active;
-  	});
-
-
-		// checks for collisions and positions player accordingly
-		collisionDetection();
-
-		// rendering level
-		renderLevel();
-
-		// update the game in about 1/60 seconds
-
-		requestAnimFrame(function() {
-			updateGame();
-		});
-	}
-
-	//retrieves information about which image to use
-	//and what positions to pull out specific tiles
-
 	function loadCheck() {
 		tilesets--;
 		if (tilesets === 0) {
+			var renderOptions = {
+				canvas: canvas,
+				context: context,
+				levelRows: levelRows,
+				levelCols: levelCols,
+				levels: levels,
+				playerClass: playerClass,
+				bgTileset: bgTileset,
+				charTileset: charTileset,
+				tileSize: tileSize
+			};
+			renderer = new levelRenderer.Renderer(renderOptions);
 			updateGame();
 		}
 	}
@@ -303,11 +131,96 @@ function collisionDetection() {
 			onReady: loadCheck
 	});
 
-	//updateGame();
+	// function to handle the game itself
+	function updateGame() {
+		// updates player position
+		playerClass.update();
 
+		// check for projectiles
+
+		playerClass.playerProjectiles.forEach(function(projectile) {
+			projectile.update();
+		});
+		playerClass.playerProjectiles = playerClass.playerProjectiles.filter(function(projectile) {
+			return projectile.active;
+		});
+
+		// checks for collisions and positions player accordingly
+		var collisionParams = {
+			playerClass: playerClass,
+			tileSize: tileSize,
+			levels: levels
+		};
+
+		var exit = collisionManager.collisionDetection(collisionParams);
+
+		if (exit) {
+			levels = levelManager.LevelChoice(levels.num += 1);
+			renderer.levels = levels;
+		}
+		// rendering
+		renderer.render();
+
+		// update the game in about 1/60 seconds
+
+		requestAnimFrame(function() {
+			updateGame();
+		});
+	}
 })();
 
-},{"./levelManager":2,"./projectile":4,"./tileset":5}],2:[function(require,module,exports){
+},{"./collisionManager":2,"./levelManager":3,"./levelRenderer":4,"./player":6,"./projectile":7,"./tileset":8}],2:[function(require,module,exports){
+function collisionDetection({playerClass, tileSize, levels}) {
+
+	var baseCol = Math.floor(playerClass.x/tileSize);
+	var baseRow = Math.floor(playerClass.y/tileSize);
+	var colOverlap = playerClass.x%tileSize;
+	var rowOverlap = playerClass.y%tileSize;
+
+    // check for horizontal player collisions
+
+    if(playerClass.xSpeed>0){
+        if((levels.map[baseRow][baseCol+1] && !levels.map[baseRow][baseCol]) || (levels.map[baseRow+1][baseCol+1] && !levels.map[baseRow+1][baseCol] && rowOverlap)){
+            if (levels.map[baseRow][baseCol + 1] === 10) {
+                return true;
+            }
+            playerClass.x=baseCol*tileSize;
+        }
+    }
+
+    if(playerClass.xSpeed<0){
+        if((!levels.map[baseRow][baseCol+1] && levels.map[baseRow][baseCol]) || (!levels.map[baseRow+1][baseCol+1] && levels.map[baseRow+1][baseCol] && rowOverlap)){
+            console.log("V1 ", levels.map[baseRow][baseCol])
+            if (levels.map[baseRow + 1][baseCol] === 10) {
+                return true;
+            }
+            playerClass.x=(baseCol+1)*tileSize;
+        }
+    }
+
+	// check for vertical player collisions
+
+    if(playerClass.ySpeed>0){
+        if((levels.map[baseRow+1][baseCol] && !levels.map[baseRow][baseCol]) || (levels.map[baseRow+1][baseCol+1] && !levels.map[baseRow][baseCol+1] && colOverlap)){
+            if (levels.map[baseRow + 1][baseCol] === 10) {
+                return true;
+            }
+            playerClass.y = baseRow*tileSize;
+        }
+    }
+
+	if(playerClass.ySpeed<0){
+		if((!levels.map[baseRow+1][baseCol] && levels.map[baseRow][baseCol]) || (!levels.map[baseRow+1][baseCol+1] && levels.map[baseRow][baseCol+1] && colOverlap)){
+			if (levels.map[baseRow][baseCol] === 10) {
+                    return true;
+			}
+			playerClass.y = (baseRow+1)*tileSize;
+		}
+	}
+};
+
+exports.collisionDetection = collisionDetection;
+},{}],3:[function(require,module,exports){
 var maps = require('./maps');
 
 var LevelChoice = function(choice) {
@@ -334,7 +247,54 @@ var LevelChoice = function(choice) {
 exports.LevelChoice = LevelChoice;
 
 
-},{"./maps":3}],3:[function(require,module,exports){
+},{"./maps":5}],4:[function(require,module,exports){
+var Renderer = function(options) {
+  this.canvas = options.canvas;
+  this.context = options.context;
+  this.levelRows = options.levelRows;
+  this.levelCols = options.levelCols;
+  this.levels = options.levels;
+  this.playerClass = options.playerClass;
+  this.bgTileset = options.bgTileset;
+  this.charTileset = options.charTileset;
+  this.tileSize = options.tileSize;
+};
+
+//general drawing function for all tiles
+
+Renderer.prototype.drawTile = function(sprite, singleTileSpec, x, y) {
+	this.context.drawImage(
+		sprite,
+		singleTileSpec.x, singleTileSpec.y, this.tileSize, this.tileSize,
+		Math.floor(x * this.tileSize), Math.floor(y * this.tileSize), this.tileSize, this.tileSize
+	);
+};
+
+Renderer.prototype.render = function() {
+  // clear the canvas
+  this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  for (var i = 0; i<this.levelRows; i++){
+    for(var j = 0; j<this.levelCols; j++){
+      if(this.levels.map[i][j] !== 0 && this.levels.map[i][j] < 10) {
+        this.drawTile(this.bgTileset.sprite, this.bgTileset.tileSpec[this.levels.map[i][j]], j, i);
+      }
+      else if (this.levels.map[i][j] === 10) {
+        this.context.fillStyle = "#000000";
+        this.context.fillRect(j * this.tileSize, i * this.tileSize, this.tileSize, this.tileSize);
+      }
+    }
+  }
+  // this.playerClass.draw();
+  this.playerClass.playerProjectiles.forEach(function(projectile) {
+    projectile.draw();
+  });
+  //renders gerald
+  this.drawTile(this.charTileset.sprite, this.charTileset.tileSpec[1], this.playerClass.x/this.playerClass.width, this.playerClass.y/this.playerClass.height);
+};
+
+exports.Renderer = Renderer;
+
+},{}],5:[function(require,module,exports){
 var levels =  {
     one : { // 35 x 19
         num: 1,
@@ -476,64 +436,136 @@ Templates =======================
 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 */
-},{}],4:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
+var makeProjectile = require('./projectile').makeProjectile;
+
+var Player = function(options) {
+  this.color = '#00ff00';
+  this.playerProjectiles = [];
+  this.keyPresses = options.keyPresses;
+  this.movementSpeed = options.movementSpeed;
+  this.x = options.playerXPos;
+  this.y = options.playerYPos;
+  this.width = options.tileSize;
+  this.height = options.tileSize;
+  this.xSpeed = 0;
+  this.ySpeed = 0;
+  this.facing = 'up';
+};
+
+Player.prototype.update = function() {
+  this.xSpeed = 0;
+  this.ySpeed = 0;
+
+  //shoot projectile if space pressed
+  if (this.keyPresses.spacePressed) {
+    this.shoot();
+  }
+
+  //updates speed according to pressed key
+  if (this.keyPresses.rightPressed) {
+    this.xSpeed = this.movementSpeed;
+    this.facing = 'right';
+  }
+  else {
+    if (this.keyPresses.leftPressed) {
+      this.xSpeed = -(this.movementSpeed);
+      this.facing = 'left';
+    }
+    else {
+      if (this.keyPresses.upPressed) {
+        this.ySpeed = -(this.movementSpeed);
+        this.facing = 'up';
+      }
+      else {
+        if (this.keyPresses.downPressed) {
+          this.ySpeed = this.movementSpeed;
+          this.facing = 'down';
+        }
+      }
+    }
+  }
+  this.x += this.xSpeed;
+  this.y += this.ySpeed;
+};
+
+Player.prototype.shoot = function() {
+  var projectilePosition = this.midpoint();
+
+  var projectile = makeProjectile({
+    speed: 5,
+    x: projectilePosition.x,
+    y: projectilePosition.y,
+    facing: this.facing
+  }, canvas);
+  this.playerProjectiles.push(projectile);
+};
+
+Player.prototype.midpoint = function() {
+  return {
+    x: this.x + this.width/2,
+    y: this.y + this.height/2
+  };
+};
+
+exports.Player = Player;
+
+},{"./projectile":7}],7:[function(require,module,exports){
 // sets projectile direction, draws projectile, updates projectile, contains projectile
 
-	function makeProjectile(I, canvas) {
+function makeProjectile(I, canvas) {
 
-	  I.active = true;
+  I.active = true;
+	I.width = 3;
+  I.height = 3;
+  I.color = "#8A2BE2";
 
+	// adjusts x and y velocity to change projectile direction per facing direction
+	switch (I.facing) {
+		case 'up':
+			I.xVelocity = 0;
+			I.yVelocity = -I.speed;
+			break;
+		case 'right':
+			I.xVelocity = I.speed;
+			I.yVelocity = 0;
+			break;
+		case 'down':
+			I.xVelocity = 0;
+			I.yVelocity = I.speed;
+			break;
+		case 'left':
+			I.xVelocity = -I.speed;
+			I.yVelocity = 0;
+			break;
+		default:
+			console.log('projectile aiming broke');
+	}
 
-		I.width = 3;
-	  I.height = 3;
-	  I.color = "#8A2BE2";
+  I.inBounds = function() {
+    return I.x >= 0 && I.x <= canvas.width &&
+      I.y >= 0 && I.y <= canvas.height;
+  };
 
-		// adjusts x and y velocity to change projectile direction per facing direction
-		switch (I.facing) {
-			case 'up':
-				I.xVelocity = 0;
-				I.yVelocity = -I.speed;
-				break;
-			case 'right':
-				I.xVelocity = I.speed;
-				I.yVelocity = 0;
-				break;
-			case 'down':
-				I.xVelocity = 0;
-				I.yVelocity = I.speed;
-				break;
-			case 'left':
-				I.xVelocity = -I.speed;
-				I.yVelocity = 0;
-				break;
-			default:
-				console.log('projectile aiming broke');
-		}
+  I.draw = function() {
+		var context = canvas.getContext("2d");
+    context.fillStyle = this.color;
+    context.fillRect(this.x, this.y, this.width, this.height);
+  };
 
-	  I.inBounds = function() {
-	    return I.x >= 0 && I.x <= canvas.width &&
-	      I.y >= 0 && I.y <= canvas.height;
-	  };
+  I.update = function() {
+    I.x += I.xVelocity;
+    I.y += I.yVelocity;
 
-	  I.draw = function() {
-			var context = canvas.getContext("2d");
-	    context.fillStyle = this.color;
-	    context.fillRect(this.x, this.y, this.width, this.height);
-	  };
+    I.active = I.active && I.inBounds();
+  };
 
-	  I.update = function() {
-	    I.x += I.xVelocity;
-	    I.y += I.yVelocity;
-
-	    I.active = I.active && I.inBounds();
-	  };
-
-	  return I;
-	};
+  return I;
+};
 
 exports.makeProjectile = makeProjectile;
 
-},{}],5:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 var Tileset = function(options){
 	this.onspriteload = options.onspriteload || function(){};
 	this.onReadyCb = options.onReady || function(){};
