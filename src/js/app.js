@@ -1,5 +1,3 @@
-var tileset = require('./tileset');
-
 (function(){
 
 	var canvas = document.getElementById("canvas");   // the canvas where game will be drawn
@@ -9,6 +7,9 @@ var tileset = require('./tileset');
 	var levelManager = require('./levelManager');
 	var levels = levelManager.LevelChoice(1);
 
+	var tileset = require('./tileset');
+	var player = require('./player');
+
 	var collisionManager = require('./collisionManager');
 
 	var levelCols = levels.map[0].length;				// level width, in tiles
@@ -16,11 +17,14 @@ var tileset = require('./tileset');
 	var tileSize = 32;												  // tile size, in pixels
 	var playerCol = levels.playerCol;          // player starting column
 	var playerRow = levels.playerRow;          // player starting row
-	var leftPressed = false;                   // are we pressing LEFT arrow key?
-	var rightPressed = false;                  // are we pressing RIGHT arrow key?
-	var upPressed = false;                     // are we pressing UP arrow key?
-	var downPressed = false;                  // are we pressing DOWN arrow key?
-	var spacePressed = false;                  // are we pressing space key?
+	var keyPresses = {
+		leftPressed: false,                   // are we pressing LEFT arrow key?
+		rightPressed: false,                  // are we pressing RIGHT arrow key?
+		upPressed: false,                    // are we pressing UP arrow key?
+		downPressed: false,                  // are we pressing DOWN arrow key?
+		spacePressed: false,                  // are we pressing space key?
+	};
+
 	var movementSpeed = 5;                    // the speed we are going to move, in pixels per frame
 
 	var playerYPos = playerRow * tileSize;		// converting Y player position from tiles to pixels
@@ -37,19 +41,19 @@ var tileset = require('./tileset');
 		// console.log(e.keyCode);
 		switch(e.keyCode){
 			case 65:
-				leftPressed=true;
+				keyPresses.leftPressed = true;
 				break;
 			case 87:
-				upPressed=true;
+				keyPresses.upPressed = true;
 				break;
 			case 68:
-				rightPressed=true;
+				keyPresses.rightPressed = true;
 				break;
 			case 83:
-				downPressed=true;
+				keyPresses.downPressed = true;
 				break;
 			case 32:
-				spacePressed=true;
+				keyPresses.spacePressed = true;
 				break;
 		}
 	}, false);
@@ -57,96 +61,33 @@ var tileset = require('./tileset');
 	document.addEventListener("keyup", function(e) {
 		switch(e.keyCode){
 			case 65:
-				leftPressed = false;
+				keyPresses.leftPressed = false;
 				break;
 			case 87:
-				upPressed = false;
+				keyPresses.upPressed = false;
 				break;
 			case 68:
-				rightPressed = false;
+				keyPresses.rightPressed = false;
 				break;
 			case 83:
-				downPressed = false;
+				keyPresses.downPressed = false;
 				break;
 			case 32:
-				spacePressed = false;
+				keyPresses.spacePressed = false;
 		}
 	}, false);
 
-var playerProjectiles = [];
+	//creates gerald and makes him shoot stuff
 
-var playerClass = {
-	color: '#00ff00',
-	x: playerXPos,
-	y: playerYPos,
-	width: tileSize,
-	height: tileSize,
-	xSpeed: 0,					// player horizontal speed, in pixels per frame
-	ySpeed: 0,					// player vertical speed, in pixels per frame
-	facing: 'up',
-	//draw: function() {
+	var playerOptions = {
+		keyPresses: keyPresses,
+		movementSpeed: movementSpeed,
+		playerXPos: playerXPos,
+		playerYPos: playerYPos,
+		tileSize: tileSize
+	};
 
-		// drawTile(charTileset.sprite, charTileset.tileSpec[1], this.x/this.width, this.y/this.height);
-
-		// context.fillStyle = this.color;
-		// context.fillRect(this.x, this.y, this.width, this.height);
-	//},
-	update: function() {
-		// no friction or inertia at the moment, so at every frame initial speed is set to zero
-		this.xSpeed = 0;
-		this.ySpeed = 0;
-
-		// shoot projectile if space pressed
-		if (spacePressed){
-			this.shoot();
-		}
-
-		// updating speed according to key pressed
-		if (rightPressed){
-			this.xSpeed = movementSpeed;
-			this.facing = 'right';
-		}
-		else {
-			if (leftPressed) {
-				this.xSpeed = -movementSpeed;
-				this.facing = 'left';
-			}
-			else {
-				if(upPressed) {
-					this.ySpeed = -movementSpeed;
-					this.facing = 'up';
-				}
-				else {
-					if (downPressed) {
-						this.ySpeed = movementSpeed;
-						this.facing = 'down';
-					}
-				}
-			}
-		}
-
-		// updating player position
-		this.x += this.xSpeed;
-		this.y += this.ySpeed;
-
-	},
-	shoot: function() {
-		var projectilePosition = this.midpoint();
-
-		playerProjectiles.push(makeProjectile({
-			speed: 5,
-			x: projectilePosition.x,
-			y: projectilePosition.y,
-				facing: this.facing
-		}, canvas));
-	},
-	midpoint: function() {
-		return {
-			x: this.x + this.width/2,
-			y: this.y + this.height/2
-		};
-	}
-};
+	var playerClass = new player.Player(playerOptions);
 
 	// this function will do its best to make stuff work at 60FPS - please notice I said "will do its best"
 	window.requestAnimFrame = (function(callback) {
@@ -166,7 +107,6 @@ var playerClass = {
 				levelCols: levelCols,
 				levels: levels,
 				playerClass: playerClass,
-				playerProjectiles: playerProjectiles,
 				bgTileset: bgTileset,
 				charTileset: charTileset,
 				tileSize: tileSize
@@ -197,10 +137,10 @@ var playerClass = {
 
 		// check for projectiles
 
-		playerProjectiles.forEach(function(projectile) {
+		playerClass.playerProjectiles.forEach(function(projectile) {
 			projectile.update();
 		});
-		playerProjectiles = playerProjectiles.filter(function(projectile) {
+		playerClass.playerProjectiles = playerClass.playerProjectiles.filter(function(projectile) {
 			return projectile.active;
 		});
 

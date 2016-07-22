@@ -9,6 +9,7 @@ var gulp = require('gulp'),
     source = require('vinyl-source-stream'),
     buffer = require('vinyl-buffer'),
     gls = require('gulp-live-server');
+    jshint = require('gulp-jshint');
 
 
 // Compile Sass task
@@ -16,6 +17,13 @@ gulp.task('sass', function() {
   return gulp.src('src/scss/main.scss')
     .pipe(sass())
     .pipe(gulp.dest('build/css'));
+});
+
+// JavaScript linting task
+gulp.task('jshint', function() {
+  return gulp.src('site/js/*.js')
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'));
 });
 
 // Minify index
@@ -81,7 +89,7 @@ gulp.task('serve', function() {
 
 
 // Default task
-gulp.task('dev', ['html', 'scripts', 'sass', 'fonts', 'watch', 'serve', 'images', 'spec']);
+gulp.task('dev', ['html', 'scripts', 'sass', 'fonts', 'watch', 'serve', 'images', 'spec', 'jshint']);
 
 // Build task
-gulp.task('build', ['sass', 'html', 'scripts', 'styles', 'images', 'spec']);
+gulp.task('build', ['sass', 'html', 'scripts', 'styles', 'images', 'spec', 'jshint']);
