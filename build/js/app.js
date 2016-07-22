@@ -27,14 +27,14 @@ var tileset = require('./tileset');
 	var playerYPos = playerRow * tileSize;		// converting Y player position from tiles to pixels
 	var playerXPos = playerCol * tileSize;   // converting X player position from tiles to pixels
 
-	canvas.width=tileSize*levelCols;   // canvas width. Won't work without it even if you style it from CSS
-	canvas.height=tileSize*levelRows;  // canvas height. Same as before
+	canvas.width = tileSize * levelCols;   // canvas width. Won't work without it even if you style it from CSS
+	canvas.height = tileSize * levelRows;  // canvas height. Same as before
 
 	var makeProjectile = require('./projectile').makeProjectile;
 
 	// simple WASD listeners
 
-	document.addEventListener("keydown", function(e){
+	document.addEventListener("keydown", function(e) {
 		// console.log(e.keyCode);
 		switch(e.keyCode){
 			case 65:
@@ -55,32 +55,24 @@ var tileset = require('./tileset');
 		}
 	}, false);
 
-	document.addEventListener("keyup", function(e){
+	document.addEventListener("keyup", function(e) {
 		switch(e.keyCode){
 			case 65:
-				leftPressed=false;
+				leftPressed = false;
 				break;
 			case 87:
-				upPressed=false;
+				upPressed = false;
 				break;
 			case 68:
-				rightPressed=false;
+				rightPressed = false;
 				break;
 			case 83:
-				downPressed=false;
+				downPressed = false;
 				break;
 			case 32:
-				spacePressed=false;
+				spacePressed = false;
 		}
 	}, false);
-
-// function drawTile(sprite, singleTileSpec, x, y) {
-// 	context.drawImage(
-// 		sprite,
-// 		singleTileSpec.x, singleTileSpec.y, tileSize, tileSize,
-// 		Math.floor(x * tileSize), Math.floor(y * tileSize), tileSize, tileSize
-// 	);
-// };
 
 var playerProjectiles = [];
 
@@ -93,17 +85,17 @@ var playerClass = {
 	xSpeed: 0,					// player horizontal speed, in pixels per frame
 	ySpeed: 0,					// player vertical speed, in pixels per frame
 	facing: 'up',
-	// draw: function() {
-	//
-	// 	drawTile(charTileset.sprite, charTileset.tileSpec[1], this.x/this.width, this.y/this.height);
-	//
-	// 	// context.fillStyle = this.color;
-	// 	// context.fillRect(this.x, this.y, this.width, this.height);
-	// },
+	//draw: function() {
+
+		// drawTile(charTileset.sprite, charTileset.tileSpec[1], this.x/this.width, this.y/this.height);
+
+		// context.fillStyle = this.color;
+		// context.fillRect(this.x, this.y, this.width, this.height);
+	//},
 	update: function() {
 		// no friction or inertia at the moment, so at every frame initial speed is set to zero
-		this.xSpeed=0;
-		this.ySpeed=0;
+		this.xSpeed = 0;
+		this.ySpeed = 0;
 
 		// shoot projectile if space pressed
 		if (spacePressed){
@@ -112,22 +104,22 @@ var playerClass = {
 
 		// updating speed according to key pressed
 		if (rightPressed){
-			this.xSpeed=movementSpeed;
+			this.xSpeed = movementSpeed;
 			this.facing = 'right';
 		}
 		else {
 			if (leftPressed) {
-				this.xSpeed=-movementSpeed;
+				this.xSpeed = -movementSpeed;
 				this.facing = 'left';
 			}
 			else {
-				if(upPressed){
-					this.ySpeed=-movementSpeed;
+				if(upPressed) {
+					this.ySpeed = -movementSpeed;
 					this.facing = 'up';
 				}
 				else {
 					if (downPressed) {
-						this.ySpeed=movementSpeed;
+						this.ySpeed = movementSpeed;
 						this.facing = 'down';
 					}
 				}
@@ -135,8 +127,8 @@ var playerClass = {
 		}
 
 		// updating player position
-		this.x +=this.xSpeed;
-		this.y +=this.ySpeed;
+		this.x += this.xSpeed;
+		this.y += this.ySpeed;
 
 	},
 	shoot: function() {
@@ -156,31 +148,6 @@ var playerClass = {
 		};
 	}
 };
-
-
-	// function to display the level
-
-	// function renderLevel(){
-	// 	// clear the canvas
-	// 	context.clearRect(0, 0, canvas.width, canvas.height);
-	// 	// walls = red boxes
-	// 	for(i=0;i<levelRows;i++){
-	// 		for(j=0;j<levelCols;j++){
-	// 			if(levels.map[i][j] !== 0 && levels.map[i][j] < 10){
-	// 				drawTile(bgTileset.sprite, bgTileset.tileSpec[levels.map[i][j]], j, i);
-	// 			}
-	// 			else if (levels.map[i][j] === 10) {
-	// 				context.fillStyle = "#000000";
-	// 				context.fillRect(j*tileSize,i*tileSize,tileSize,tileSize);
-	// 			}
-	// 		}
-	// 	}
-	// 	playerClass.draw();
-	// 	playerProjectiles.forEach(function(projectile) {
-	// 		projectile.draw();
-	// 	});
-	// }
-
 
 	// this function will do its best to make stuff work at 60FPS - please notice I said "will do its best"
 	window.requestAnimFrame = (function(callback) {
@@ -231,25 +198,26 @@ var playerClass = {
 
 		// check for projectiles
 
-		// playerProjectiles.forEach(function(projectile) {
-		// 	projectile.update();
-		// });
-		// playerProjectiles = playerProjectiles.filter(function(projectile) {
-		// 	return projectile.active;
-		// });
+		playerProjectiles.forEach(function(projectile) {
+			projectile.update();
+		});
+		playerProjectiles = playerProjectiles.filter(function(projectile) {
+			return projectile.active;
+		});
 
 		// checks for collisions and positions player accordingly
-		// var collisionParams = {
-		// 	playerClass: playerClass,
-		// 	tileSize: tileSize,
-		// 	levels: levels
-		// };
+		var collisionParams = {
+			playerClass: playerClass,
+			tileSize: tileSize,
+			levels: levels
+		};
 
-		// var exit = collisionManager.collisionDetection(collisionParams);
+		var exit = collisionManager.collisionDetection(collisionParams);
 
-		// if (exit) {
-		// 	levels = levelManager.LevelChoice(levels.num += 1);
-		// }
+		if (exit) {
+			levels = levelManager.LevelChoice(levels.num += 1);
+			renderer.levels = levels;
+		}
 		// rendering
 		renderer.render();
 
@@ -259,10 +227,6 @@ var playerClass = {
 			updateGame();
 		});
 	}
-
-
-	//updateGame();
-
 })();
 
 },{"./collisionManager":2,"./levelManager":3,"./levelRenderer":4,"./projectile":6,"./tileset":7}],2:[function(require,module,exports){
@@ -357,11 +321,9 @@ var Renderer = function(options) {
   this.bgTileset = options.bgTileset;
   this.charTileset = options.charTileset;
   this.tileSize = options.tileSize;
-  console.log('THIS', this);
 };
 
 Renderer.prototype.drawTile = function(sprite, singleTileSpec, x, y) {
-  // console.log('i am drawing shit', sprite);
 	this.context.drawImage(
 		sprite,
 		singleTileSpec.x, singleTileSpec.y, this.tileSize, this.tileSize,
@@ -384,8 +346,8 @@ Renderer.prototype.render = function() {
             }
         }
     }
-    // playerClass.draw();
-    // playerProjectiles.forEach(function(projectile) {
+    // this.playerClass.draw();
+    // this.playerProjectiles.forEach(function(projectile) {
     //     projectile.draw();
     // });
     this.drawTile(this.charTileset.sprite, this.charTileset.tileSpec[1], this.playerClass.x/this.playerClass.width, this.playerClass.y/this.playerClass.height);

@@ -11,11 +11,9 @@ var Renderer = function(options) {
   this.bgTileset = options.bgTileset;
   this.charTileset = options.charTileset;
   this.tileSize = options.tileSize;
-  console.log('THIS', this);
 };
 
 Renderer.prototype.drawTile = function(sprite, singleTileSpec, x, y) {
-  // console.log('i am drawing shit', sprite);
 	this.context.drawImage(
 		sprite,
 		singleTileSpec.x, singleTileSpec.y, this.tileSize, this.tileSize,
@@ -38,8 +36,8 @@ Renderer.prototype.render = function() {
             }
         }
     }
-    // playerClass.draw();
-    // playerProjectiles.forEach(function(projectile) {
+    // this.playerClass.draw();
+    // this.playerProjectiles.forEach(function(projectile) {
     //     projectile.draw();
     // });
     this.drawTile(this.charTileset.sprite, this.charTileset.tileSpec[1], this.playerClass.x/this.playerClass.width, this.playerClass.y/this.playerClass.height);
