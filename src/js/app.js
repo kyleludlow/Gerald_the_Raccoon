@@ -167,12 +167,7 @@
 			levels: levels
 		};
 
-		var projectileParams = {
-			projectile: playerClass.playerProjectiles,
-			tileSize: tileSize,
-			levels: levels
-		};
-
+		// checks for projectile wall collisions
 		playerClass.playerProjectiles.forEach(function(projectile) {
 			projectileCollision.projectileCollision({projectile: projectile, tileSize: tileSize, levels: levels});
 		});

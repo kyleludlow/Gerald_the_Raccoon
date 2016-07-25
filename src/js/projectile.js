@@ -3,8 +3,8 @@
 function makeProjectile(I, canvas) {
 
   I.active = true;
-	I.width = 5;
-  I.height = 5;
+	I.width = 3;
+  I.height = 3;
   I.color = "#8A2BE2";
 
 	// adjusts x and y velocity to change projectile direction per facing direction
