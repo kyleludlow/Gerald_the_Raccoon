@@ -154,7 +154,8 @@
 		var exit = collisionManager.collisionDetection(collisionParams);
 
 		if (exit) {
-			levels = levelManager.LevelChoice(levels.num += 1);
+			console.log(levels.num);
+			levels = levelManager.LevelChoice(levels.num + 1);
 			renderer.levels = levels;
 		}
 		// rendering
