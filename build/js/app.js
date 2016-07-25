@@ -93,8 +93,10 @@
 
 	//mob stuff
 	var mobOptions = {
-		movementSpeed: movementSpeed,
-		position: {x:20, y:10},
+		position: {
+			x: 30,
+			y: 50
+		},
 		playerXPos: playerXPos,
 		playerYPos: playerYPos,
 		tileSize: tileSize,
@@ -124,6 +126,7 @@
 				mobClass: mobClass,
 				bgTileset: bgTileset,
 				charTileset: charTileset,
+				farmerTileset: farmerTileset,
 				stairTileset: stairTileset,
 				tileSize: tileSize
 			};
@@ -132,7 +135,7 @@
 		}
 	}
 
-	var tilesets = 3;
+	var tilesets = 4;
 
 	bgTileset = new tileset.Tileset({
 			spritePath: '../img/walls.png',
@@ -146,6 +149,12 @@
 			onReady: loadCheck
 	});
 
+	farmerTileset = new tileset.Tileset({
+			spritePath: '../img/farmer.png',
+			specPath: '../spec/farmer.json',
+			onReady: loadCheck
+	});
+
 	stairTileset = new tileset.Tileset({
 			spritePath: '../img/stairs.png',
 			specPath: '../spec/sprite.json',
@@ -156,6 +165,9 @@
 	function updateGame() {
 		// updates player position
 		playerClass.update();
+
+		//updates mob position
+		mobClass.update();
 
 		// check for projectiles
 
@@ -281,6 +293,7 @@ var Renderer = function(options) {
   this.bgTileset = options.bgTileset;
   this.charTileset = options.charTileset;
   this.stairTileset = options.stairTileset;
+  this.farmerTileset = options.farmerTileset;
   this.tileSize = options.tileSize;
 };
 
@@ -314,9 +327,9 @@ Renderer.prototype.render = function() {
   //renders gerald
 
   this.drawTile(this.charTileset.sprite, this.charTileset.tileSpec[1], this.playerClass.x/this.playerClass.width, this.playerClass.y/this.playerClass.height);
-  
+
   //renders mob
-  this.drawTile(this.charTileset.sprite, this.charTileset.tileSpec[1], this.mobClass.x/this.mobClass.width, this.mobClass.y/this.mobClass.height);
+  this.drawTile(this.farmerTileset.sprite, this.farmerTileset.tileSpec[1], this.mobClass.position.x/this.mobClass.width, this.mobClass.position.y/this.mobClass.height);
 };
 
 exports.Renderer = Renderer;
@@ -465,24 +478,21 @@ Templates =======================
 */
 },{}],6:[function(require,module,exports){
 var Mob = function(options) {
-  this.color = '#ffffff';
   this.targetAgent = options.targetAgent;
-  this.x = options.playerXPos;
-  this.y = options.playerYPos;
   this.width = options.tileSize;
   this.height = options.tileSize;
   this.position = options.position;
 };
 
 Mob.prototype.update = function() {
-  var dx = this.targetAgent.position.x - this.position.x,
-      dy = this.targetAgent.position.y - this.position.y,
+  var dx = this.targetAgent.x - this.position.x,
+      dy = this.targetAgent.y - this.position.y,
       moveX = dx * 0.03,
       moveY = dy * 0.03,
       absX = Math.abs(moveX),
-      abxY = Math.abs(moveY);
+      absY = Math.abs(moveY);
   moveX = absX/moveX * Math.max(absX, 0.05);
-  moveY = abxY/moveY * Math.max(absY, 0.05);
+  moveY = absY/moveY * Math.max(absY, 0.05);
   return {
     x: moveX,
     y: moveY

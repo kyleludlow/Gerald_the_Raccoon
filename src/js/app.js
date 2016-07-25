@@ -92,8 +92,10 @@
 
 	//mob stuff
 	var mobOptions = {
-		movementSpeed: movementSpeed,
-		position: {x:20, y:10},
+		position: {
+			x: 30,
+			y: 50
+		},
 		playerXPos: playerXPos,
 		playerYPos: playerYPos,
 		tileSize: tileSize,
@@ -123,6 +125,7 @@
 				mobClass: mobClass,
 				bgTileset: bgTileset,
 				charTileset: charTileset,
+				farmerTileset: farmerTileset,
 				stairTileset: stairTileset,
 				tileSize: tileSize
 			};
@@ -131,7 +134,7 @@
 		}
 	}
 
-	var tilesets = 3;
+	var tilesets = 4;
 
 	bgTileset = new tileset.Tileset({
 			spritePath: '../img/walls.png',
@@ -145,6 +148,12 @@
 			onReady: loadCheck
 	});
 
+	farmerTileset = new tileset.Tileset({
+			spritePath: '../img/farmer.png',
+			specPath: '../spec/farmer.json',
+			onReady: loadCheck
+	});
+
 	stairTileset = new tileset.Tileset({
 			spritePath: '../img/stairs.png',
 			specPath: '../spec/sprite.json',
@@ -155,6 +164,9 @@
 	function updateGame() {
 		// updates player position
 		playerClass.update();
+
+		//updates mob position
+		mobClass.update();
 
 		// check for projectiles
 

@@ -9,6 +9,7 @@ var Renderer = function(options) {
   this.bgTileset = options.bgTileset;
   this.charTileset = options.charTileset;
   this.stairTileset = options.stairTileset;
+  this.farmerTileset = options.farmerTileset;
   this.tileSize = options.tileSize;
 };
 
@@ -42,9 +43,9 @@ Renderer.prototype.render = function() {
   //renders gerald
 
   this.drawTile(this.charTileset.sprite, this.charTileset.tileSpec[1], this.playerClass.x/this.playerClass.width, this.playerClass.y/this.playerClass.height);
-  
+
   //renders mob
-  this.drawTile(this.charTileset.sprite, this.charTileset.tileSpec[1], this.mobClass.x/this.mobClass.width, this.mobClass.y/this.mobClass.height);
+  this.drawTile(this.farmerTileset.sprite, this.farmerTileset.tileSpec[1], this.mobClass.position.x/this.mobClass.width, this.mobClass.position.y/this.mobClass.height);
 };
 
 exports.Renderer = Renderer;
