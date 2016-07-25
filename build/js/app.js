@@ -1,6 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function(){
-
+	var utils = require('./utils');
+	utils.startUp();
 	var canvas = document.getElementById("canvas");   // the canvas where game will be drawn
 	var context = canvas.getContext("2d");            // canvas context
 	var levelRenderer = require('./levelRenderer');
@@ -89,7 +90,7 @@
 	};
 
 	var playerClass = new player.Player(playerOptions);
-
+	utils.textWobbler(`Score: ${playerClass.score}`, '.score');
 	// this function will do its best to make stuff work at 60FPS - please notice I said "will do its best"
 	window.requestAnimFrame = (function(callback) {
 		return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
@@ -149,8 +150,8 @@
 	function updateGame() {
 		// updates player position
 		playerClass.update();
-		document.querySelector('.score').textContent = `Score: ${playerClass.score}`
 		// check for projectiles
+		
 
 		playerClass.playerProjectiles.forEach(function(projectile) {
 			projectile.update();
@@ -184,7 +185,9 @@
 	}
 })();
 
-},{"./collisionManager":2,"./levelManager":3,"./levelRenderer":4,"./player":6,"./projectile":7,"./tileset":8}],2:[function(require,module,exports){
+},{"./collisionManager":2,"./levelManager":3,"./levelRenderer":4,"./player":6,"./projectile":7,"./tileset":8,"./utils":9}],2:[function(require,module,exports){
+var utils = require('./utils');
+
 function collisionDetection({playerClass, tileSize, levels}) {
 
 	var baseCol = Math.floor(playerClass.x/tileSize);
@@ -201,8 +204,9 @@ function collisionDetection({playerClass, tileSize, levels}) {
             }
             else if (levels.map[baseRow][baseCol + 1] === 11) {
                 playerClass.score += 1;
+                utils.textWobbler(`Score: ${playerClass.score}`, '.score');
                 levels.map[baseRow][baseCol + 1] = 0;
-                console.log(playerClass.score);
+                // console.log(playerClass.score);
             }
             playerClass.x=baseCol*tileSize;
         }
@@ -216,7 +220,8 @@ function collisionDetection({playerClass, tileSize, levels}) {
             }
             else if (levels.map[baseRow + 1][baseCol] === 11) {
                 playerClass.score += 1;
-                console.log(playerClass.score);
+                utils.textWobbler(`Score: ${playerClass.score}`, '.score');
+                // console.log(playerClass.score);
                 levels.map[baseRow + 1][baseCol] = 0;
             }
             playerClass.x=(baseCol+1)*tileSize;
@@ -232,7 +237,8 @@ function collisionDetection({playerClass, tileSize, levels}) {
             }
             else if (levels.map[baseRow + 1][baseCol] === 11) {
                 playerClass.score += 1;
-                console.log(playerClass.score);
+                utils.textWobbler(`Score: ${playerClass.score}`, '.score');
+                // console.log(playerClass.score);
                 levels.map[baseRow + 1][baseCol] = 0;
             }
             playerClass.y = baseRow*tileSize;
@@ -246,7 +252,8 @@ function collisionDetection({playerClass, tileSize, levels}) {
 			}
             else if (levels.map[baseRow][baseCol] === 11) {
                 playerClass.score += 1;
-                console.log(playerClass.score);
+                utils.textWobbler(`Score: ${playerClass.score}`, '.score');
+                // console.log(playerClass.score);
                 levels.map[baseRow][baseCol] = 0;
             }
 			playerClass.y = (baseRow+1)*tileSize;
@@ -255,7 +262,7 @@ function collisionDetection({playerClass, tileSize, levels}) {
 };
 
 exports.collisionDetection = collisionDetection;
-},{}],3:[function(require,module,exports){
+},{"./utils":9}],3:[function(require,module,exports){
 var maps = require('./maps');
 
 var LevelChoice = function(choice) {
@@ -675,4 +682,33 @@ Tileset.prototype.getTileSpec = function(){
 
 	exports.Tileset = Tileset;
 
+},{}],9:[function(require,module,exports){
+var startUp = function() {
+  $('.play').on('click', function() {
+    $('.intro-screen').fadeOut(500);
+  })
+  
+  textWobbler('Gerald The Raccoon', '.intro-wrapper h1');
+};
+
+function textWobbler(text, el) {
+  var el = document.querySelector(el);
+  var output = document.createElement('span');
+  for (var i = 0; i < text.length; i++) {
+    var span = document.createElement('span');
+    var letter = document.createTextNode(text[i]);
+    span.classList = 'wobble';
+    span.appendChild(letter);
+    if (span.textContent === " ") {
+      span.style.padding = "0.3em";
+    }
+    span.style.animationDuration = (Math.random() * (1.5 - 0.5 + 1) + 0.5) + 's';
+    output.appendChild(span);
+  }
+  el.textContent = '';
+  el.appendChild(output);
+}
+
+exports.startUp = startUp;
+exports.textWobbler = textWobbler;
 },{}]},{},[1]);

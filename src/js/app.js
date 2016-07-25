@@ -1,5 +1,6 @@
 (function(){
-
+	var utils = require('./utils');
+	utils.startUp();
 	var canvas = document.getElementById("canvas");   // the canvas where game will be drawn
 	var context = canvas.getContext("2d");            // canvas context
 	var levelRenderer = require('./levelRenderer');
@@ -88,7 +89,7 @@
 	};
 
 	var playerClass = new player.Player(playerOptions);
-
+	utils.textWobbler(`Score: ${playerClass.score}`, '.score');
 	// this function will do its best to make stuff work at 60FPS - please notice I said "will do its best"
 	window.requestAnimFrame = (function(callback) {
 		return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
@@ -148,8 +149,8 @@
 	function updateGame() {
 		// updates player position
 		playerClass.update();
-		document.querySelector('.score').textContent = `Score: ${playerClass.score}`
 		// check for projectiles
+		
 
 		playerClass.playerProjectiles.forEach(function(projectile) {
 			projectile.update();
