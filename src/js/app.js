@@ -9,6 +9,7 @@
 
 	var tileset = require('./tileset');
 	var player = require('./player');
+	var mob = require('./mob');
 
 	var collisionManager = require('./collisionManager');
 
@@ -89,6 +90,18 @@
 
 	var playerClass = new player.Player(playerOptions);
 
+	//mob stuff
+	var mobOptions = {
+		movementSpeed: movementSpeed,
+		position: {x:20, y:10},
+		playerXPos: playerXPos,
+		playerYPos: playerYPos,
+		tileSize: tileSize,
+		targetAgent: playerClass
+	};
+
+	var mobClass = new mob.Mob(mobOptions);
+
 	// this function will do its best to make stuff work at 60FPS - please notice I said "will do its best"
 	window.requestAnimFrame = (function(callback) {
 		return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
@@ -107,6 +120,7 @@
 				levelCols: levelCols,
 				levels: levels,
 				playerClass: playerClass,
+				mobClass: mobClass,
 				bgTileset: bgTileset,
 				charTileset: charTileset,
 				stairTileset: stairTileset,

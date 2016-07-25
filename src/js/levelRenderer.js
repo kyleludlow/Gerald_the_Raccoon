@@ -5,6 +5,7 @@ var Renderer = function(options) {
   this.levelCols = options.levelCols;
   this.levels = options.levels;
   this.playerClass = options.playerClass;
+  this.mobClass = options.mobClass;
   this.bgTileset = options.bgTileset;
   this.charTileset = options.charTileset;
   this.stairTileset = options.stairTileset;
@@ -39,7 +40,11 @@ Renderer.prototype.render = function() {
     projectile.draw();
   });
   //renders gerald
+
   this.drawTile(this.charTileset.sprite, this.charTileset.tileSpec[1], this.playerClass.x/this.playerClass.width, this.playerClass.y/this.playerClass.height);
+  
+  //renders mob
+  this.drawTile(this.charTileset.sprite, this.charTileset.tileSpec[1], this.mobClass.x/this.mobClass.width, this.mobClass.y/this.mobClass.height);
 };
 
 exports.Renderer = Renderer;

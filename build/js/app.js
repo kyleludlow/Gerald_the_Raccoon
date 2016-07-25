@@ -10,6 +10,7 @@
 
 	var tileset = require('./tileset');
 	var player = require('./player');
+	var mob = require('./mob');
 
 	var collisionManager = require('./collisionManager');
 
@@ -90,6 +91,18 @@
 
 	var playerClass = new player.Player(playerOptions);
 
+	//mob stuff
+	var mobOptions = {
+		movementSpeed: movementSpeed,
+		position: {x:20, y:10},
+		playerXPos: playerXPos,
+		playerYPos: playerYPos,
+		tileSize: tileSize,
+		targetAgent: playerClass
+	};
+
+	var mobClass = new mob.Mob(mobOptions);
+
 	// this function will do its best to make stuff work at 60FPS - please notice I said "will do its best"
 	window.requestAnimFrame = (function(callback) {
 		return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
@@ -108,6 +121,7 @@
 				levelCols: levelCols,
 				levels: levels,
 				playerClass: playerClass,
+				mobClass: mobClass,
 				bgTileset: bgTileset,
 				charTileset: charTileset,
 				stairTileset: stairTileset,
@@ -177,7 +191,7 @@
 	}
 })();
 
-},{"./collisionManager":2,"./levelManager":3,"./levelRenderer":4,"./player":6,"./projectile":7,"./tileset":8}],2:[function(require,module,exports){
+},{"./collisionManager":2,"./levelManager":3,"./levelRenderer":4,"./mob":6,"./player":7,"./projectile":8,"./tileset":9}],2:[function(require,module,exports){
 function collisionDetection({playerClass, tileSize, levels}) {
 
 	var baseCol = Math.floor(playerClass.x/tileSize);
@@ -263,6 +277,7 @@ var Renderer = function(options) {
   this.levelCols = options.levelCols;
   this.levels = options.levels;
   this.playerClass = options.playerClass;
+  this.mobClass = options.mobClass;
   this.bgTileset = options.bgTileset;
   this.charTileset = options.charTileset;
   this.stairTileset = options.stairTileset;
@@ -297,7 +312,11 @@ Renderer.prototype.render = function() {
     projectile.draw();
   });
   //renders gerald
+
   this.drawTile(this.charTileset.sprite, this.charTileset.tileSpec[1], this.playerClass.x/this.playerClass.width, this.playerClass.y/this.playerClass.height);
+  
+  //renders mob
+  this.drawTile(this.charTileset.sprite, this.charTileset.tileSpec[1], this.mobClass.x/this.mobClass.width, this.mobClass.y/this.mobClass.height);
 };
 
 exports.Renderer = Renderer;
@@ -445,6 +464,34 @@ Templates =======================
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 */
 },{}],6:[function(require,module,exports){
+var Mob = function(options) {
+  this.color = '#ffffff';
+  this.targetAgent = options.targetAgent;
+  this.x = options.playerXPos;
+  this.y = options.playerYPos;
+  this.width = options.tileSize;
+  this.height = options.tileSize;
+  this.position = options.position;
+};
+
+Mob.prototype.update = function() {
+  var dx = this.targetAgent.position.x - this.position.x,
+      dy = this.targetAgent.position.y - this.position.y,
+      moveX = dx * 0.03,
+      moveY = dy * 0.03,
+      absX = Math.abs(moveX),
+      abxY = Math.abs(moveY);
+  moveX = absX/moveX * Math.max(absX, 0.05);
+  moveY = abxY/moveY * Math.max(absY, 0.05);
+  return {
+    x: moveX,
+    y: moveY
+  };
+};
+
+exports.Mob = Mob;
+
+},{}],7:[function(require,module,exports){
 var makeProjectile = require('./projectile').makeProjectile;
 
 var Player = function(options) {
@@ -518,7 +565,7 @@ Player.prototype.midpoint = function() {
 
 exports.Player = Player;
 
-},{"./projectile":7}],7:[function(require,module,exports){
+},{"./projectile":8}],8:[function(require,module,exports){
 // sets projectile direction, draws projectile, updates projectile, contains projectile
 
 function makeProjectile(I, canvas) {
@@ -573,7 +620,7 @@ function makeProjectile(I, canvas) {
 
 exports.makeProjectile = makeProjectile;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var Tileset = function(options){
 	this.onspriteload = options.onspriteload || function(){};
 	this.onReadyCb = options.onReady || function(){};
