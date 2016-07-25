@@ -110,6 +110,7 @@
 				bgTileset: bgTileset,
 				charTileset: charTileset,
 				stairTileset: stairTileset,
+				pickupTileset: pickupTileset,
 				tileSize: tileSize
 			};
 			renderer = new levelRenderer.Renderer(renderOptions);
@@ -136,6 +137,12 @@
 			specPath: '../spec/sprite.json',
 			onReady: loadCheck
 	});
+
+	pickupTileset = new tileset.Tileset({
+			spritePath: '../img/trash_can.png',
+			specPath: '../spec/sprite.json',
+			onReady: loadCheck
+	})
 
 	// function to handle the game itself
 	function updateGame() {

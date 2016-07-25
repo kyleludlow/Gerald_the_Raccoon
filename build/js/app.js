@@ -111,6 +111,7 @@
 				bgTileset: bgTileset,
 				charTileset: charTileset,
 				stairTileset: stairTileset,
+				pickupTileset: pickupTileset,
 				tileSize: tileSize
 			};
 			renderer = new levelRenderer.Renderer(renderOptions);
@@ -137,6 +138,12 @@
 			specPath: '../spec/sprite.json',
 			onReady: loadCheck
 	});
+
+	pickupTileset = new tileset.Tileset({
+			spritePath: '../img/trash_can.png',
+			specPath: '../spec/sprite.json',
+			onReady: loadCheck
+	})
 
 	// function to handle the game itself
 	function updateGame() {
@@ -192,15 +199,23 @@ function collisionDetection({playerClass, tileSize, levels}) {
             if (levels.map[baseRow][baseCol + 1] === 10) {
                 return true;
             }
+            else if (levels.map[baseRow][baseCol + 1] === 11) {
+                console.log('PICKUP');
+                levels.map[baseRow][baseCol + 1] = 0;
+            }
             playerClass.x=baseCol*tileSize;
         }
     }
 
     if(playerClass.xSpeed<0){
         if((!levels.map[baseRow][baseCol+1] && levels.map[baseRow][baseCol]) || (!levels.map[baseRow+1][baseCol+1] && levels.map[baseRow+1][baseCol] && rowOverlap)){
-            console.log("V1 ", levels.map[baseRow][baseCol])
+            // console.log("V1 ", levels.map[baseRow][baseCol])
             if (levels.map[baseRow + 1][baseCol] === 10) {
                 return true;
+            }
+            else if (levels.map[baseRow + 1][baseCol] === 11) {
+                console.log('PICKUP');
+                levels.map[baseRow + 1][baseCol] = 0;
             }
             playerClass.x=(baseCol+1)*tileSize;
         }
@@ -213,6 +228,10 @@ function collisionDetection({playerClass, tileSize, levels}) {
             if (levels.map[baseRow + 1][baseCol] === 10) {
                 return true;
             }
+            else if (levels.map[baseRow + 1][baseCol] === 11) {
+                console.log('PICKUP');
+                levels.map[baseRow + 1][baseCol] = 0;
+            }
             playerClass.y = baseRow*tileSize;
         }
     }
@@ -222,6 +241,10 @@ function collisionDetection({playerClass, tileSize, levels}) {
 			if (levels.map[baseRow][baseCol] === 10) {
                     return true;
 			}
+            else if (levels.map[baseRow][baseCol] === 11) {
+                console.log('PICKUP');
+                levels.map[baseRow][baseCol] = 0;
+            }
 			playerClass.y = (baseRow+1)*tileSize;
 		}
 	}
@@ -235,19 +258,44 @@ var LevelChoice = function(choice) {
     var level = null; 
     switch (choice) {
         case 1:
-            level = maps.levels.one;
+            level = {
+                map: JSON.parse(JSON.stringify(maps.levels.one.map)),
+                num: maps.levels.one.num,
+                playerCol: maps.levels.one.playerCol,
+                playerRow: maps.levels.one.playerRow
+            }
             break;
         case 2:
-            level = maps.levels.two;
+            level = {
+                map: JSON.parse(JSON.stringify(maps.levels.two.map)),
+                num: maps.levels.two.num,
+                playerCol: maps.levels.two.playerCol,
+                playerRow: maps.levels.two.playerRow
+            }
             break;
         case 3:
-            level = maps.levels.three;
+            level = {
+                map: JSON.parse(JSON.stringify(maps.levels.three.map)),
+                num: maps.levels.three.num,
+                playerCol: maps.levels.three.playerCol,
+                playerRow: maps.levels.three.playerRow
+            }
             break;
         case 4:
-            level = maps.levels.four;
+            level = {
+                map: JSON.parse(JSON.stringify(maps.levels.four.map)),
+                num: maps.levels.four.num,
+                playerCol: maps.levels.four.playerCol,
+                playerRow: maps.levels.four.playerRow
+            }
             break;
         default:
-            level = maps.levels.one;
+            level = {
+                map: JSON.parse(JSON.stringify(maps.levels.one.map)),
+                num: maps.levels.one.num,
+                playerCol: maps.levels.one.playerCol,
+                playerRow: maps.levels.one.playerRow
+            }
     }
     return level;
 };                           
@@ -267,6 +315,7 @@ var Renderer = function(options) {
   this.charTileset = options.charTileset;
   this.stairTileset = options.stairTileset;
   this.tileSize = options.tileSize;
+  this.pickupTileset = pickupTileset;
 };
 
 //general drawing function for all tiles
@@ -286,6 +335,9 @@ Renderer.prototype.render = function() {
     for(var j = 0; j<this.levelCols; j++){
       if(this.levels.map[i][j] !== 0 && this.levels.map[i][j] < 10) {
         this.drawTile(this.bgTileset.sprite, this.bgTileset.tileSpec[this.levels.map[i][j]], j, i);
+      }
+      else if (this.levels.map[i][j] === 11) {
+        this.drawTile(this.pickupTileset.sprite, this.pickupTileset.tileSpec[1], j, i);
       }
       else if (this.levels.map[i][j] === 10) {
         this.drawTile(this.stairTileset.sprite, this.stairTileset.tileSpec[1], j, i);
@@ -309,11 +361,11 @@ var levels =  {
         map : 
         [        						
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,10,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,10,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,1],
+            [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1],
             [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-            [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-            [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,11,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -349,10 +401,10 @@ var levels =  {
             [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,10,1],
+            [1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
+            [1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
+            [1,11,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,11,1,0,0,0,0,0,0,0,0,0,0,0,1,10,1],
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 	    ],
         playerCol: 33,
@@ -363,8 +415,8 @@ var levels =  {
         map: 
         [
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,11,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -376,10 +428,10 @@ var levels =  {
             [1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,0,0,0,0,1,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,10,1,0,0,0,0,0,0,0,1,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,0,0,0,0,0,1,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,11,1,0,0,0,0,0,1,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,0,0,1,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,11,1,10,1,0,0,0,0,0,0,0,1,0,0,1],
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
         ],
         playerCol: 33,
@@ -390,8 +442,8 @@ var levels =  {
         map: 
         [
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1],
             [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1],
@@ -402,13 +454,15 @@ var levels =  {
             [1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1],
             [1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1],
             [1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1],
-            [1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1],
-            [1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,1,0,1],
+            [1,0,0,0,1,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1],
+            [1,0,0,0,1,0,0,0,0,0,11,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,1,0,1],
             [1,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,10,1],
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-        ]
+        ],
+        playerCol: 33,
+        playerRow: 2
     }
 }
 

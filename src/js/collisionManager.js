@@ -12,15 +12,23 @@ function collisionDetection({playerClass, tileSize, levels}) {
             if (levels.map[baseRow][baseCol + 1] === 10) {
                 return true;
             }
+            else if (levels.map[baseRow][baseCol + 1] === 11) {
+                console.log('PICKUP');
+                levels.map[baseRow][baseCol + 1] = 0;
+            }
             playerClass.x=baseCol*tileSize;
         }
     }
 
     if(playerClass.xSpeed<0){
         if((!levels.map[baseRow][baseCol+1] && levels.map[baseRow][baseCol]) || (!levels.map[baseRow+1][baseCol+1] && levels.map[baseRow+1][baseCol] && rowOverlap)){
-            console.log("V1 ", levels.map[baseRow][baseCol])
+            // console.log("V1 ", levels.map[baseRow][baseCol])
             if (levels.map[baseRow + 1][baseCol] === 10) {
                 return true;
+            }
+            else if (levels.map[baseRow + 1][baseCol] === 11) {
+                console.log('PICKUP');
+                levels.map[baseRow + 1][baseCol] = 0;
             }
             playerClass.x=(baseCol+1)*tileSize;
         }
@@ -33,6 +41,10 @@ function collisionDetection({playerClass, tileSize, levels}) {
             if (levels.map[baseRow + 1][baseCol] === 10) {
                 return true;
             }
+            else if (levels.map[baseRow + 1][baseCol] === 11) {
+                console.log('PICKUP');
+                levels.map[baseRow + 1][baseCol] = 0;
+            }
             playerClass.y = baseRow*tileSize;
         }
     }
@@ -42,6 +54,10 @@ function collisionDetection({playerClass, tileSize, levels}) {
 			if (levels.map[baseRow][baseCol] === 10) {
                     return true;
 			}
+            else if (levels.map[baseRow][baseCol] === 11) {
+                console.log('PICKUP');
+                levels.map[baseRow][baseCol] = 0;
+            }
 			playerClass.y = (baseRow+1)*tileSize;
 		}
 	}

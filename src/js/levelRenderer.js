@@ -9,6 +9,7 @@ var Renderer = function(options) {
   this.charTileset = options.charTileset;
   this.stairTileset = options.stairTileset;
   this.tileSize = options.tileSize;
+  this.pickupTileset = pickupTileset;
 };
 
 //general drawing function for all tiles
@@ -28,6 +29,9 @@ Renderer.prototype.render = function() {
     for(var j = 0; j<this.levelCols; j++){
       if(this.levels.map[i][j] !== 0 && this.levels.map[i][j] < 10) {
         this.drawTile(this.bgTileset.sprite, this.bgTileset.tileSpec[this.levels.map[i][j]], j, i);
+      }
+      else if (this.levels.map[i][j] === 11) {
+        this.drawTile(this.pickupTileset.sprite, this.pickupTileset.tileSpec[1], j, i);
       }
       else if (this.levels.map[i][j] === 10) {
         this.drawTile(this.stairTileset.sprite, this.stairTileset.tileSpec[1], j, i);
