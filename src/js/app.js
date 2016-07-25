@@ -148,7 +148,7 @@
 	function updateGame() {
 		// updates player position
 		playerClass.update();
-
+		document.querySelector('.score').textContent = `Score: ${playerClass.score}`
 		// check for projectiles
 
 		playerClass.playerProjectiles.forEach(function(projectile) {

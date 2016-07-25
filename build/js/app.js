@@ -149,7 +149,7 @@
 	function updateGame() {
 		// updates player position
 		playerClass.update();
-
+		document.querySelector('.score').textContent = `Score: ${playerClass.score}`
 		// check for projectiles
 
 		playerClass.playerProjectiles.forEach(function(projectile) {
@@ -200,8 +200,9 @@ function collisionDetection({playerClass, tileSize, levels}) {
                 return true;
             }
             else if (levels.map[baseRow][baseCol + 1] === 11) {
-                console.log('PICKUP');
+                playerClass.score += 1;
                 levels.map[baseRow][baseCol + 1] = 0;
+                console.log(playerClass.score);
             }
             playerClass.x=baseCol*tileSize;
         }
@@ -214,7 +215,8 @@ function collisionDetection({playerClass, tileSize, levels}) {
                 return true;
             }
             else if (levels.map[baseRow + 1][baseCol] === 11) {
-                console.log('PICKUP');
+                playerClass.score += 1;
+                console.log(playerClass.score);
                 levels.map[baseRow + 1][baseCol] = 0;
             }
             playerClass.x=(baseCol+1)*tileSize;
@@ -229,7 +231,8 @@ function collisionDetection({playerClass, tileSize, levels}) {
                 return true;
             }
             else if (levels.map[baseRow + 1][baseCol] === 11) {
-                console.log('PICKUP');
+                playerClass.score += 1;
+                console.log(playerClass.score);
                 levels.map[baseRow + 1][baseCol] = 0;
             }
             playerClass.y = baseRow*tileSize;
@@ -242,7 +245,8 @@ function collisionDetection({playerClass, tileSize, levels}) {
                     return true;
 			}
             else if (levels.map[baseRow][baseCol] === 11) {
-                console.log('PICKUP');
+                playerClass.score += 1;
+                console.log(playerClass.score);
                 levels.map[baseRow][baseCol] = 0;
             }
 			playerClass.y = (baseRow+1)*tileSize;
@@ -513,6 +517,7 @@ var Player = function(options) {
   this.xSpeed = 0;
   this.ySpeed = 0;
   this.facing = 'up';
+  this.score = 0;
 };
 
 Player.prototype.update = function() {

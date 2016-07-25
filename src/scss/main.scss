@@ -1,12 +1,15 @@
 @import 'fonts';
 
 body {
-  background-color: '#000';
+  background-color: #000;
   margin: 0px;
+  text-align: center;
 }
 
 @import 'intro';
+@import 'score';
 
 .game-canvas {
   background: url('../img/cementtile.png');
+  margin-top: 3.8em;
 }
