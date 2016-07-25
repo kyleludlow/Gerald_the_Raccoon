@@ -11,6 +11,7 @@
 	var player = require('./player');
 
 	var collisionManager = require('./collisionManager');
+	var projectileCollision = require('./projectile.collision');
 
 	var levelCols = levels.map[0].length;				// level width, in tiles
 	var levelRows = levels.map.length;					// level height, in tiles
@@ -157,6 +158,18 @@
 			tileSize: tileSize,
 			levels: levels
 		};
+
+		var projectileParams = {
+			projectile: playerClass.playerProjectiles,
+			tileSize: tileSize,
+			levels: levels
+		};
+
+		playerClass.playerProjectiles.forEach(function(projectile) {
+			projectileCollision.projectileCollision({projectile: projectile, tileSize: tileSize, levels: levels});
+		});
+
+
 
 		var exit = collisionManager.collisionDetection(collisionParams);
 

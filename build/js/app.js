@@ -12,6 +12,7 @@
 	var player = require('./player');
 
 	var collisionManager = require('./collisionManager');
+	var projectileCollision = require('./projectile.collision');
 
 	var levelCols = levels.map[0].length;				// level width, in tiles
 	var levelRows = levels.map.length;					// level height, in tiles
@@ -159,6 +160,18 @@
 			levels: levels
 		};
 
+		var projectileParams = {
+			projectile: playerClass.playerProjectiles,
+			tileSize: tileSize,
+			levels: levels
+		};
+
+		playerClass.playerProjectiles.forEach(function(projectile) {
+			projectileCollision.projectileCollision({projectile: projectile, tileSize: tileSize, levels: levels});
+		});
+
+
+
 		var exit = collisionManager.collisionDetection(collisionParams);
 
 		if (exit) {
@@ -177,7 +190,7 @@
 	}
 })();
 
-},{"./collisionManager":2,"./levelManager":3,"./levelRenderer":4,"./player":6,"./projectile":7,"./tileset":8}],2:[function(require,module,exports){
+},{"./collisionManager":2,"./levelManager":3,"./levelRenderer":4,"./player":6,"./projectile":8,"./projectile.collision":7,"./tileset":9}],2:[function(require,module,exports){
 function collisionDetection({playerClass, tileSize, levels}) {
 
 	var baseCol = Math.floor(playerClass.x/tileSize);
@@ -228,6 +241,7 @@ function collisionDetection({playerClass, tileSize, levels}) {
 };
 
 exports.collisionDetection = collisionDetection;
+
 },{}],3:[function(require,module,exports){
 var maps = require('./maps');
 
@@ -518,14 +532,65 @@ Player.prototype.midpoint = function() {
 
 exports.Player = Player;
 
-},{"./projectile":7}],7:[function(require,module,exports){
+},{"./projectile":8}],7:[function(require,module,exports){
+function projectileCollision({projectile, tileSize, levels}) {
+
+	var baseCol = Math.floor(projectile.x/tileSize);
+	var baseRow = Math.floor(projectile.y/tileSize);
+	var colOverlap = (projectile.x%tileSize) + projectile.width;
+	var rowOverlap = (projectile.y%tileSize) + projectile.height;
+  console.log(baseCol, baseRow, colOverlap, rowOverlap);
+
+    // check for horizontal player collisions
+
+    if(projectile.xVelocity>0){
+        if((levels.map[baseRow][baseCol+1] && !levels.map[baseRow][baseCol]) || (levels.map[baseRow+1][baseCol+1] && !levels.map[baseRow+1][baseCol] && rowOverlap)){
+
+            projectile.x=baseCol*tileSize;
+            // projectile.active = false;
+
+        }
+    }
+
+    if(projectile.xVelocity<0){
+        if((!levels.map[baseRow][baseCol+1] && levels.map[baseRow][baseCol]) || (!levels.map[baseRow+1][baseCol+1] && levels.map[baseRow+1][baseCol] && rowOverlap)){
+
+            projectile.x=(baseCol+1)*tileSize;
+            // projectile.active = false;
+
+        }
+    }
+
+	// check for vertical player collisions
+
+    if(projectile.yVelocity>0){
+        if((levels.map[baseRow+1][baseCol] && !levels.map[baseRow][baseCol]) || (levels.map[baseRow+1][baseCol+1] && !levels.map[baseRow][baseCol+1] && colOverlap)){
+
+            // projectile.y = baseRow*tileSize;
+            projectile.active = false;
+
+        }
+    }
+
+	if(projectile.yVelocity<0){
+		if((!levels.map[baseRow+1][baseCol] && levels.map[baseRow][baseCol]) || (!levels.map[baseRow+1][baseCol+1] && levels.map[baseRow][baseCol+1] && colOverlap)){
+
+			// projectile.y = (baseRow+1)*tileSize;
+      projectile.active = false;
+		}
+	}
+};
+
+exports.projectileCollision = projectileCollision;
+
+},{}],8:[function(require,module,exports){
 // sets projectile direction, draws projectile, updates projectile, contains projectile
 
 function makeProjectile(I, canvas) {
 
   I.active = true;
-	I.width = 3;
-  I.height = 3;
+	I.width = 5;
+  I.height = 5;
   I.color = "#8A2BE2";
 
 	// adjusts x and y velocity to change projectile direction per facing direction
@@ -573,7 +638,7 @@ function makeProjectile(I, canvas) {
 
 exports.makeProjectile = makeProjectile;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var Tileset = function(options){
 	this.onspriteload = options.onspriteload || function(){};
 	this.onReadyCb = options.onReady || function(){};
