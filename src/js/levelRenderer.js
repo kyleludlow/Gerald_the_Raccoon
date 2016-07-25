@@ -7,6 +7,7 @@ var Renderer = function(options) {
   this.playerClass = options.playerClass;
   this.bgTileset = options.bgTileset;
   this.charTileset = options.charTileset;
+  this.stairTileset = options.stairTileset;
   this.tileSize = options.tileSize;
 };
 
@@ -29,8 +30,7 @@ Renderer.prototype.render = function() {
         this.drawTile(this.bgTileset.sprite, this.bgTileset.tileSpec[this.levels.map[i][j]], j, i);
       }
       else if (this.levels.map[i][j] === 10) {
-        this.context.fillStyle = "#000000";
-        this.context.fillRect(j * this.tileSize, i * this.tileSize, this.tileSize, this.tileSize);
+        this.drawTile(this.stairTileset.sprite, this.stairTileset.tileSpec[1], j, i);
       }
     }
   }

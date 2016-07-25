@@ -109,6 +109,7 @@
 				playerClass: playerClass,
 				bgTileset: bgTileset,
 				charTileset: charTileset,
+				stairTileset: stairTileset,
 				tileSize: tileSize
 			};
 			renderer = new levelRenderer.Renderer(renderOptions);
@@ -116,7 +117,7 @@
 		}
 	}
 
-	var tilesets = 2;
+	var tilesets = 3;
 
 	bgTileset = new tileset.Tileset({
 			spritePath: '../img/walls.png',
@@ -127,6 +128,12 @@
 	charTileset = new tileset.Tileset({
 			spritePath: '../img/animals.gif',
 			specPath: '../spec/sprite.json',//TODO
+			onReady: loadCheck
+	});
+
+	stairTileset = new tileset.Tileset({
+			spritePath: '../img/stairs.png',
+			specPath: '../spec/sprite.json',
 			onReady: loadCheck
 	});
 

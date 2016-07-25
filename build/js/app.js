@@ -110,6 +110,7 @@
 				playerClass: playerClass,
 				bgTileset: bgTileset,
 				charTileset: charTileset,
+				stairTileset: stairTileset,
 				tileSize: tileSize
 			};
 			renderer = new levelRenderer.Renderer(renderOptions);
@@ -117,7 +118,7 @@
 		}
 	}
 
-	var tilesets = 2;
+	var tilesets = 3;
 
 	bgTileset = new tileset.Tileset({
 			spritePath: '../img/walls.png',
@@ -128,6 +129,12 @@
 	charTileset = new tileset.Tileset({
 			spritePath: '../img/animals.gif',
 			specPath: '../spec/sprite.json',//TODO
+			onReady: loadCheck
+	});
+
+	stairTileset = new tileset.Tileset({
+			spritePath: '../img/stairs.png',
+			specPath: '../spec/sprite.json',
 			onReady: loadCheck
 	});
 
@@ -258,6 +265,7 @@ var Renderer = function(options) {
   this.playerClass = options.playerClass;
   this.bgTileset = options.bgTileset;
   this.charTileset = options.charTileset;
+  this.stairTileset = options.stairTileset;
   this.tileSize = options.tileSize;
 };
 
@@ -280,8 +288,7 @@ Renderer.prototype.render = function() {
         this.drawTile(this.bgTileset.sprite, this.bgTileset.tileSpec[this.levels.map[i][j]], j, i);
       }
       else if (this.levels.map[i][j] === 10) {
-        this.context.fillStyle = "#000000";
-        this.context.fillRect(j * this.tileSize, i * this.tileSize, this.tileSize, this.tileSize);
+        this.drawTile(this.stairTileset.sprite, this.stairTileset.tileSpec[1], j, i);
       }
     }
   }
