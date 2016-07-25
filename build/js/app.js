@@ -1,6 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function(){
-
+	var utils = require('./utils');
+	utils.startUp();
 	var canvas = document.getElementById("canvas");   // the canvas where game will be drawn
 	var context = canvas.getContext("2d");            // canvas context
 	var levelRenderer = require('./levelRenderer');
@@ -90,7 +91,7 @@
 	};
 
 	var playerClass = new player.Player(playerOptions);
-
+	utils.textWobbler(`Score: ${playerClass.score}`, '.score');
 	// this function will do its best to make stuff work at 60FPS - please notice I said "will do its best"
 	window.requestAnimFrame = (function(callback) {
 		return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
@@ -112,6 +113,7 @@
 				bgTileset: bgTileset,
 				charTileset: charTileset,
 				stairTileset: stairTileset,
+				pickupTileset: pickupTileset,
 				tileSize: tileSize
 			};
 			renderer = new levelRenderer.Renderer(renderOptions);
@@ -139,12 +141,18 @@
 			onReady: loadCheck
 	});
 
+	pickupTileset = new tileset.Tileset({
+			spritePath: '../img/trash_can.png',
+			specPath: '../spec/sprite.json',
+			onReady: loadCheck
+	})
+
 	// function to handle the game itself
 	function updateGame() {
 		// updates player position
 		playerClass.update();
-
 		// check for projectiles
+
 
 		playerClass.playerProjectiles.forEach(function(projectile) {
 			projectile.update();
@@ -190,7 +198,9 @@
 	}
 })();
 
-},{"./collisionManager":2,"./levelManager":3,"./levelRenderer":4,"./player":6,"./projectile":8,"./projectile.collision":7,"./tileset":9}],2:[function(require,module,exports){
+},{"./collisionManager":2,"./levelManager":3,"./levelRenderer":4,"./player":6,"./projectile":8,"./projectile.collision":7,"./tileset":9,"./utils":10}],2:[function(require,module,exports){
+var utils = require('./utils');
+
 function collisionDetection({playerClass, tileSize, levels}) {
 
 	var baseCol = Math.floor(playerClass.x/tileSize);
@@ -205,15 +215,27 @@ function collisionDetection({playerClass, tileSize, levels}) {
             if (levels.map[baseRow][baseCol + 1] === 10) {
                 return true;
             }
+            else if (levels.map[baseRow][baseCol + 1] === 11) {
+                playerClass.score += 1;
+                utils.textWobbler(`Score: ${playerClass.score}`, '.score');
+                levels.map[baseRow][baseCol + 1] = 0;
+                // console.log(playerClass.score);
+            }
             playerClass.x=baseCol*tileSize;
         }
     }
 
     if(playerClass.xSpeed<0){
         if((!levels.map[baseRow][baseCol+1] && levels.map[baseRow][baseCol]) || (!levels.map[baseRow+1][baseCol+1] && levels.map[baseRow+1][baseCol] && rowOverlap)){
-            console.log("V1 ", levels.map[baseRow][baseCol])
+            // console.log("V1 ", levels.map[baseRow][baseCol])
             if (levels.map[baseRow + 1][baseCol] === 10) {
                 return true;
+            }
+            else if (levels.map[baseRow + 1][baseCol] === 11) {
+                playerClass.score += 1;
+                utils.textWobbler(`Score: ${playerClass.score}`, '.score');
+                // console.log(playerClass.score);
+                levels.map[baseRow + 1][baseCol] = 0;
             }
             playerClass.x=(baseCol+1)*tileSize;
         }
@@ -226,6 +248,12 @@ function collisionDetection({playerClass, tileSize, levels}) {
             if (levels.map[baseRow + 1][baseCol] === 10) {
                 return true;
             }
+            else if (levels.map[baseRow + 1][baseCol] === 11) {
+                playerClass.score += 1;
+                utils.textWobbler(`Score: ${playerClass.score}`, '.score');
+                // console.log(playerClass.score);
+                levels.map[baseRow + 1][baseCol] = 0;
+            }
             playerClass.y = baseRow*tileSize;
         }
     }
@@ -235,6 +263,12 @@ function collisionDetection({playerClass, tileSize, levels}) {
 			if (levels.map[baseRow][baseCol] === 10) {
                     return true;
 			}
+            else if (levels.map[baseRow][baseCol] === 11) {
+                playerClass.score += 1;
+                utils.textWobbler(`Score: ${playerClass.score}`, '.score');
+                // console.log(playerClass.score);
+                levels.map[baseRow][baseCol] = 0;
+            }
 			playerClass.y = (baseRow+1)*tileSize;
 		}
 	}
@@ -242,26 +276,51 @@ function collisionDetection({playerClass, tileSize, levels}) {
 
 exports.collisionDetection = collisionDetection;
 
-},{}],3:[function(require,module,exports){
+},{"./utils":10}],3:[function(require,module,exports){
 var maps = require('./maps');
 
 var LevelChoice = function(choice) {
     var level = null; 
     switch (choice) {
         case 1:
-            level = maps.levels.one;
+            level = {
+                map: JSON.parse(JSON.stringify(maps.levels.one.map)),
+                num: maps.levels.one.num,
+                playerCol: maps.levels.one.playerCol,
+                playerRow: maps.levels.one.playerRow
+            }
             break;
         case 2:
-            level = maps.levels.two;
+            level = {
+                map: JSON.parse(JSON.stringify(maps.levels.two.map)),
+                num: maps.levels.two.num,
+                playerCol: maps.levels.two.playerCol,
+                playerRow: maps.levels.two.playerRow
+            }
             break;
         case 3:
-            level = maps.levels.three;
+            level = {
+                map: JSON.parse(JSON.stringify(maps.levels.three.map)),
+                num: maps.levels.three.num,
+                playerCol: maps.levels.three.playerCol,
+                playerRow: maps.levels.three.playerRow
+            }
             break;
         case 4:
-            level = maps.levels.four;
+            level = {
+                map: JSON.parse(JSON.stringify(maps.levels.four.map)),
+                num: maps.levels.four.num,
+                playerCol: maps.levels.four.playerCol,
+                playerRow: maps.levels.four.playerRow
+            }
             break;
         default:
-            level = maps.levels.one;
+            level = {
+                map: JSON.parse(JSON.stringify(maps.levels.one.map)),
+                num: maps.levels.one.num,
+                playerCol: maps.levels.one.playerCol,
+                playerRow: maps.levels.one.playerRow
+            }
     }
     return level;
 };                           
@@ -281,6 +340,7 @@ var Renderer = function(options) {
   this.charTileset = options.charTileset;
   this.stairTileset = options.stairTileset;
   this.tileSize = options.tileSize;
+  this.pickupTileset = pickupTileset;
 };
 
 //general drawing function for all tiles
@@ -300,6 +360,9 @@ Renderer.prototype.render = function() {
     for(var j = 0; j<this.levelCols; j++){
       if(this.levels.map[i][j] !== 0 && this.levels.map[i][j] < 10) {
         this.drawTile(this.bgTileset.sprite, this.bgTileset.tileSpec[this.levels.map[i][j]], j, i);
+      }
+      else if (this.levels.map[i][j] === 11) {
+        this.drawTile(this.pickupTileset.sprite, this.pickupTileset.tileSpec[1], j, i);
       }
       else if (this.levels.map[i][j] === 10) {
         this.drawTile(this.stairTileset.sprite, this.stairTileset.tileSpec[1], j, i);
@@ -323,11 +386,11 @@ var levels =  {
         map : 
         [        						
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,10,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,10,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,1],
+            [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1],
             [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-            [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-            [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,11,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -363,10 +426,10 @@ var levels =  {
             [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,10,1],
+            [1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
+            [1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
+            [1,11,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,11,1,0,0,0,0,0,0,0,0,0,0,0,1,10,1],
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 	    ],
         playerCol: 33,
@@ -377,8 +440,8 @@ var levels =  {
         map: 
         [
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,11,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -390,10 +453,10 @@ var levels =  {
             [1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,0,0,0,0,1,0,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,10,1,0,0,0,0,0,0,0,1,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,0,0,0,0,0,1,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,11,1,0,0,0,0,0,1,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,0,0,1,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,11,1,10,1,0,0,0,0,0,0,0,1,0,0,1],
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
         ],
         playerCol: 33,
@@ -404,8 +467,8 @@ var levels =  {
         map: 
         [
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1],
             [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1],
@@ -416,13 +479,15 @@ var levels =  {
             [1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1],
             [1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1],
             [1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1],
-            [1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1],
-            [1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,1,0,1],
+            [1,0,0,0,1,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1],
+            [1,0,0,0,1,0,0,0,0,0,11,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,1,0,1],
             [1,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1],
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,10,1],
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-        ]
+        ],
+        playerCol: 33,
+        playerRow: 2
     }
 }
 
@@ -473,6 +538,7 @@ var Player = function(options) {
   this.xSpeed = 0;
   this.ySpeed = 0;
   this.facing = 'up';
+  this.score = 0;
 };
 
 Player.prototype.update = function() {
@@ -681,4 +747,33 @@ Tileset.prototype.getTileSpec = function(){
 
 	exports.Tileset = Tileset;
 
+},{}],10:[function(require,module,exports){
+var startUp = function() {
+  $('.play').on('click', function() {
+    $('.intro-screen').fadeOut(500);
+  })
+  
+  textWobbler('Gerald The Raccoon', '.intro-wrapper h1');
+};
+
+function textWobbler(text, el) {
+  var el = document.querySelector(el);
+  var output = document.createElement('span');
+  for (var i = 0; i < text.length; i++) {
+    var span = document.createElement('span');
+    var letter = document.createTextNode(text[i]);
+    span.classList = 'wobble';
+    span.appendChild(letter);
+    if (span.textContent === " ") {
+      span.style.padding = "0.3em";
+    }
+    span.style.animationDuration = (Math.random() * (1.5 - 0.5 + 1) + 0.5) + 's';
+    output.appendChild(span);
+  }
+  el.textContent = '';
+  el.appendChild(output);
+}
+
+exports.startUp = startUp;
+exports.textWobbler = textWobbler;
 },{}]},{},[1]);
