@@ -12,6 +12,7 @@ var Player = function(options) {
   this.xSpeed = 0;
   this.ySpeed = 0;
   this.facing = 'up';
+  this.score = 0;
 };
 
 Player.prototype.update = function() {
