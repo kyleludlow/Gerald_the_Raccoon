@@ -1,5 +1,6 @@
 (function(){
-
+	var utils = require('./utils');
+	utils.startUp();
 	var canvas = document.getElementById("canvas");   // the canvas where game will be drawn
 	var context = canvas.getContext("2d");            // canvas context
 	var levelRenderer = require('./levelRenderer');
@@ -12,6 +13,7 @@
 	var mob = require('./mob');
 
 	var collisionManager = require('./collisionManager');
+	var projectileCollision = require('./projectile.collision');
 
 	var levelCols = levels.map[0].length;				// level width, in tiles
 	var levelRows = levels.map.length;					// level height, in tiles
@@ -102,6 +104,8 @@
 
 	var mobClass = new mob.Mob(mobOptions);
 
+	utils.textWobbler(`Score: ${playerClass.score}`, '.score');
+
 	// this function will do its best to make stuff work at 60FPS - please notice I said "will do its best"
 	window.requestAnimFrame = (function(callback) {
 		return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
@@ -125,6 +129,7 @@
 				charTileset: charTileset,
 				farmerTileset: farmerTileset,
 				stairTileset: stairTileset,
+				pickupTileset: pickupTileset,
 				tileSize: tileSize
 			};
 			renderer = new levelRenderer.Renderer(renderOptions);
@@ -158,6 +163,12 @@
 			onReady: loadCheck
 	});
 
+	pickupTileset = new tileset.Tileset({
+			spritePath: '../img/trash_can.png',
+			specPath: '../spec/sprite.json',
+			onReady: loadCheck
+	})
+
 	// function to handle the game itself
 	function updateGame() {
 		// updates player position
@@ -181,6 +192,13 @@
 			tileSize: tileSize,
 			levels: levels
 		};
+
+		// checks for projectile wall collisions
+		playerClass.playerProjectiles.forEach(function(projectile) {
+			projectileCollision.projectileCollision({projectile: projectile, tileSize: tileSize, levels: levels});
+		});
+
+
 
 		var exit = collisionManager.collisionDetection(collisionParams);
 

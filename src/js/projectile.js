@@ -3,27 +3,38 @@
 function makeProjectile(I, canvas) {
 
   I.active = true;
-	I.width = 3;
-  I.height = 3;
-  I.color = "#8A2BE2";
+	I.image = new Image();
+	var lastFire;
 
 	// adjusts x and y velocity to change projectile direction per facing direction
 	switch (I.facing) {
 		case 'up':
 			I.xVelocity = 0;
 			I.yVelocity = -I.speed;
+			I.width = 30;
+  		I.height = 64;
+			I.image.src = './img/fireball_up.png';
 			break;
 		case 'right':
 			I.xVelocity = I.speed;
 			I.yVelocity = 0;
+			I.width = 64;
+  		I.height = 30;
+			I.image.src = './img/fireball_right.png';
 			break;
 		case 'down':
 			I.xVelocity = 0;
 			I.yVelocity = I.speed;
+			I.width = 30;
+			I.height = 64;
+			I.image.src = './img/fireball_down.png';
 			break;
 		case 'left':
 			I.xVelocity = -I.speed;
 			I.yVelocity = 0;
+			I.width = 64;
+  		I.height = 30;
+			I.image.src = './img/fireball.gif';
 			break;
 		default:
 			console.log('projectile aiming broke');
@@ -36,10 +47,9 @@ function makeProjectile(I, canvas) {
 
   I.draw = function() {
 		var context = canvas.getContext("2d");
-    context.fillStyle = this.color;
-    context.fillRect(this.x, this.y, this.width, this.height);
+		context.drawImage(I.image, I.x - 25, I.y - 15, this.width, this.height);
   };
-
+	
   I.update = function() {
     I.x += I.xVelocity;
     I.y += I.yVelocity;
