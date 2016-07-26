@@ -4,7 +4,7 @@ function projectileCollision({projectile, tileSize, levels}) {
 	var baseRow = Math.floor(projectile.y/tileSize);
 	var colOverlap = (projectile.x%tileSize) + projectile.width;
 	var rowOverlap = (projectile.y%tileSize) + projectile.height;
-  console.log(baseCol, baseRow, colOverlap, rowOverlap);
+//   console.log(baseCol, baseRow, colOverlap, rowOverlap);
 
     // check for horizontal projectile collisions
 

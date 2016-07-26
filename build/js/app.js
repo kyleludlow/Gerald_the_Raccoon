@@ -534,15 +534,17 @@ var Player = function(options) {
   this.ySpeed = 0;
   this.facing = 'up';
   this.score = 0;
+  this.now = Date.now();
 };
 
 Player.prototype.update = function() {
   this.xSpeed = 0;
   this.ySpeed = 0;
 
-  //shoot projectile if space pressed
-  if (this.keyPresses.spacePressed) {
+  //shoot projectile if space pressed and limit fire rate.
+  if (this.keyPresses.spacePressed && Date.now() - this.now > 150) {
     this.shoot();
+    this.now = Date.now();
   }
 
   //updates speed according to pressed key
@@ -576,7 +578,7 @@ Player.prototype.shoot = function() {
   var projectilePosition = this.midpoint();
 
   var projectile = makeProjectile({
-    speed: 5,
+    speed: 8,
     x: projectilePosition.x,
     y: projectilePosition.y,
     facing: this.facing
@@ -600,7 +602,7 @@ function projectileCollision({projectile, tileSize, levels}) {
 	var baseRow = Math.floor(projectile.y/tileSize);
 	var colOverlap = (projectile.x%tileSize) + projectile.width;
 	var rowOverlap = (projectile.y%tileSize) + projectile.height;
-  console.log(baseCol, baseRow, colOverlap, rowOverlap);
+//   console.log(baseCol, baseRow, colOverlap, rowOverlap);
 
     // check for horizontal projectile collisions
 
@@ -650,27 +652,38 @@ exports.projectileCollision = projectileCollision;
 function makeProjectile(I, canvas) {
 
   I.active = true;
-	I.width = 3;
-  I.height = 3;
-  I.color = "#8A2BE2";
+	I.image = new Image();
+	var lastFire;
 
 	// adjusts x and y velocity to change projectile direction per facing direction
 	switch (I.facing) {
 		case 'up':
 			I.xVelocity = 0;
 			I.yVelocity = -I.speed;
+			I.width = 30;
+  		I.height = 64;
+			I.image.src = './img/fireball_up.png';
 			break;
 		case 'right':
 			I.xVelocity = I.speed;
 			I.yVelocity = 0;
+			I.width = 64;
+  		I.height = 30;
+			I.image.src = './img/fireball_right.png';
 			break;
 		case 'down':
 			I.xVelocity = 0;
 			I.yVelocity = I.speed;
+			I.width = 30;
+			I.height = 64;
+			I.image.src = './img/fireball_down.png';
 			break;
 		case 'left':
 			I.xVelocity = -I.speed;
 			I.yVelocity = 0;
+			I.width = 64;
+  		I.height = 30;
+			I.image.src = './img/fireball.gif';
 			break;
 		default:
 			console.log('projectile aiming broke');
@@ -683,10 +696,9 @@ function makeProjectile(I, canvas) {
 
   I.draw = function() {
 		var context = canvas.getContext("2d");
-    context.fillStyle = this.color;
-    context.fillRect(this.x, this.y, this.width, this.height);
+		context.drawImage(I.image, I.x - 25, I.y - 15, this.width, this.height);
   };
-
+	
   I.update = function() {
     I.x += I.xVelocity;
     I.y += I.yVelocity;
