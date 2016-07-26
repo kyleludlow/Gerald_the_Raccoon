@@ -13,15 +13,17 @@ var Player = function(options) {
   this.ySpeed = 0;
   this.facing = 'up';
   this.score = 0;
+  this.now = Date.now();
 };
 
 Player.prototype.update = function() {
   this.xSpeed = 0;
   this.ySpeed = 0;
 
-  //shoot projectile if space pressed
-  if (this.keyPresses.spacePressed) {
+  //shoot projectile if space pressed and limit fire rate.
+  if (this.keyPresses.spacePressed && Date.now() - this.now > 150) {
     this.shoot();
+    this.now = Date.now();
   }
 
   //updates speed according to pressed key
@@ -55,7 +57,7 @@ Player.prototype.shoot = function() {
   var projectilePosition = this.midpoint();
 
   var projectile = makeProjectile({
-    speed: 5,
+    speed: 8,
     x: projectilePosition.x,
     y: projectilePosition.y,
     facing: this.facing
