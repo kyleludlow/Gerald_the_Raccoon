@@ -94,10 +94,8 @@
 
 	//mob stuff
 	var mobOptions = {
-		position: {
-			x: 30,
-			y: 50
-		},
+		x: 30,
+		y: 50,
 		tileSize: tileSize,
 		targetAgent: playerClass
 	};
@@ -198,8 +196,6 @@
 			projectileCollision.projectileCollision({projectile: projectile, tileSize: tileSize, levels: levels});
 		});
 
-
-
 		var exit = collisionManager.collisionDetection(collisionParams);
 
 		if (exit) {
@@ -207,6 +203,12 @@
 			levels = levelManager.LevelChoice(levels.num + 1);
 			renderer.levels = levels;
 		}
+
+		//checks the collisions for the mob
+		collisionParams.playerClass = mobClass;
+
+		collisionManager.collisionDetection(collisionParams);
+
 		// rendering
 		renderer.render();
 
