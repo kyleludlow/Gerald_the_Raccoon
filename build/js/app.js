@@ -608,7 +608,6 @@ function projectileCollision({projectile, tileSize, levels}) {
 
     if(projectile.xVelocity>0){
         if((levels.map[baseRow][baseCol+1] && !levels.map[baseRow][baseCol]) || (levels.map[baseRow+1][baseCol+1] && !levels.map[baseRow+1][baseCol] && rowOverlap)){
-            console.log(projectile);
             projectile.image.src = './img/fireball_die_right.png';
             projectile.width = 64;
             projectile.height = 64;
