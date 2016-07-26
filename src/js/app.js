@@ -10,6 +10,7 @@
 
 	var tileset = require('./tileset');
 	var player = require('./player');
+	var mob = require('./mob');
 
 	var collisionManager = require('./collisionManager');
 	var projectileCollision = require('./projectile.collision');
@@ -90,7 +91,21 @@
 	};
 
 	var playerClass = new player.Player(playerOptions);
+
+	//mob stuff
+	var mobOptions = {
+		position: {
+			x: 30,
+			y: 50
+		},
+		tileSize: tileSize,
+		targetAgent: playerClass
+	};
+
+	var mobClass = new mob.Mob(mobOptions);
+
 	utils.textWobbler(`Score: ${playerClass.score}`, '.score');
+
 	// this function will do its best to make stuff work at 60FPS - please notice I said "will do its best"
 	window.requestAnimFrame = (function(callback) {
 		return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
@@ -109,8 +124,10 @@
 				levelCols: levelCols,
 				levels: levels,
 				playerClass: playerClass,
+				mobClass: mobClass,
 				bgTileset: bgTileset,
 				charTileset: charTileset,
+				farmerTileset: farmerTileset,
 				stairTileset: stairTileset,
 				pickupTileset: pickupTileset,
 				tileSize: tileSize
@@ -120,7 +137,7 @@
 		}
 	}
 
-	var tilesets = 3;
+	var tilesets = 4;
 
 	bgTileset = new tileset.Tileset({
 			spritePath: '../img/walls.png',
@@ -131,6 +148,12 @@
 	charTileset = new tileset.Tileset({
 			spritePath: '../img/animals.gif',
 			specPath: '../spec/sprite.json',//TODO
+			onReady: loadCheck
+	});
+
+	farmerTileset = new tileset.Tileset({
+			spritePath: '../img/farmer.png',
+			specPath: '../spec/farmer.json',
 			onReady: loadCheck
 	});
 
@@ -150,8 +173,11 @@
 	function updateGame() {
 		// updates player position
 		playerClass.update();
-		// check for projectiles
 
+		//updates mob position
+		mobClass.update();
+
+		// check for projectiles
 
 		playerClass.playerProjectiles.forEach(function(projectile) {
 			projectile.update();
