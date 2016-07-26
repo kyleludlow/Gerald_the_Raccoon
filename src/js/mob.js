@@ -5,6 +5,11 @@ var Mob = function(options) {
   this.position = options.position;
 };
 
+Mob.prototype.move = function(moveX, moveY) {
+  this.position.x += moveX;
+  this.position.y += moveY;
+};
+
 Mob.prototype.update = function() {
   var dx = this.targetAgent.x - this.position.x,
       dy = this.targetAgent.y - this.position.y,
@@ -14,10 +19,8 @@ Mob.prototype.update = function() {
       absY = Math.abs(moveY);
   moveX = absX/moveX * Math.max(absX, 0.05);
   moveY = absY/moveY * Math.max(absY, 0.05);
-  return {
-    x: moveX,
-    y: moveY
-  };
+
+  this.move(moveX, moveY);
 };
 
 exports.Mob = Mob;

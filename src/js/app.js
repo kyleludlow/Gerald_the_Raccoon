@@ -96,8 +96,6 @@
 			x: 30,
 			y: 50
 		},
-		playerXPos: playerXPos,
-		playerYPos: playerYPos,
 		tileSize: tileSize,
 		targetAgent: playerClass
 	};
