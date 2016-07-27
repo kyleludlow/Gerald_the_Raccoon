@@ -79,9 +79,6 @@ Player.prototype.midpoint = function() {
 };
 
 Player.prototype.moveStart = function(e) {
-
-  console.log(this);
-
   switch(e.keyCode) {
 			case 65:
 				this.keyPresses.leftPressed = true;
@@ -102,7 +99,6 @@ Player.prototype.moveStart = function(e) {
 }
 
 Player.prototype.moveStop = function(e) {
-
   switch(e.keyCode){
 			case 65:
 				this.keyPresses.leftPressed = false;

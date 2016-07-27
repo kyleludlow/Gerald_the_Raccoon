@@ -41,10 +41,11 @@
 
 	//mob stuff
 	var mobOptions = {
-		x: 30,
-		y: 50,
+		x: 32,
+		y: 64,
 		tileSize: tileSize,
-		targetAgent: playerClass
+		targetAgent: playerClass,
+		levels: levels //for astar
 	};
 
 	var mobClass = new mob.Mob(mobOptions);
@@ -119,8 +120,8 @@
 		// updates player position
 		playerClass.update();
 
-		//updates mob position
-		mobClass.update();
+		//updates mob position and has it move toward player
+		mobClass.chooseAction();
 
 		// check for projectiles
 
@@ -149,6 +150,7 @@
 			console.log(levels.num);
 			levels = levelManager.LevelChoice(levels.num + 1);
 			renderer.levels = levels;
+			mobClass.updateMap();
 		}
 
 		//checks the collisions for the mob
