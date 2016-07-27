@@ -1,27 +1,27 @@
 var makeProjectile = require('./projectile').makeProjectile;
 
 var Player = function(options) {
-  this.color = '#00ff00';
-  this.playerProjectiles = [];
-  this.keyPresses = {
-		leftPressed: false,                   // are we pressing LEFT arrow key?
-		rightPressed: false,                  // are we pressing RIGHT arrow key?
-		upPressed: false,                    // are we pressing UP arrow key?
-		downPressed: false,                  // are we pressing DOWN arrow key?
-		spacePressed: false,                  // are we pressing space key?
+  this.playerProjectiles = [];    // shot projectiles array
+  this.keyPresses = {             // are hotkeys being pressed?
+		leftPressed: false,
+		rightPressed: false,
+		upPressed: false,
+		downPressed: false,
+		spacePressed: false,
 	};
   this.movementSpeed = 5;
-  this.x = options.playerXPos;
-  this.y = options.playerYPos;
-  this.width = options.tileSize;
-  this.height = options.tileSize;
-  this.xSpeed = 0;
-  this.ySpeed = 0;
-  this.facing = 'up';
-  this.score = 0;
-  this.now = Date.now();
+  this.x = options.playerXPos;    // player x coordinate on map
+  this.y = options.playerYPos;    // player y coordinate on map
+  this.width = options.tileSize;  // player width
+  this.height = options.tileSize; // player height
+  this.xSpeed = 0;                // horizontal speed
+  this.ySpeed = 0;                // vertical speed
+  this.facing = 'up';             // facing direction
+  this.score = 0;                 // current game score
+  this.now = Date.now();          // current timestamp to help limit fire rate
 };
 
+// updates player speed, position, and shooting
 Player.prototype.update = function() {
   this.xSpeed = 0;
   this.ySpeed = 0;
@@ -59,6 +59,7 @@ Player.prototype.update = function() {
   this.y += this.ySpeed;
 };
 
+// sends projectile options to factory for rendering
 Player.prototype.shoot = function() {
   var projectilePosition = this.midpoint();
 
@@ -71,6 +72,7 @@ Player.prototype.shoot = function() {
   this.playerProjectiles.push(projectile);
 };
 
+// calculates the player middle for projectile starting location
 Player.prototype.midpoint = function() {
   return {
     x: this.x + this.width/2,
@@ -78,6 +80,7 @@ Player.prototype.midpoint = function() {
   };
 };
 
+// stores movement and projectile hotkey keydowns
 Player.prototype.moveStart = function(e) {
   switch(e.keyCode) {
 			case 65:
@@ -98,6 +101,7 @@ Player.prototype.moveStart = function(e) {
 	}
 }
 
+// stores movement and projectile hotkey keyups
 Player.prototype.moveStop = function(e) {
   switch(e.keyCode){
 			case 65:
