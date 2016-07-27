@@ -1,12 +1,14 @@
 var maps = require('./maps');
 
+// function to send the correct map to the renderer.
+
 var LevelChoice = function(choice) {
     var level = null; 
     switch (choice) {
         case 1:
             level = {
-                map: JSON.parse(JSON.stringify(maps.levels.one.map)),
-                num: maps.levels.one.num,
+                map: JSON.parse(JSON.stringify(maps.levels.one.map)), // deep clone of original map. Otherwise pickups are not rerendered wen the level comes around again.
+                num: maps.levels.one.num, // used by level manager to know what the next level will be
                 playerCol: maps.levels.one.playerCol,
                 playerRow: maps.levels.one.playerRow
             }

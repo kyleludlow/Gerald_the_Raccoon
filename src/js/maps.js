@@ -1,6 +1,8 @@
+// each map is a 2d array. Current standard size is 35 x 19.
+
 var levels =  {
-    one : { // 35 x 19
-        num: 1,
+    one : { 
+        num: 1, // used by levelManager to define the next level.
         map :
         [
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -23,7 +25,7 @@ var levels =  {
             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 	    ],
-        playerCol: 32,
+        playerCol: 32, // this is only used in the initial level. It seems to be ignored every subsequent render.
         playerRow: 17
     },
     two: {
