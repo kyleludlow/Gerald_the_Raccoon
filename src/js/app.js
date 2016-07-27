@@ -40,15 +40,15 @@
 	document.addEventListener("keyup", playerClass.moveStop.bind(playerClass));
 
 	// mob stuff
-	var mobOptions = {
-		x: 32,
-		y: 64,
-		tileSize: tileSize,
-		targetAgent: playerClass,
-		levels: levels //for astar
-	};
+	// var mobOptions = {
+	// 	x: 32,
+	// 	y: 64,
+	// 	tileSize: tileSize,
+	// 	targetAgent: playerClass,
+	// 	levels: levels //for astar
+	// };
 
-	var mobClass = new mob.Mob(mobOptions);
+	// var mobClass = new mob.Mob(mobOptions);
 
 	utils.textWobbler(`Score: ${playerClass.score}`, '.score');
 
@@ -73,7 +73,7 @@
 				levelCols: levelCols,
 				levels: levels,
 				playerClass: playerClass,
-				mobClass: mobClass,
+				// mobClass: mobClass,
 				bgTileset: bgTileset,
 				charTileset: charTileset,
 				farmerTileset: farmerTileset,
@@ -124,7 +124,7 @@
 		playerClass.update();
 
 		// updates mob position and has it move toward player
-		mobClass.chooseAction();
+		// mobClass.chooseAction();
 
 		// check for projectiles
 		playerClass.playerProjectiles.forEach(function(projectile) {
@@ -153,13 +153,14 @@
 			console.log(levels.num);
 			levels = levelManager.LevelChoice(levels.num + 1);
 			renderer.levels = levels;
-			mobClass.updateMap();
+			renderer.killMobs = true;
+			// mobClass.updateMap();
 		}
 
 		// checks the collisions for the mob
-		collisionParams.playerClass = mobClass;
+		// collisionParams.playerClass = mobClass;
 
-		collisionManager.collisionDetection(collisionParams);
+		// collisionManager.collisionDetection(collisionParams);
 
 		// rendering
 		renderer.render();

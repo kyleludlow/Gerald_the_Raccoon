@@ -16,11 +16,12 @@ var Mob = function(options) {
 // unwalkable (u) tiles for pathfinding
 
 Mob.prototype.updateMap = function(level) {
+  // console.log(level);
   this.levels = level.map;
   this.walkableMap = this.levels.map(function(row) {
     return row.map(function(tile) {
       return tile === 0 ? 'w' : 'u';
-    });
+    })
   });
 };
 
