@@ -14,6 +14,7 @@
 	var makeProjectile = require('./projectile').makeProjectile;
 
 	var collisionManager = require('./collisionManager');
+	var playerCollision = require('./player.collision');
 	var projectileCollision = require('./projectile.collision');
 
 	var levelCols = levels.map[0].length;				// level width, in tiles
@@ -136,7 +137,7 @@
 
 		// checks for collisions and positions player accordingly
 		var collisionParams = {
-			playerClass: playerClass,
+			entity: playerClass,
 			tileSize: tileSize,
 			levels: levels
 		};
@@ -147,7 +148,7 @@
 		});
 
 		// checks for when player reaches exit/stairs
-		var exit = collisionManager.collisionDetection(collisionParams);
+		var exit = playerCollision.playerCollision(collisionParams);
 
 		if (exit) {
 			console.log(levels.num);
