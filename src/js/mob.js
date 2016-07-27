@@ -14,7 +14,6 @@ var Mob = function(options) {
 
 //retrieves level and converts map to walkable (w) vs
 // unwalkable (u) tiles for pathfinding
-
 Mob.prototype.updateMap = function(level) {
   this.levels = level.map;
   this.walkableMap = this.levels.map(function(row) {
@@ -25,7 +24,6 @@ Mob.prototype.updateMap = function(level) {
 };
 
 //individualizes map tiles
-
 Mob.prototype.getMap = function() {
   return this.walkableMap.map(function(row) {
     return row.map(function(tile) {
@@ -36,7 +34,6 @@ Mob.prototype.getMap = function() {
 
 //calculates location of start (s--where the monster is)
 //and goal (g--where the player is)
-
 Mob.prototype.getAStarMovement = function() {
   var map = this.getMap(),
       path;
@@ -44,25 +41,15 @@ Mob.prototype.getAStarMovement = function() {
       tileY = Math.floor(this.y/this.height);
       targetX = Math.floor(this.targetAgent.x/this.width);
       targetY = Math.floor(this.targetAgent.y/this.height);
-  // console.log('me', tileX, tileY);
-  // console.log('target', targetX, targetY);
   map[tileY][tileX] = 's';
   map[targetY][targetX] = 'g';
 
-  // for (var j = 0; j < map.length; j++) {
-  //   var row = ''
-  //   for (var i = 0; i < map[j].length; i++) {
-  //     row += map[j][i];
-  //   }
-  //   console.log(row);
-  // }
 
   // calculates best path between s and g
   //map === level map
   //'manhattan' === "discovery" of g method
   //true === allows monster to cut corners
   path = astar(map, 'manhattan', true);
-  // console.log('thepath', path[1]);
 
   if (path && path.length > 1) {
     return {
@@ -76,27 +63,25 @@ Mob.prototype.getAStarMovement = function() {
 };
 
 //provides information for where mob should move
-
 Mob.prototype.moveToTarget = function() {
   var nextMove = this.getAStarMovement();
   var dx = (nextMove.x * this.width) - this.x;
   var dy = (nextMove.y * this.height) - this.y;
-  var moveX = dx * 0.3;
-  var moveY = dy * 0.3;
+  var moveX = dx * 0.03;
+  var moveY = dy * 0.03;
 
   if (moveX) {
-    moveX = Math.abs(moveX)/moveX * Math.max(moveX, 0.7);
+    moveX = Math.abs(moveX)/moveX * Math.max(moveX, 2.25);
   }
   if (moveY) {
-    moveY = Math.abs(moveY)/moveY * Math.max(moveY, 0.7);
+    moveY = Math.abs(moveY)/moveY * Math.max(moveY, 2.25);
   }
+
   this.move(moveX, moveY);
 }
 
 //movement pattern for mob
-
 Mob.prototype.move = function(moveX, moveY) {
-  // console.log('next move', moveX, moveY);
   this.x += moveX;
   this.y += moveY;
   this.xSpeed = moveX;
