@@ -7,7 +7,8 @@ function makeProjectile(I, canvas) {
 	var lastFire;
 
 	// adjusts x and y velocity to change projectile direction per facing direction
-	switch (I.facing) {
+  // also changes fireball sprite and dimensions accordingly
+  switch (I.facing) {
 		case 'up':
 			I.xVelocity = 0;
 			I.yVelocity = -I.speed;
@@ -40,21 +41,16 @@ function makeProjectile(I, canvas) {
 			console.log('projectile aiming broke');
 	}
 
-  I.inBounds = function() {
-    return I.x >= 0 && I.x <= canvas.width &&
-      I.y >= 0 && I.y <= canvas.height;
-  };
-
+  // draws projectile sprite to map
   I.draw = function() {
 		var context = canvas.getContext("2d");
 		context.drawImage(I.image, I.x - 25, I.y - 15, this.width, this.height);
   };
-	
+
+  // updates projectile x and y coordinates on map
   I.update = function() {
     I.x += I.xVelocity;
     I.y += I.yVelocity;
-
-    I.active = I.active && I.inBounds();
   };
 
   return I;
