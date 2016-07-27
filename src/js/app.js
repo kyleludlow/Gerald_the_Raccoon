@@ -11,6 +11,7 @@
 	var tileset = require('./tileset');
 	var player = require('./player');
 	var mob = require('./mob');
+	var makeProjectile = require('./projectile').makeProjectile;
 
 	var collisionManager = require('./collisionManager');
 	var projectileCollision = require('./projectile.collision');
@@ -27,8 +28,7 @@
 	canvas.width = tileSize * levelCols;   // canvas width. Won't work without it even if you style it from CSS
 	canvas.height = tileSize * levelRows;  // canvas height. Same as before
 
-	var makeProjectile = require('./projectile').makeProjectile;
-
+	// player stuff
 	var playerOptions = {
 		playerXPos: playerXPos,
 		playerYPos: playerYPos,
@@ -39,7 +39,7 @@
 	document.addEventListener("keydown", playerClass.moveStart.bind(playerClass));
 	document.addEventListener("keyup", playerClass.moveStop.bind(playerClass));
 
-	//mob stuff
+	// mob stuff
 	var mobOptions = {
 		x: 32,
 		y: 64,
@@ -59,6 +59,9 @@
 			window.setTimeout(callback, 1000/60);
 		};
 	})();
+
+	// makes sure that all tilesets have been loaded before
+	// updating the game
 
 	function loadCheck() {
 		tilesets--;
@@ -84,31 +87,31 @@
 	}
 
 	var tilesets = 5;
-
+	// background tileset
 	bgTileset = new tileset.Tileset({
 			spritePath: '../img/walls.png',
 			specPath: '../spec/gaunt.json',
 			onReady: loadCheck
 	});
-
+	// player tileset
 	charTileset = new tileset.Tileset({
 			spritePath: '../img/animals.gif',
 			specPath: '../spec/sprite.json',//TODO
 			onReady: loadCheck
 	});
-
+	// mob tileset
 	farmerTileset = new tileset.Tileset({
 			spritePath: '../img/farmer.png',
 			specPath: '../spec/farmer.json',
 			onReady: loadCheck
 	});
-
+	// exit/stair tileset
 	stairTileset = new tileset.Tileset({
 			spritePath: '../img/stairs.png',
 			specPath: '../spec/sprite.json',
 			onReady: loadCheck
 	});
-
+	// pickable items tileset
 	pickupTileset = new tileset.Tileset({
 			spritePath: '../img/trash_can.png',
 			specPath: '../spec/sprite.json',
@@ -120,11 +123,10 @@
 		// updates player position
 		playerClass.update();
 
-		//updates mob position and has it move toward player
+		// updates mob position and has it move toward player
 		mobClass.chooseAction();
 
 		// check for projectiles
-
 		playerClass.playerProjectiles.forEach(function(projectile) {
 			projectile.update();
 		});
@@ -144,6 +146,7 @@
 			projectileCollision.projectileCollision({projectile: projectile, tileSize: tileSize, levels: levels});
 		});
 
+		// checks for when player reaches exit/stairs
 		var exit = collisionManager.collisionDetection(collisionParams);
 
 		if (exit) {
@@ -153,7 +156,7 @@
 			mobClass.updateMap();
 		}
 
-		//checks the collisions for the mob
+		// checks the collisions for the mob
 		collisionParams.playerClass = mobClass;
 
 		collisionManager.collisionDetection(collisionParams);

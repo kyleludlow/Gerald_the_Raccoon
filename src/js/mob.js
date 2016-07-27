@@ -2,7 +2,6 @@ var astar = require('../lib/astar');
 
 var Mob = function(options) {
   this.updateMap(options.levels);
-  console.log(this.walkableMap);
   this.targetAgent = options.targetAgent;
   this.width = options.tileSize;
   this.height = options.tileSize;
@@ -11,8 +10,10 @@ var Mob = function(options) {
   this.xSpeed = 0;
   this.ySpeed = 0;
   this.score = 0;
-  // this.getAStarMovement();
 };
+
+//retrieves level and converts map to walkable (w) vs
+// unwalkable (u) tiles for pathfinding
 
 Mob.prototype.updateMap = function(level) {
   this.levels = level.map;
@@ -23,6 +24,8 @@ Mob.prototype.updateMap = function(level) {
   });
 };
 
+//individualizes map tiles
+
 Mob.prototype.getMap = function() {
   return this.walkableMap.map(function(row) {
     return row.map(function(tile) {
@@ -30,6 +33,9 @@ Mob.prototype.getMap = function() {
     });
   });
 };
+
+//calculates location of start (s--where the monster is)
+//and goal (g--where the player is)
 
 Mob.prototype.getAStarMovement = function() {
   var map = this.getMap(),
@@ -51,7 +57,10 @@ Mob.prototype.getAStarMovement = function() {
   //   console.log(row);
   // }
 
-  // console.log('the map', map);
+  // calculates best path between s and g
+  //map === level map
+  //'manhattan' === "discovery" of g method
+  //true === allows monster to cut corners
   path = astar(map, 'manhattan', true);
   // console.log('thepath', path[1]);
 
@@ -65,6 +74,8 @@ Mob.prototype.getAStarMovement = function() {
     x: this.x,
     y: this.y};
 };
+
+//provides information for where mob should move
 
 Mob.prototype.moveToTarget = function() {
   var nextMove = this.getAStarMovement();
@@ -81,6 +92,8 @@ Mob.prototype.moveToTarget = function() {
   }
   this.move(moveX, moveY);
 }
+
+//movement pattern for mob
 
 Mob.prototype.move = function(moveX, moveY) {
   // console.log('next move', moveX, moveY);

@@ -44,8 +44,8 @@ Renderer.prototype.render = function() {
   this.playerClass.playerProjectiles.forEach(function(projectile) {
     projectile.draw();
   });
-  //renders gerald
 
+  //renders gerald
   this.drawTile(this.charTileset.sprite, this.charTileset.tileSpec[1], this.playerClass.x/this.playerClass.width, this.playerClass.y/this.playerClass.height);
 
   //renders mob
