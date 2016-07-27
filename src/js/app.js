@@ -1,6 +1,6 @@
 (function(){
 	var utils = require('./utils');
-	utils.startUp();
+	utils.init();
 	var canvas = document.getElementById("canvas");   // the canvas where game will be drawn
 	var context = canvas.getContext("2d");            // canvas context
 	var levelRenderer = require('./levelRenderer');
@@ -20,15 +20,6 @@
 	var tileSize = 32;												  // tile size, in pixels
 	var playerCol = levels.playerCol;          // player starting column
 	var playerRow = levels.playerRow;          // player starting row
-	var keyPresses = {
-		leftPressed: false,                   // are we pressing LEFT arrow key?
-		rightPressed: false,                  // are we pressing RIGHT arrow key?
-		upPressed: false,                    // are we pressing UP arrow key?
-		downPressed: false,                  // are we pressing DOWN arrow key?
-		spacePressed: false,                  // are we pressing space key?
-	};
-
-	var movementSpeed = 5;                    // the speed we are going to move, in pixels per frame
 
 	var playerYPos = playerRow * tileSize;		// converting Y player position from tiles to pixels
 	var playerXPos = playerCol * tileSize;   // converting X player position from tiles to pixels
@@ -38,59 +29,15 @@
 
 	var makeProjectile = require('./projectile').makeProjectile;
 
-	// simple WASD listeners
-
-	document.addEventListener("keydown", function(e) {
-		// console.log(e.keyCode);
-		switch(e.keyCode){
-			case 65:
-				keyPresses.leftPressed = true;
-				break;
-			case 87:
-				keyPresses.upPressed = true;
-				break;
-			case 68:
-				keyPresses.rightPressed = true;
-				break;
-			case 83:
-				keyPresses.downPressed = true;
-				break;
-			case 32:
-				keyPresses.spacePressed = true;
-				break;
-		}
-	}, false);
-
-	document.addEventListener("keyup", function(e) {
-		switch(e.keyCode){
-			case 65:
-				keyPresses.leftPressed = false;
-				break;
-			case 87:
-				keyPresses.upPressed = false;
-				break;
-			case 68:
-				keyPresses.rightPressed = false;
-				break;
-			case 83:
-				keyPresses.downPressed = false;
-				break;
-			case 32:
-				keyPresses.spacePressed = false;
-		}
-	}, false);
-
-	//creates gerald and makes him shoot stuff
-
 	var playerOptions = {
-		keyPresses: keyPresses,
-		movementSpeed: movementSpeed,
 		playerXPos: playerXPos,
 		playerYPos: playerYPos,
 		tileSize: tileSize
 	};
 
 	var playerClass = new player.Player(playerOptions);
+	document.addEventListener("keydown", playerClass.moveStart.bind(playerClass));
+	document.addEventListener("keyup", playerClass.moveStop.bind(playerClass));
 
 	//mob stuff
 	var mobOptions = {
@@ -135,7 +82,7 @@
 		}
 	}
 
-	var tilesets = 4;
+	var tilesets = 5;
 
 	bgTileset = new tileset.Tileset({
 			spritePath: '../img/walls.png',

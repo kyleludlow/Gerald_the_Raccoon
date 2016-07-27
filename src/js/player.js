@@ -3,8 +3,14 @@ var makeProjectile = require('./projectile').makeProjectile;
 var Player = function(options) {
   this.color = '#00ff00';
   this.playerProjectiles = [];
-  this.keyPresses = options.keyPresses;
-  this.movementSpeed = options.movementSpeed;
+  this.keyPresses = {
+		leftPressed: false,                   // are we pressing LEFT arrow key?
+		rightPressed: false,                  // are we pressing RIGHT arrow key?
+		upPressed: false,                    // are we pressing UP arrow key?
+		downPressed: false,                  // are we pressing DOWN arrow key?
+		spacePressed: false,                  // are we pressing space key?
+	};
+  this.movementSpeed = 5;
   this.x = options.playerXPos;
   this.y = options.playerYPos;
   this.width = options.tileSize;
@@ -71,5 +77,49 @@ Player.prototype.midpoint = function() {
     y: this.y + this.height/2
   };
 };
+
+Player.prototype.moveStart = function(e) {
+
+  console.log(this);
+
+  switch(e.keyCode) {
+			case 65:
+				this.keyPresses.leftPressed = true;
+        break;
+			case 87:
+				this.keyPresses.upPressed = true;
+				break;
+			case 68:
+				this.keyPresses.rightPressed = true;
+				break;
+			case 83:
+				this.keyPresses.downPressed = true;
+				break;
+			case 32:
+				this.keyPresses.spacePressed = true;
+				break;
+	}
+}
+
+Player.prototype.moveStop = function(e) {
+
+  switch(e.keyCode){
+			case 65:
+				this.keyPresses.leftPressed = false;
+				break;
+			case 87:
+				this.keyPresses.upPressed = false;
+				break;
+			case 68:
+				this.keyPresses.rightPressed = false;
+				break;
+			case 83:
+				this.keyPresses.downPressed = false;
+				break;
+			case 32:
+				this.keyPresses.spacePressed = false;
+	}
+}
+
 
 exports.Player = Player;

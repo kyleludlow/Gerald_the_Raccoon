@@ -1,8 +1,7 @@
-var startUp = function() {
+var init = function() {
   $('.play').on('click', function() {
     $('.intro-screen').fadeOut(500);
   })
-  
   textWobbler('Gerald The Raccoon', '.intro-wrapper h1');
 };
 
@@ -24,5 +23,5 @@ function textWobbler(text, el) {
   el.appendChild(output);
 }
 
-exports.startUp = startUp;
+exports.init = init;
 exports.textWobbler = textWobbler;
