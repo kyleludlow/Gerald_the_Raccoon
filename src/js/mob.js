@@ -19,7 +19,13 @@ Mob.prototype.updateMap = function(level) {
   this.levels = level.map;
   this.walkableMap = this.levels.map(function(row) {
     return row.map(function(tile) {
-      return tile === 0 ? 'w' : 'u';
+      if (tile === 11 || tile === 0) {
+        return 'w'
+      }
+      else {
+        return 'u'
+      }
+      // return tile === 0 ? 'w' : 'u';
     })
   });
 };
