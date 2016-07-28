@@ -1,6 +1,9 @@
 var makeProjectile = require('./projectile').makeProjectile;
 
 var Player = function(options) {
+  this.context = options.context;
+  this.sprite = new Image();
+  this.tileSize = options.tileSize;
   this.playerProjectiles = [];    // shot projectiles array
   this.keyPresses = {             // are hotkeys being pressed?
 		leftPressed: false,
@@ -19,6 +22,49 @@ var Player = function(options) {
   this.facing = 'up';             // facing direction
   this.score = 0;                 // current game score
   this.now = Date.now();          // current timestamp to help limit fire rate
+};
+
+//draws player
+
+Player.prototype.draw = function() {
+  var singleTileSpec;
+
+  switch (this.facing) {
+		case 'up':
+			this.sprite.src = './img/animals.gif';
+      singleTileSpec = {
+        x: 0,
+        y: 0
+      };
+			break;
+		case 'left':
+			this.sprite.src = './img/PonAndCon.gif';
+      singleTileSpec = {
+        x: 32,
+        y: 0
+      };
+			break;
+		case 'down':
+			this.sprite.src = './img/animals.gif';
+      singleTileSpec = {
+        x: 0,
+        y: 0
+      };
+			break;
+		case 'right':
+			this.sprite.src = './img/PonAndConReverse.gif';
+      singleTileSpec = {
+        x: 32,
+        y: 0
+      };
+			break;
+		default:
+	}
+  this.context.drawImage(
+		this.sprite,
+		singleTileSpec.x, singleTileSpec.y, this.tileSize, this.tileSize,
+		Math.floor(this.x), Math.floor(this.y), this.tileSize, this.tileSize
+	);
 };
 
 // updates player speed, position, and shooting
@@ -98,8 +144,8 @@ Player.prototype.moveStart = function(e) {
 			case 32:
 				this.keyPresses.spacePressed = true;
 				break;
-	}
-}
+	};
+};
 
 // stores movement and projectile hotkey keyups
 Player.prototype.moveStop = function(e) {
@@ -118,8 +164,8 @@ Player.prototype.moveStop = function(e) {
 				break;
 			case 32:
 				this.keyPresses.spacePressed = false;
-	}
-}
+	};
+};
 
 
 exports.Player = Player;
