@@ -1,5 +1,5 @@
 var mob = require('./mob');
-var collisionManager = require('./collisionManager');
+var mobCollision = require('./mob.collision');
 
 var Renderer = function(options) {
   this.canvas = options.canvas;
@@ -20,7 +20,6 @@ var Renderer = function(options) {
 };
 
 //general drawing function for all tiles
-
 Renderer.prototype.drawTile = function(sprite, singleTileSpec, x, y) {
 	this.context.drawImage(
 		sprite,
@@ -76,12 +75,15 @@ Renderer.prototype.render = function() {
   this.mobs.forEach(mob => {
     this.drawTile(this.farmerTileset.sprite, this.farmerTileset.tileSpec[1], mob.x/mob.width, mob.y/mob.height);
     mob.chooseAction();
+
+    // parameters for mob collisions
     var collisionParams = {
-			playerClass: mob,
+			entity: mob,
 			tileSize: this.tileSize,
 			levels: this.levels
 		};
-    // collisionManager.collisionDetection(collisionParams);
+    // intiate mob collision handling
+    mobCollision.mobCollision(collisionParams);
   })
   //this.drawTile(this.farmerTileset.sprite, this.farmerTileset.tileSpec[1], this.mobClass.x/this.mobClass.width, this.mobClass.y/this.mobClass.height);
 };
