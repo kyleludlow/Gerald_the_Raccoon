@@ -78,10 +78,10 @@ Mob.prototype.moveToTarget = function() {
   var moveY = dy * 0.03;
 
   if (moveX) {
-    moveX = Math.abs(moveX)/moveX * Math.max(moveX, 2.25);
+    moveX = Math.abs(moveX)/moveX * Math.max(moveX, 1.25);
   }
   if (moveY) {
-    moveY = Math.abs(moveY)/moveY * Math.max(moveY, 2.25);
+    moveY = Math.abs(moveY)/moveY * Math.max(moveY, 1.25);
   }
 
   this.move(moveX, moveY);

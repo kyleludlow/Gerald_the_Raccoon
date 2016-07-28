@@ -150,6 +150,8 @@
 		// checks for when player reaches exit/stairs
 		var exit = playerCollision.playerCollision(collisionParams);
 
+		console.log('EXIT', exit);
+
 		if (exit) {
 			console.log(levels.num);
 			levels = levelManager.LevelChoice(levels.num + 1);
