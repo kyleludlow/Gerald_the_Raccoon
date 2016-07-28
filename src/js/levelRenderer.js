@@ -37,8 +37,8 @@ Renderer.prototype.render = function() {
   }
   // clear the canvas
   this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  for (var i = 0; i<this.levelRows; i++){
-    for(var j = 0; j<this.levelCols; j++){
+  for (var i = 0; i<this.levelRows; i++) {
+    for(var j = 0; j<this.levelCols; j++) {
       if(this.levels.map[i][j] !== 0 && this.levels.map[i][j] < 2) {
         this.drawTile(this.bgTileset.sprite, this.bgTileset.tileSpec[this.levels.map[i][j]], j, i);
       }
@@ -60,18 +60,17 @@ Renderer.prototype.render = function() {
         this.levels.map[i][j] = 0;
       }
     }
-  }
-      
-    
-  
-  // this.playerClass.daw();
+  };
+
+  this.playerClass.draw(this.context);
+
   this.playerClass.playerProjectiles.forEach(function(projectile) {
     projectile.draw();
   });
 
   //renders gerald
-  this.drawTile(this.charTileset.sprite, this.charTileset.tileSpec[1], this.playerClass.x/this.playerClass.width, this.playerClass.y/this.playerClass.height);
-  
+  //this.drawTile(this.charTileset.sprite, this.charTileset.tileSpec[1], this.playerClass.x/this.playerClass.width, this.playerClass.y/this.playerClass.height);
+
   //renders mob
   this.mobs.forEach(mob => {
     this.drawTile(this.farmerTileset.sprite, this.farmerTileset.tileSpec[1], mob.x/mob.width, mob.y/mob.height);
