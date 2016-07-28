@@ -54,6 +54,7 @@ Renderer.prototype.render = function() {
           x: this.levels.map[i].indexOf(12) * 32,
           y: i * 32,
           tileSize: this.tileSize,
+          context: this.context,
           targetAgent: this.playerClass,
           levels: this.levels //for astar
         }))
@@ -62,7 +63,7 @@ Renderer.prototype.render = function() {
     }
   };
 
-  this.playerClass.draw(this.context);
+  this.playerClass.draw();
 
   this.playerClass.playerProjectiles.forEach(function(projectile) {
     projectile.draw();
@@ -73,7 +74,7 @@ Renderer.prototype.render = function() {
 
   //renders mob
   this.mobs.forEach(mob => {
-    this.drawTile(this.farmerTileset.sprite, this.farmerTileset.tileSpec[1], mob.x/mob.width, mob.y/mob.height);
+    // this.drawTile(this.farmerTileset.sprite, this.farmerTileset.tileSpec[1], mob.x/mob.width, mob.y/mob.height);
     mob.chooseAction();
     var collisionParams = {
 			playerClass: mob,
@@ -81,6 +82,7 @@ Renderer.prototype.render = function() {
 			levels: this.levels
 		};
     collisionManager.collisionDetection(collisionParams);
+    mob.draw();
   })
   //this.drawTile(this.farmerTileset.sprite, this.farmerTileset.tileSpec[1], this.mobClass.x/this.mobClass.width, this.mobClass.y/this.mobClass.height);
 };

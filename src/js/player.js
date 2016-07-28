@@ -22,14 +22,12 @@ var Player = function(options) {
   this.facing = 'up';             // facing direction
   this.score = 0;                 // current game score
   this.now = Date.now();          // current timestamp to help limit fire rate
-  this.facing = 'up';
 };
 
 //draws player
 
 Player.prototype.draw = function() {
-  var sprite = {},
-      singleTileSpec;
+  var singleTileSpec;
 
   switch (this.facing) {
 		case 'up':

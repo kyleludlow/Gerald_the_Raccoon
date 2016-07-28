@@ -74,7 +74,7 @@
 			renderer = new levelRenderer.Renderer(renderOptions);
 			updateGame();
 		}
-	}
+	};
 
 	var tilesets = 5;
 	// background tileset

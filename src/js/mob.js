@@ -5,11 +5,57 @@ var Mob = function(options) {
   this.targetAgent = options.targetAgent;
   this.width = options.tileSize;
   this.height = options.tileSize;
+  this.tileSize = options.tileSize;
   this.x = options.x;
   this.y = options.y;
   this.xSpeed = 0;
   this.ySpeed = 0;
   this.score = 0;
+  this.sprite = new Image();
+  this.facing = 'down';
+  this.context = options.context;
+};
+
+Mob.prototype.draw = function() {
+  console.log('i am drawing', this.facing);
+  var singleTileSpec;
+
+  switch (this.facing) {
+		case 'up':
+			this.sprite.src = './img/farmer.png';
+      singleTileSpec = {
+        x: 96,
+        y: 96
+      };
+			break;
+		case 'left':
+			this.sprite.src = './img/farmer.png';
+      singleTileSpec = {
+        x: 32,
+        y: 32
+      };
+			break;
+		case 'down':
+			this.sprite.src = './img/farmer.png';
+      singleTileSpec = {
+        x: 0,
+        y: 0
+      };
+			break;
+		case 'right':
+			this.sprite.src = './img/farmer.png';
+      singleTileSpec = {
+        x: 32,
+        y: 64
+      };
+			break;
+		default:
+	}
+  this.context.drawImage(
+		this.sprite,
+		singleTileSpec.x, singleTileSpec.y, this.tileSize, this.tileSize,
+		Math.floor(this.x), Math.floor(this.y), this.tileSize, this.tileSize
+	);
 };
 
 //retrieves level and converts map to walkable (w) vs
@@ -87,6 +133,22 @@ Mob.prototype.move = function(moveX, moveY) {
   this.y += moveY;
   this.xSpeed = moveX;
   this.ySpeed = moveY;
+
+  if (moveX > 0) {
+    this.facing = 'right';
+  }
+  else if (moveX < 0) {
+    this.facing = 'left';
+  }
+  else if (moveY > 0) {
+    this.facing = 'up';
+  }
+  else if (moveY < 0) {
+    this.facing = 'down';
+  }
+  else {
+    this.facing = 'down';
+  }
 };
 
 Mob.prototype.atTarget = function() {
