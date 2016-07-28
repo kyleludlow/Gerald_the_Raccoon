@@ -1,60 +1,61 @@
 var collisionManager = require('./collisionManager').collisionDetection;
 
 
-var playerCollision = function(options) {
-  collisionManager.call(this, options)
-}
+// var playerCollision = function(options) {
+//   var playerCollide = new collisionDetection(options);
+//   collisionManager.call(this, options)
+// }
 
-playerCollision.collidesHorizontalRight = function() {
+
+
+var playerCollisions = {};
+
+playerCollisions.collidesHorizontalRight = function(levels, entity, baseRow, baseCol) {
   if (levels.map[baseRow][baseCol + 1] === 10) {
       return true;
   }
   else if (levels.map[baseRow][baseCol + 1] === 11) {
-      if (entity.hasOwnProperty("playerProjectiles")) {
           entity.score += 1;
           utils.textWobbler(`Score: ${entity.score}`, '.score');
           levels.map[baseRow][baseCol + 1] = 0;
-      }
   }
 };
 
-playerCollision.collidesHorizontalLeft = function() {
+playerCollisions.collidesHorizontalLeft = function(levels, entity, baseRow, baseCol) {
   if (levels.map[baseRow + 1][baseCol] === 10) {
       return true;
   }
   else if (levels.map[baseRow + 1][baseCol] === 11) {
-      if (entity.hasOwnProperty("playerProjectiles")) {
           entity.score += 1;
           utils.textWobbler(`Score: ${entity.score}`, '.score');
           levels.map[baseRow + 1][baseCol] = 0;
-      }
   }
 };
 
-playerCollision.collidesVerticalBelow = function() {
+playerCollisions.collidesVerticalBelow = function(levels, entity, baseRow, baseCol) {
   if (levels.map[baseRow + 1][baseCol] === 10) {
       return true;
   }
   else if (levels.map[baseRow + 1][baseCol] === 11) {
-      if (entity.hasOwnProperty("playerProjectiles")) {
           entity.score += 1;
           utils.textWobbler(`Score: ${entity.score}`, '.score');
           levels.map[baseRow + 1][baseCol] = 0;
-      }
   }
 };
 
-playerCollision.collidesVerticalAbove = function() {
+playerCollisions.collidesVerticalAbove = function(levels, entity, baseRow, baseCol) {
   if (levels.map[baseRow][baseCol] === 10) {
                 return true;
   }
   else if (levels.map[baseRow][baseCol] === 11) {
-      if (entity.hasOwnProperty("playerProjectiles")) {
           entity.score += 1;
           utils.textWobbler(`Score: ${entity.score}`, '.score');
           levels.map[baseRow][baseCol] = 0;
-      }
   }
+};
+
+var playerCollision = function(options) {
+  collisionManager.call(this, options, playerCollisions);
 };
 
 exports.playerCollision = playerCollision;

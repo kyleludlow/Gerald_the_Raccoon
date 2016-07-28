@@ -1,6 +1,6 @@
 var utils = require('./utils');
 
-function collisionDetection(options) {
+function collisionDetection(options, collisionHandlers) {
     if (!options) options = {}
     var entity = options.entity || 0;
     var tileSize = options.tileSize || 0;
@@ -9,23 +9,28 @@ function collisionDetection(options) {
     var baseRow = Math.floor(entity.y / tileSize);
     var colOverlap = entity.x % tileSize;
     var rowOverlap = entity.y % tileSize;
+		// console.log(options);
+		// console.log(levels);
 
-    this.collidesHorizontalLeft = function() {
+    this.collidesHorizontalLeft = collisionHandlers.collidesHorizontalLeft || function() {
         return;
-    }
-    this.collidesHorizontalRight = function() {
+    };
+    this.collidesHorizontalRight = collisionHandlers.collidesHorizontalRight || function() {
         return;
-    }
-    this.collidesVerticalAbove = function() {
+    };
+    this.collidesVerticalAbove = collisionHandlers.collidesHorizontalAbove || function() {
         return;
-    }
-    this.collidesVerticalBelow = function() {
+    };
+    this.collidesVerticalBelow = collisionHandlers.collidesHorizontalBelow || function() {
         return;
-    }
+    };
+
+		// console.log(this.collidesHorizontalLeft);
 
     this.handleCollisions = function() {
         // check for horizontal player collisions
-
+				// var levels = this.levels;
+				console.log(levels);
         if (entity.xSpeed > 0) {
             if ((levels.map[baseRow][baseCol + 1] && !levels.map[baseRow][baseCol]) || (levels.map[baseRow + 1][baseCol + 1] && !levels.map[baseRow + 1][baseCol] && rowOverlap)) {
                 // if (levels.map[baseRow][baseCol + 1] === 10) {
@@ -41,7 +46,7 @@ function collisionDetection(options) {
                 // console.log(entity.score);
 
                 // }
-                this.collidesHorizontalRight();
+                this.collidesHorizontalRight(levels, this.entity, baseRow, baseCol);
 
                 entity.x = baseCol * tileSize;
             }
@@ -61,7 +66,7 @@ function collisionDetection(options) {
                 //     }
                 //
                 // }
-                this.collidesHorizontalLeft();
+                this.collidesHorizontalLeft(levels, this.entity, baseRow, baseCol);
 
                 entity.x = (baseCol + 1) * tileSize;
             }
@@ -82,7 +87,7 @@ function collisionDetection(options) {
                 //     }
                 // }
                 //
-                this.collidesVerticalBelow();
+                this.collidesVerticalBelow(levels, this.entity, baseRow, baseCol);
                 entity.y = baseRow * tileSize;
             }
         }
@@ -99,11 +104,12 @@ function collisionDetection(options) {
                 //               levels.map[baseRow][baseCol] = 0;
                 //           }
                 //       }
-                this.collidesVerticalAbove();
+                this.collidesVerticalAbove(levels, this.entity, baseRow, baseCol);
                 entity.y = (baseRow + 1) * tileSize;
             }
         }
     }
+		this.handleCollisions();
 };
 
 exports.collisionDetection = collisionDetection;

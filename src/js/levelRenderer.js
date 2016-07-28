@@ -61,9 +61,9 @@ Renderer.prototype.render = function() {
       }
     }
   }
-      
-    
-  
+
+
+
   // this.playerClass.daw();
   this.playerClass.playerProjectiles.forEach(function(projectile) {
     projectile.draw();
@@ -71,7 +71,7 @@ Renderer.prototype.render = function() {
 
   //renders gerald
   this.drawTile(this.charTileset.sprite, this.charTileset.tileSpec[1], this.playerClass.x/this.playerClass.width, this.playerClass.y/this.playerClass.height);
-  
+
   //renders mob
   this.mobs.forEach(mob => {
     this.drawTile(this.farmerTileset.sprite, this.farmerTileset.tileSpec[1], mob.x/mob.width, mob.y/mob.height);
@@ -81,7 +81,7 @@ Renderer.prototype.render = function() {
 			tileSize: this.tileSize,
 			levels: this.levels
 		};
-    collisionManager.collisionDetection(collisionParams);
+    // collisionManager.collisionDetection(collisionParams);
   })
   //this.drawTile(this.farmerTileset.sprite, this.farmerTileset.tileSpec[1], this.mobClass.x/this.mobClass.width, this.mobClass.y/this.mobClass.height);
 };

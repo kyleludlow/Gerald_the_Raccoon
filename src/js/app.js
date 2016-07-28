@@ -143,9 +143,9 @@
 		};
 
 		// checks for projectile wall collisions
-		playerClass.playerProjectiles.forEach(function(projectile) {
-			projectileCollision.projectileCollision({projectile: projectile, tileSize: tileSize, levels: levels});
-		});
+		// playerClass.playerProjectiles.forEach(function(projectile) {
+		// 	projectileCollision.projectileCollision({projectile: projectile, tileSize: tileSize, levels: levels});
+		// });
 
 		// checks for when player reaches exit/stairs
 		var exit = playerCollision.playerCollision(collisionParams);
