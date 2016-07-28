@@ -22,31 +22,31 @@ Mob.prototype.draw = function() {
 
   switch (this.facing) {
 		case 'up':
-			this.sprite.src = './img/farmer.png';
+			this.sprite.src = './img/farmerUp.png';
       singleTileSpec = {
-        x: 96,
-        y: 96
+        x: 0,
+        y: 0
       };
 			break;
 		case 'left':
-			this.sprite.src = './img/farmer.png';
+			this.sprite.src = './img/farmerLeft.png';
       singleTileSpec = {
-        x: 32,
-        y: 32
+        x: 0,
+        y: 0
       };
 			break;
 		case 'down':
-			this.sprite.src = './img/farmer.png';
+			this.sprite.src = './img/farmerDown.png';
       singleTileSpec = {
         x: 0,
         y: 0
       };
 			break;
 		case 'right':
-			this.sprite.src = './img/farmer.png';
+			this.sprite.src = './img/farmerRight.png';
       singleTileSpec = {
-        x: 32,
-        y: 64
+        x: 0,
+        y: 0
       };
 			break;
 		default:
