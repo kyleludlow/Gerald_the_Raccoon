@@ -32,23 +32,13 @@
 	var playerOptions = {
 		playerXPos: playerXPos,
 		playerYPos: playerYPos,
-		tileSize: tileSize
+		tileSize: tileSize,
+		context: context,
 	};
 
 	var playerClass = new player.Player(playerOptions);
 	document.addEventListener("keydown", playerClass.moveStart.bind(playerClass));
 	document.addEventListener("keyup", playerClass.moveStop.bind(playerClass));
-
-	// mob stuff
-	// var mobOptions = {
-	// 	x: 32,
-	// 	y: 64,
-	// 	tileSize: tileSize,
-	// 	targetAgent: playerClass,
-	// 	levels: levels //for astar
-	// };
-
-	// var mobClass = new mob.Mob(mobOptions);
 
 	utils.textWobbler(`Score: ${playerClass.score}`, '.score');
 
@@ -84,7 +74,7 @@
 			renderer = new levelRenderer.Renderer(renderOptions);
 			updateGame();
 		}
-	}
+	};
 
 	var tilesets = 5;
 	// background tileset

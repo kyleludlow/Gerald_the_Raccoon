@@ -37,8 +37,8 @@ Renderer.prototype.render = function() {
   }
   // clear the canvas
   this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  for (var i = 0; i<this.levelRows; i++){
-    for(var j = 0; j<this.levelCols; j++){
+  for (var i = 0; i<this.levelRows; i++) {
+    for(var j = 0; j<this.levelCols; j++) {
       if(this.levels.map[i][j] !== 0 && this.levels.map[i][j] < 2) {
         this.drawTile(this.bgTileset.sprite, this.bgTileset.tileSpec[this.levels.map[i][j]], j, i);
       }
@@ -54,27 +54,27 @@ Renderer.prototype.render = function() {
           x: this.levels.map[i].indexOf(12) * 32,
           y: i * 32,
           tileSize: this.tileSize,
+          context: this.context,
           targetAgent: this.playerClass,
           levels: this.levels //for astar
         }))
         this.levels.map[i][j] = 0;
       }
     }
-  }
-      
-    
-  
-  // this.playerClass.daw();
+  };
+
+  this.playerClass.draw();
+
   this.playerClass.playerProjectiles.forEach(function(projectile) {
     projectile.draw();
   });
 
   //renders gerald
-  this.drawTile(this.charTileset.sprite, this.charTileset.tileSpec[1], this.playerClass.x/this.playerClass.width, this.playerClass.y/this.playerClass.height);
-  
+  //this.drawTile(this.charTileset.sprite, this.charTileset.tileSpec[1], this.playerClass.x/this.playerClass.width, this.playerClass.y/this.playerClass.height);
+
   //renders mob
   this.mobs.forEach(mob => {
-    this.drawTile(this.farmerTileset.sprite, this.farmerTileset.tileSpec[1], mob.x/mob.width, mob.y/mob.height);
+    // this.drawTile(this.farmerTileset.sprite, this.farmerTileset.tileSpec[1], mob.x/mob.width, mob.y/mob.height);
     mob.chooseAction();
     var collisionParams = {
 			playerClass: mob,
@@ -82,6 +82,7 @@ Renderer.prototype.render = function() {
 			levels: this.levels
 		};
     collisionManager.collisionDetection(collisionParams);
+    mob.draw();
   })
   //this.drawTile(this.farmerTileset.sprite, this.farmerTileset.tileSpec[1], this.mobClass.x/this.mobClass.width, this.mobClass.y/this.mobClass.height);
 };
