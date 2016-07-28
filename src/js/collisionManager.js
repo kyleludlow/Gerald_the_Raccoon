@@ -9,6 +9,8 @@ function collisionDetection(options, collisionHandlers) {
     var colOverlap = entity.x % tileSize;
     var rowOverlap = entity.y % tileSize;
 
+		// console.log(entity);
+
 		// defines entity specific collision handlers to be updated by entity
     this.collidesLeft = collisionHandlers.collidesLeft;
     this.collidesRight = collisionHandlers.collidesRight;
@@ -18,7 +20,7 @@ function collisionDetection(options, collisionHandlers) {
 		// handles wall collision and entity-specific collision events
     this.handleCollisions = function() {
 
-        // check for horizontal collisions
+        // check for right collisions
         if (entity.xSpeed > 0) {
             if ((levels.map[baseRow][baseCol + 1] && !levels.map[baseRow][baseCol]) || (levels.map[baseRow + 1][baseCol + 1] && !levels.map[baseRow + 1][baseCol] && rowOverlap)) {
 
@@ -29,6 +31,7 @@ function collisionDetection(options, collisionHandlers) {
             }
         }
 
+				// checks for left collisions
         if (entity.xSpeed < 0) {
             if ((!levels.map[baseRow][baseCol + 1] && levels.map[baseRow][baseCol]) || (!levels.map[baseRow + 1][baseCol + 1] && levels.map[baseRow + 1][baseCol] && rowOverlap)) {
 
