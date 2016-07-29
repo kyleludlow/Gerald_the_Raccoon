@@ -1,16 +1,14 @@
+var game = require('./app');
 
 // init function to enable hiding of intro screen and anything else needed on startup.
 var init = function() {
   resizeIntro(); // make sure intro screen fills the viewport...
+  textWobbler('Gerald The Raccoon', '.intro-wrapper h1');
 
   $(window).on('resize', function() {
     resizeIntro();
   })
-
-  $('.play').on('click', function() {
-    $('.intro-screen').fadeOut(500);
-  })
-  textWobbler('Gerald The Raccoon', '.intro-wrapper h1');
+  
 };
 
 // broke wobbly text idea into function so it can be used across the app.

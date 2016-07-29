@@ -1,13 +1,31 @@
-(function(){
-	var utils = require('./utils');
-	utils.init();
+
+var utils = require('./utils');
+var gameRunning = false;
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  utils.init();
+	$('.play').on('click', setGameCycle); // both intro and death screen have '.play' buttons;
+})
+
+function setGameCycle() { // function to start and stop game cycle.
+	$('.intro-screen').fadeOut(500);
+	gameRunning = !gameRunning;
+	if (gameRunning) {
+		startGame();
+	}
+	console.log(gameRunning);
+}
+
+function startGame() { // broke the start game into a function so it can be triggered when needed.
+	// var utils = require('./utils');
+	// utils.init();
 	var canvas = document.getElementById("canvas");   // the canvas where game will be drawn
 	var context = canvas.getContext("2d");            // canvas context
 	var levelRenderer = require('./levelRenderer');
 	var renderer = null;
 	var levelManager = require('./levelManager');
 	var levels = levelManager.LevelChoice(1);
-
 	var tileset = require('./tileset');
 	var player = require('./player');
 	var mob = require('./mob');
@@ -64,7 +82,6 @@
 				levelCols: levelCols,
 				levels: levels,
 				playerClass: playerClass,
-				// mobClass: mobClass,
 				bgTileset: bgTileset,
 				charTileset: charTileset,
 				farmerTileset: farmerTileset,
@@ -157,9 +174,13 @@
 		renderer.render();
 
 		// update the game in about 1/60 seconds
-
-		requestAnimFrame(function() {
-			updateGame();
-		});
+		if (gameRunning) {
+			requestAnimFrame(function() {
+				updateGame();
+			});
+		}
 	}
-})();
+};
+
+exports.startGame = startGame;
+exports.setGameCycle = setGameCycle;

@@ -26,9 +26,7 @@ mobCollisions.collidesAbove = function(levels, entity, baseRow, baseCol) {
 
 // calls the collision manager with mob specific collision event handlers
 var mobCollision = function(options) {
-
     return collisionManager(options, mobCollisions);
-
 };
 
 exports.mobCollision = mobCollision;

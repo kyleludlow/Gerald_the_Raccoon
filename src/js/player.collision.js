@@ -1,5 +1,5 @@
 var collisionManager = require('./collisionManager').collisionDetection;
-
+var utils = require('./utils');
 
 // defines object for player specific collision events
 var playerCollisions = {};
@@ -9,12 +9,11 @@ playerCollisions.collidesRight = function(levels, entity, baseRow, baseCol) {
     // if the tile to the right is a staircase, return true for level handling
     if (levels.map[baseRow][baseCol + 1] === 10) {
         return true;
-
     }
     // else if the tile to the right is a trashcan, player score increased and trashcan removed
     else if (levels.map[baseRow][baseCol + 1] === 11) {
-        // entity.score += 1;
-        // utils.textWobbler(`Score: ${entity.score}`, '.score');
+        entity.score += 1;
+        utils.textWobbler(`Score: ${entity.score}`, '.score');
         return levels.map[baseRow][baseCol + 1] = 0;
     }
 };
@@ -27,8 +26,8 @@ playerCollisions.collidesLeft = function(levels, entity, baseRow, baseCol) {
     }
     // else if the tile to the left is a trashcan, player score increased and trashcan removed
     else if (levels.map[baseRow + 1][baseCol] === 11) {
-        // entity.score += 1;
-        // utils.textWobbler(`Score: ${entity.score}`, '.score');
+        entity.score += 1;
+        utils.textWobbler(`Score: ${entity.score}`, '.score');
         return levels.map[baseRow + 1][baseCol] = 0;
     }
 };
@@ -41,8 +40,8 @@ playerCollisions.collidesBelow = function(levels, entity, baseRow, baseCol) {
     }
     // else if the tile below is a trashcan, player score increased and trashcan removed
     else if (levels.map[baseRow + 1][baseCol] === 11) {
-        // entity.score += 1;
-        // utils.textWobbler(`Score: ${entity.score}`, '.score');
+        entity.score += 1;
+        utils.textWobbler(`Score: ${entity.score}`, '.score');
         return levels.map[baseRow + 1][baseCol] = 0;
     }
 };
@@ -55,8 +54,8 @@ playerCollisions.collidesAbove = function(levels, entity, baseRow, baseCol) {
     }
     // else if the tile above is a trashcan, player score increased and trashcan removed
     else if (levels.map[baseRow][baseCol] === 11) {
-        // entity.score += 1;
-        // utils.textWobbler(`Score: ${entity.score}`, '.score');
+        entity.score += 1;
+        utils.textWobbler(`Score: ${entity.score}`, '.score');
         return levels.map[baseRow][baseCol] = 0;
     }
 };

@@ -1,0 +1,18 @@
+.death-wrapper {
+  background-color: transparentize(#000, 0.3);
+  height: 100vh;
+  left: -100vw;
+  position: absolute;
+  text-align: center;
+  width: 100vw;
+}
+
+.death {
+  box-sizing: border-box;
+  color: red;
+  font: 4em 'bearpawregular', cursive;
+  left: 25%;
+  position: absolute;
+  top: 25%;
+  transform: translate(-25% -25%);
+}
