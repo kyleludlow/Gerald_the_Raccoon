@@ -73,6 +73,7 @@ gulp.task('watch', function() {
   gulp.watch('src/js/**/**/*.js', ['scripts']);
   gulp.watch('src/scss/*.scss', ['sass']);
   gulp.watch('src/index.html', ['html']);
+  gulp.watch('src/lib/*', ['scripts']);
 });
 
 // start server

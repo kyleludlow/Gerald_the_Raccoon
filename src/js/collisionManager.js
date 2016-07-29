@@ -1,4 +1,4 @@
-var utils = require('./utils');
+
 
 function collisionDetection(options, collisionHandlers) {
     var entity = options.entity;
@@ -27,7 +27,7 @@ function collisionDetection(options, collisionHandlers) {
 								// positions entity along side of the wall
                 entity.x = baseCol * tileSize;
 								// checks for non-wall collision events and returns accordingly (see entity collisions)
-								return this.collidesRight(levels, this.entity, baseRow, baseCol);
+								return this.collidesRight(levels, entity, baseRow, baseCol);
             }
         }
 
@@ -38,7 +38,7 @@ function collisionDetection(options, collisionHandlers) {
 								// positions entity along side of the wall
                 entity.x = (baseCol + 1) * tileSize;
 								// checks for non-wall collision events and returns accordingly (see entity collisions)
-								return this.collidesLeft(levels, this.entity, baseRow, baseCol);
+								return this.collidesLeft(levels, entity, baseRow, baseCol);
 
             }
         }
@@ -50,7 +50,7 @@ function collisionDetection(options, collisionHandlers) {
 								// positions entity along side of the wall
 								entity.y = baseRow * tileSize;
 								// checks for non-wall collision events and returns accordingly (see entity collisions)
-                return this.collidesBelow(levels, this.entity, baseRow, baseCol);
+                return this.collidesBelow(levels, entity, baseRow, baseCol);
             }
         }
 
@@ -61,7 +61,7 @@ function collisionDetection(options, collisionHandlers) {
 								// positions entity along side of the wall
                 entity.y = (baseRow + 1) * tileSize;
 								// checks for non-wall collision events and returns accordingly (see entity collisions)
-								return this.collidesAbove(levels, this.entity, baseRow, baseCol);
+								return this.collidesAbove(levels, entity, baseRow, baseCol);
 
             }
         }

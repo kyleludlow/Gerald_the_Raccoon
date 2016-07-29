@@ -17,7 +17,7 @@ var Mob = function(options) {
 };
 
 Mob.prototype.draw = function() {
-  console.log('i am drawing', this.facing);
+  // console.log('i am drawing', this.facing);
   var singleTileSpec;
 
   switch (this.facing) {
@@ -158,14 +158,14 @@ Mob.prototype.move = function(moveX, moveY) {
 };
 
 Mob.prototype.atTarget = function() {
-  //TODO: add code for what happens when farmer reaches
-  //player
+  $('.death-wrapper').animate({left: '0'});
 };
 
 Mob.prototype.chooseAction = function() {
   if (
-    Math.abs(this.y - this.targetAgent.y) < 1 && Math.abs(this.x - this.targetAgent.x) < 1
+    Math.abs(this.y - this.targetAgent.y) < 20 && Math.abs(this.x - this.targetAgent.x) < 20
   ) {
+    // console.log('HERE!');
     this.atTarget();
   }
   else {
