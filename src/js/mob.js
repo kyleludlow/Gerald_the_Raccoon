@@ -15,6 +15,7 @@ var Mob = function(options) {
   this.sprite = new Image();
   this.facing = 'down';
   this.context = options.context;
+  this.active = true;
 };
 
 Mob.prototype.draw = function() {
@@ -176,5 +177,10 @@ Mob.prototype.chooseAction = function() {
     this.moveToTarget();
   }
 };
+
+Mob.prototype.explode = function() {
+  console.log('BOPOOOOOOOM');
+  this.active = false;
+}
 
 exports.Mob = Mob;

@@ -1,14 +1,40 @@
-function projectileCollision({projectile, tileSize, levels}) {
+function projectileCollision({projectile, mobs, tileSize}, levels) {
 
 	var baseCol = Math.floor(projectile.x/tileSize);
 	var baseRow = Math.floor(projectile.y/tileSize);
 	var colOverlap = (projectile.x%tileSize) + projectile.width;
 	var rowOverlap = (projectile.y%tileSize) + projectile.height;
-//   console.log(baseCol, baseRow, colOverlap, rowOverlap);
+  // console.log('IN PROJECTILES....BITCH', levels);
+	// console.log('BASECOL', baseCol);
+	// console.log('TILESIZE', tileSize);
+	// console.log('PROJECTILE', projectile);
 
-    // check for horizontal projectile collisions
+		// console.log(mob);
+		// check for horizontal projectile collisions
+		//
+		if(mobs){
+			mobs.forEach(function(mob) {
+				console.log('im heeeeeeere');
+				if ((Math.abs(colOverlap - mob.x) < 30) || (Math.abs(rowOverlap - mob.y) < 30)) {
+					mob.explode();
+					// return projectile.active = false;
+					// console.log(projectile);
 
-    if(projectile.xVelocity>0){
+					// projectile.image.src = './img/fireball_die_right.png';
+					// mob.image.src = '';
+					// projectile.width = 64;
+					// projectile.height = 64;
+					// projectile.y -= 5;
+					// projectile.x=baseCol*tileSize;
+					// setTimeout(() => { projectile.active = false }, 100)
+					// alert('BOOOOOOOOOM BITCH');
+				}
+			});
+		}
+
+
+
+		if(projectile.xVelocity>0){
         if((levels.map[baseRow][baseCol+1] && !levels.map[baseRow][baseCol]) || (levels.map[baseRow+1][baseCol+1] && !levels.map[baseRow+1][baseCol] && rowOverlap)){
             projectile.image.src = './img/fireball_die_right.png';
             projectile.width = 64;

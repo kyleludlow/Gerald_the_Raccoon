@@ -150,9 +150,9 @@ function startGame() { // broke the start game into a function so it can be trig
 		};
 
 		// checks for projectile wall collisions
-		playerClass.playerProjectiles.forEach(function(projectile) {
-			projectileCollision.projectileCollision({projectile: projectile, tileSize: tileSize, levels: levels});
-		});
+		// playerClass.playerProjectiles.forEach(function(projectile) {
+		// 	projectileCollision.projectileCollision({projectile: projectile, tileSize: tileSize, levels: levels});
+		// });
 
 		// checks for when player reaches exit/stairs
 		var exit = playerCollision.playerCollision(collisionParams);
@@ -171,7 +171,7 @@ function startGame() { // broke the start game into a function so it can be trig
 		// collisionManager.collisionDetection(collisionParams);
 
 		// rendering
-		renderer.render();
+		renderer.render(levels, tileSize);
 
 		// update the game in about 1/60 seconds
 		if (gameRunning) {
