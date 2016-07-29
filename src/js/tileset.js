@@ -13,14 +13,14 @@ var Tileset = function(options){
 
 Tileset.prototype.onSpriteLoad = function(e){
 	this.spriteLoaded = true;
-  console.log('sprite loaded', this.sprite);
+  // console.log('sprite loaded', this.sprite);
 	this.onReady();
 };
 
 Tileset.prototype.onSpecLoad = function(data){
 	this.specLoaded = true;
 	this.tileSpec = data;
-  console.log('spec loaded', this.tileSpec);
+  // console.log('spec loaded', this.tileSpec);
 	this.onReady();
 };
 

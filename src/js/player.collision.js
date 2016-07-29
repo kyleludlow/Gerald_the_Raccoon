@@ -7,7 +7,6 @@ var playerCollisions = {};
 // handles player non-wall right collision events
 playerCollisions.collidesRight = function(levels, entity, baseRow, baseCol) {
     // if the tile to the right is a staircase, return true for level handling
-    console.log("YO ", entity);
     if (levels.map[baseRow][baseCol + 1] === 10) {
         return true;
     }

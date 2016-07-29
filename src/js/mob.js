@@ -1,4 +1,5 @@
 var astar = require('../lib/astar');
+var game = require('./app.js');
 
 var Mob = function(options) {
   this.updateMap(options.levels);
@@ -158,14 +159,17 @@ Mob.prototype.move = function(moveX, moveY) {
 };
 
 Mob.prototype.atTarget = function() {
-  $('.death-wrapper').animate({left: '0'});
+  game.setGameCycle();
+  $('.death-wrapper').animate({left: "0"}).on('click', 'button', function() {
+    $('.death-wrapper').animate({left: '-100vw', display: 'none'});
+    $(this).blur(); // lose focus on the start again button otherwise it's triggered by spacebar.
+  })
 };
 
 Mob.prototype.chooseAction = function() {
-  if (
-    Math.abs(this.y - this.targetAgent.y) < 20 && Math.abs(this.x - this.targetAgent.x) < 20
+  if ( // best distance i could fine without it crashing
+    Math.abs(this.y - this.targetAgent.y) < 25 && Math.abs(this.x - this.targetAgent.x) < 25
   ) {
-    // console.log('HERE!');
     this.atTarget();
   }
   else {
