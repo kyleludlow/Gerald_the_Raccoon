@@ -25,7 +25,6 @@ var Player = function(options) {
 };
 
 //draws player
-
 Player.prototype.draw = function() {
   var singleTileSpec;
 
@@ -165,6 +164,5 @@ Player.prototype.moveStop = function(e) {
 				this.keyPresses.spacePressed = false;
 	};
 };
-
 
 exports.Player = Player;

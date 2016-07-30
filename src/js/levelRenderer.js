@@ -73,11 +73,11 @@ Renderer.prototype.render = function(levels, tileSize) {
     projectile.draw();
   });
 
-
-  // renders gerald
-  this.mobs.forEach(mob =>{
-    if (mob.active === false){
+  // kills mob upon collision
+  this.mobs.forEach(mob => {
+    if (mob.active === false) {
       var mobIndex = this.mobs.indexOf(mob);
+
       this.mobs.splice(mobIndex, 1);
     }
   });

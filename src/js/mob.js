@@ -130,7 +130,7 @@ Mob.prototype.moveToTarget = function() {
   }
 
   this.move(moveX, moveY);
-}
+};
 
 //movement pattern for mob
 Mob.prototype.move = function(moveX, moveY) {
@@ -138,6 +138,9 @@ Mob.prototype.move = function(moveX, moveY) {
   this.y += moveY;
   this.xSpeed = moveX;
   this.ySpeed = moveY;
+
+  // used to determine which sprite to render based on
+  // direction gerald is facing
 
   if (moveX > 0) {
     this.facing = 'right';
