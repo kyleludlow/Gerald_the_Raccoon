@@ -19,7 +19,6 @@ var Mob = function(options) {
 };
 
 Mob.prototype.draw = function() {
-  // console.log('i am drawing', this.facing);
   var singleTileSpec;
 
   switch (this.facing) {
@@ -63,7 +62,6 @@ Mob.prototype.draw = function() {
 //retrieves level and converts map to walkable (w) vs
 // unwalkable (u) tiles for pathfinding
 Mob.prototype.updateMap = function(level) {
-  // console.log(level);
   this.levels = level.map;
   this.walkableMap = this.levels.map(function(row) {
     return row.map(function(tile) {
@@ -73,7 +71,6 @@ Mob.prototype.updateMap = function(level) {
       else {
         return 'u'
       }
-      // return tile === 0 ? 'w' : 'u';
     })
   });
 };

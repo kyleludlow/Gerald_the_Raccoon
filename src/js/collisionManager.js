@@ -7,8 +7,6 @@ function collisionDetection(options, collisionHandlers) {
     var colOverlap = entity.x % tileSize;
     var rowOverlap = entity.y % tileSize;
 
-		// console.log(entity);
-
 		// defines entity specific collision handlers to be updated by entity
     this.collidesLeft = collisionHandlers.collidesLeft;
     this.collidesRight = collisionHandlers.collidesRight;

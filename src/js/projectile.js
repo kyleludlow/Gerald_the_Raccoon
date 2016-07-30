@@ -42,7 +42,6 @@ function makeProjectile(I, canvas) {
 
   // draws projectile sprite to map
   I.draw = function() {
-    console.log(I);
     if (I.active) {
       var context = canvas.getContext("2d");
   		context.drawImage(I.image, I.x - 25, I.y - 15, this.width, this.height);
@@ -55,9 +54,7 @@ function makeProjectile(I, canvas) {
       I.x += I.xVelocity;
       I.y += I.yVelocity;
     }
-
   };
-
   return I;
 };
 

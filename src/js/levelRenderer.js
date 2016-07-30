@@ -74,7 +74,7 @@ Renderer.prototype.render = function(levels, tileSize) {
   });
 
 
-  //renders gerald
+  // renders gerald
   this.mobs.forEach(mob =>{
     if (mob.active === false){
       var mobIndex = this.mobs.indexOf(mob);
