@@ -15,10 +15,10 @@ var Mob = function(options) {
   this.sprite = new Image();
   this.facing = 'down';
   this.context = options.context;
+  this.active = true;
 };
 
 Mob.prototype.draw = function() {
-  // console.log('i am drawing', this.facing);
   var singleTileSpec;
 
   switch (this.facing) {
@@ -62,7 +62,6 @@ Mob.prototype.draw = function() {
 //retrieves level and converts map to walkable (w) vs
 // unwalkable (u) tiles for pathfinding
 Mob.prototype.updateMap = function(level) {
-  // console.log(level);
   this.levels = level.map;
   this.walkableMap = this.levels.map(function(row) {
     return row.map(function(tile) {
@@ -72,7 +71,6 @@ Mob.prototype.updateMap = function(level) {
       else {
         return 'u'
       }
-      // return tile === 0 ? 'w' : 'u';
     })
   });
 };
@@ -132,7 +130,7 @@ Mob.prototype.moveToTarget = function() {
   }
 
   this.move(moveX, moveY);
-}
+};
 
 //movement pattern for mob
 Mob.prototype.move = function(moveX, moveY) {
@@ -140,6 +138,9 @@ Mob.prototype.move = function(moveX, moveY) {
   this.y += moveY;
   this.xSpeed = moveX;
   this.ySpeed = moveY;
+
+  // used to determine which sprite to render based on
+  // direction gerald is facing
 
   if (moveX > 0) {
     this.facing = 'right';
@@ -175,6 +176,10 @@ Mob.prototype.chooseAction = function() {
   else {
     this.moveToTarget();
   }
+};
+
+Mob.prototype.explode = function() {
+  this.active = false;
 };
 
 exports.Mob = Mob;

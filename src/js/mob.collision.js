@@ -1,6 +1,5 @@
 var collisionManager = require('./collisionManager').collisionDetection;
 
-
 // defines object for mob specific collision events
 var mobCollisions = {};
 

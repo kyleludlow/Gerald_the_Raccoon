@@ -1,5 +1,6 @@
 var mob = require('./mob');
 var mobCollision = require('./mob.collision');
+var projectileCollision = require('./projectile.collision');
 
 var Renderer = function(options) {
   this.canvas = options.canvas;
@@ -19,7 +20,7 @@ var Renderer = function(options) {
   this.killMobs = false;
 };
 
-//general drawing function for all tiles
+// general drawing function for all tiles
 Renderer.prototype.drawTile = function(sprite, singleTileSpec, x, y) {
 	this.context.drawImage(
 		sprite,
@@ -28,7 +29,7 @@ Renderer.prototype.drawTile = function(sprite, singleTileSpec, x, y) {
 	);
 };
 
-Renderer.prototype.render = function() {
+Renderer.prototype.render = function(levels, tileSize) {
   // if new level, clear out mobs array
   if (this.killMobs) {
     this.mobs = [];
@@ -36,6 +37,7 @@ Renderer.prototype.render = function() {
   }
   // clear the canvas
   this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  // render level sprites (walls, stairs, trash cans)
   for (var i = 0; i<this.levelRows; i++) {
     for(var j = 0; j<this.levelCols; j++) {
       if(this.levels.map[i][j] !== 0 && this.levels.map[i][j] < 2) {
@@ -48,9 +50,8 @@ Renderer.prototype.render = function() {
         this.drawTile(this.pickupTileset.sprite, this.pickupTileset.tileSpec[1], j, i);
       }
       else if (this.levels.map[i][j] === 12) {
-        // console.log(this.levels.map[i].indexOf(12));
         this.mobs.push(new mob.Mob({
-          x: this.levels.map[i].indexOf(12) * 32,
+          x: j * 32,
           y: i * 32,
           tileSize: this.tileSize,
           context: this.context,
@@ -65,28 +66,36 @@ Renderer.prototype.render = function() {
   this.playerClass.draw();
 
   this.playerClass.playerProjectiles.forEach(function(projectile) {
+    projectileCollision.projectileCollision({projectile: projectile, mobs: this.mobs, tileSize: tileSize}, levels);
+  }, this);
+
+  this.playerClass.playerProjectiles.forEach(function(projectile) {
     projectile.draw();
   });
 
-  //renders gerald
-  //this.drawTile(this.charTileset.sprite, this.charTileset.tileSpec[1], this.playerClass.x/this.playerClass.width, this.playerClass.y/this.playerClass.height);
-
-  //renders mob
+  // kills mob upon collision
   this.mobs.forEach(mob => {
-    // this.drawTile(this.farmerTileset.sprite, this.farmerTileset.tileSpec[1], mob.x/mob.width, mob.y/mob.height);
-    mob.chooseAction();
+    if (mob.active === false) {
+      var mobIndex = this.mobs.indexOf(mob);
 
-    // parameters for mob collisions
-    var collisionParams = {
-			entity: mob,
-			tileSize: this.tileSize,
-			levels: this.levels
-		};
-    // intiate mob collision handling
-    mobCollision.mobCollision(collisionParams);
-    mob.draw();
-  })
-  //this.drawTile(this.farmerTileset.sprite, this.farmerTileset.tileSpec[1], this.mobClass.x/this.mobClass.width, this.mobClass.y/this.mobClass.height);
+      this.mobs.splice(mobIndex, 1);
+    }
+  });
+
+  // renders mob
+  this.mobs.forEach(mob => {
+      mob.chooseAction();
+
+      // parameters for mob collisions
+      var collisionParams = {
+        entity: mob,
+        tileSize: this.tileSize,
+        levels: this.levels
+      };
+      // initiate mob collision handling
+      mobCollision.mobCollision(collisionParams);
+      mob.draw();
+  });
 };
 
 exports.Renderer = Renderer;

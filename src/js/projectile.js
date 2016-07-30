@@ -1,5 +1,4 @@
 // sets projectile direction, draws projectile, updates projectile, contains projectile
-
 function makeProjectile(I, canvas) {
 
   I.active = true;
@@ -43,16 +42,19 @@ function makeProjectile(I, canvas) {
 
   // draws projectile sprite to map
   I.draw = function() {
-		var context = canvas.getContext("2d");
-		context.drawImage(I.image, I.x - 25, I.y - 15, this.width, this.height);
+    if (I.active) {
+      var context = canvas.getContext("2d");
+  		context.drawImage(I.image, I.x - 25, I.y - 15, this.width, this.height);
+    }
   };
 
   // updates projectile x and y coordinates on map
   I.update = function() {
-    I.x += I.xVelocity;
-    I.y += I.yVelocity;
+    if (I.active) {
+      I.x += I.xVelocity;
+      I.y += I.yVelocity;
+    }
   };
-
   return I;
 };
 

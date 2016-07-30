@@ -1,12 +1,10 @@
-
 var utils = require('./utils');
 var gameRunning = false;
-
 
 document.addEventListener('DOMContentLoaded', function() {
   utils.init();
 	$('.play').on('click', setGameCycle); // both intro and death screen have '.play' buttons;
-})
+});
 
 function setGameCycle() { // function to start and stop game cycle.
 	$('.intro-screen').fadeOut(500);
@@ -14,12 +12,9 @@ function setGameCycle() { // function to start and stop game cycle.
 	if (gameRunning) {
 		startGame();
 	}
-	console.log(gameRunning);
-}
+};
 
 function startGame() { // broke the start game into a function so it can be triggered when needed.
-	// var utils = require('./utils');
-	// utils.init();
 	var canvas = document.getElementById("canvas");   // the canvas where game will be drawn
 	var context = canvas.getContext("2d");            // canvas context
 	var levelRenderer = require('./levelRenderer');
@@ -124,7 +119,7 @@ function startGame() { // broke the start game into a function so it can be trig
 			spritePath: '../img/trash_can.png',
 			specPath: '../spec/sprite.json',
 			onReady: loadCheck
-	})
+	});
 
 	// function to handle the game itself
 	function updateGame() {
@@ -149,16 +144,10 @@ function startGame() { // broke the start game into a function so it can be trig
 			levels: levels
 		};
 
-		// checks for projectile wall collisions
-		playerClass.playerProjectiles.forEach(function(projectile) {
-			projectileCollision.projectileCollision({projectile: projectile, tileSize: tileSize, levels: levels});
-		});
-
 		// checks for when player reaches exit/stairs
 		var exit = playerCollision.playerCollision(collisionParams);
 
 		if (exit) {
-			console.log(levels.num);
 			levels = levelManager.LevelChoice(levels.num + 1);
 			renderer.levels = levels;
 			renderer.killMobs = true;
@@ -171,7 +160,7 @@ function startGame() { // broke the start game into a function so it can be trig
 		// collisionManager.collisionDetection(collisionParams);
 
 		// rendering
-		renderer.render();
+		renderer.render(levels, tileSize);
 
 		// update the game in about 1/60 seconds
 		if (gameRunning) {

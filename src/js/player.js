@@ -25,7 +25,6 @@ var Player = function(options) {
 };
 
 //draws player
-
 Player.prototype.draw = function() {
   var singleTileSpec;
 
@@ -58,7 +57,6 @@ Player.prototype.draw = function() {
         y: 0
       };
 			break;
-		default:
 	}
   this.context.drawImage(
 		this.sprite,
@@ -166,6 +164,5 @@ Player.prototype.moveStop = function(e) {
 				this.keyPresses.spacePressed = false;
 	};
 };
-
 
 exports.Player = Player;

@@ -3,7 +3,7 @@ var maps = require('./maps');
 // function to send the correct map to the renderer.
 
 var LevelChoice = function(choice) {
-    var level = null; 
+    var level = null;
     switch (choice) {
         case 1:
             level = {
@@ -46,7 +46,6 @@ var LevelChoice = function(choice) {
             }
     }
     return level;
-};                           
+};
 
 exports.LevelChoice = LevelChoice;
-
