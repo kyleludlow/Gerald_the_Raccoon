@@ -37,6 +37,22 @@ var LevelChoice = function(choice) {
                 playerRow: maps.levels.four.playerRow
             }
             break;
+        case 5:
+            level = {
+                map: JSON.parse(JSON.stringify(maps.levels.five.map)),
+                num: maps.levels.five.num,
+                playerCol: maps.levels.five.playerCol,
+                playerRow: maps.levels.five.playerRow
+            }
+            break;
+        case 6:
+            level = {
+                map: JSON.parse(JSON.stringify(maps.levels.six.map)),
+                num: maps.levels.six.num,
+                playerCol: maps.levels.six.playerCol,
+                playerRow: maps.levels.six.playerRow
+            }
+            break;
         default:
             level = {
                 map: JSON.parse(JSON.stringify(maps.levels.one.map)),
