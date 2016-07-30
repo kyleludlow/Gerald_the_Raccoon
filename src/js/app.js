@@ -1,7 +1,5 @@
-
 var utils = require('./utils');
 var gameRunning = false;
-
 
 document.addEventListener('DOMContentLoaded', function() {
   utils.init();
@@ -14,7 +12,6 @@ function setGameCycle() { // function to start and stop game cycle.
 	if (gameRunning) {
 		startGame();
 	}
-	console.log(gameRunning);
 }
 
 function startGame() { // broke the start game into a function so it can be triggered when needed.
@@ -158,7 +155,6 @@ function startGame() { // broke the start game into a function so it can be trig
 		var exit = playerCollision.playerCollision(collisionParams);
 
 		if (exit) {
-			console.log(levels.num);
 			levels = levelManager.LevelChoice(levels.num + 1);
 			renderer.levels = levels;
 			renderer.killMobs = true;

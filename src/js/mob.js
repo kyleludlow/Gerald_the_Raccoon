@@ -179,8 +179,7 @@ Mob.prototype.chooseAction = function() {
 };
 
 Mob.prototype.explode = function() {
-  console.log('BOPOOOOOOOM');
   this.active = false;
-}
+};
 
 exports.Mob = Mob;

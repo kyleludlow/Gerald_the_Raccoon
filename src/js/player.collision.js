@@ -14,8 +14,9 @@ playerCollisions.collidesRight = function(levels, entity, baseRow, baseCol) {
     else if (levels.map[baseRow][baseCol + 1] === 11) {
         entity.score += 1;
         utils.textWobbler(`Score: ${entity.score}`, '.score');
-        return levels.map[baseRow][baseCol + 1] = 0;
+        levels.map[baseRow][baseCol + 1] = 0;
     }
+    return false;
 };
 
 // handles player non-wall left collision events
@@ -28,8 +29,9 @@ playerCollisions.collidesLeft = function(levels, entity, baseRow, baseCol) {
     else if (levels.map[baseRow + 1][baseCol] === 11) {
         entity.score += 1;
         utils.textWobbler(`Score: ${entity.score}`, '.score');
-        return levels.map[baseRow + 1][baseCol] = 0;
+        levels.map[baseRow + 1][baseCol] = 0;
     }
+    return false;
 };
 
 // handles player non-wall below collision events
@@ -42,8 +44,9 @@ playerCollisions.collidesBelow = function(levels, entity, baseRow, baseCol) {
     else if (levels.map[baseRow + 1][baseCol] === 11) {
         entity.score += 1;
         utils.textWobbler(`Score: ${entity.score}`, '.score');
-        return levels.map[baseRow + 1][baseCol] = 0;
+        levels.map[baseRow + 1][baseCol] = 0;
     }
+    return false;
 };
 
 // handles player non-wall above collision events
@@ -56,19 +59,14 @@ playerCollisions.collidesAbove = function(levels, entity, baseRow, baseCol) {
     else if (levels.map[baseRow][baseCol] === 11) {
         entity.score += 1;
         utils.textWobbler(`Score: ${entity.score}`, '.score');
-        return levels.map[baseRow][baseCol] = 0;
+        levels.map[baseRow][baseCol] = 0;
     }
+    return false;
 };
 
 // calls the collision manager with player specific collision event handlers
 var playerCollision = function(options) {
-    // if player collides with staircase, return true for level handling
-    if (collisionManager(options, playerCollisions) === true) {
-        return true;
-    }
-
     return collisionManager(options, playerCollisions);
-
 };
 
 exports.playerCollision = playerCollision;

@@ -20,7 +20,7 @@ var Renderer = function(options) {
   this.killMobs = false;
 };
 
-//general drawing function for all tiles
+// general drawing function for all tiles
 Renderer.prototype.drawTile = function(sprite, singleTileSpec, x, y) {
 	this.context.drawImage(
 		sprite,
@@ -37,6 +37,7 @@ Renderer.prototype.render = function(levels, tileSize) {
   }
   // clear the canvas
   this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  // render level sprites (walls, stairs, trash cans)
   for (var i = 0; i<this.levelRows; i++) {
     for(var j = 0; j<this.levelCols; j++) {
       if(this.levels.map[i][j] !== 0 && this.levels.map[i][j] < 2) {
@@ -49,9 +50,8 @@ Renderer.prototype.render = function(levels, tileSize) {
         this.drawTile(this.pickupTileset.sprite, this.pickupTileset.tileSpec[1], j, i);
       }
       else if (this.levels.map[i][j] === 12) {
-        // console.log(this.levels.map[i].indexOf(12));
         this.mobs.push(new mob.Mob({
-          x: this.levels.map[i].indexOf(12) * 32,
+          x: j * 32,
           y: i * 32,
           tileSize: this.tileSize,
           context: this.context,
@@ -73,31 +73,17 @@ Renderer.prototype.render = function(levels, tileSize) {
     projectile.draw();
   });
 
-  // this.playerClass.playerProjectiles.forEach(function(projectile) {
-  //   projectile.update();
-  // });
-  // this.playerClass.playerProjectiles = playerClass.playerProjectiles.filter(function(projectile) {
-  //   return projectile.active;
-  // });
-  // console.log(levels);
 
-
-// console.log(this.playerClass.playerProjectiles);
   //renders gerald
-  //this.drawTile(this.charTileset.sprite, this.charTileset.tileSpec[1], this.playerClass.x/this.playerClass.width, this.playerClass.y/this.playerClass.height);
-this.mobs.forEach(mob =>{
-  if (mob.active === false){
-    var mobIndex = this.mobs.indexOf(mob);
-    this.mobs.splice(mobIndex, 1);
-  }
-}
+  this.mobs.forEach(mob =>{
+    if (mob.active === false){
+      var mobIndex = this.mobs.indexOf(mob);
+      this.mobs.splice(mobIndex, 1);
+    }
+  });
 
-)
-  //renders mob
+  // renders mob
   this.mobs.forEach(mob => {
-    // this.drawTile(this.farmerTileset.sprite, this.farmerTileset.tileSpec[1], mob.x/mob.width, mob.y/mob.height);
-
-    
       mob.chooseAction();
 
       // parameters for mob collisions
@@ -106,14 +92,10 @@ this.mobs.forEach(mob =>{
         tileSize: this.tileSize,
         levels: this.levels
       };
-      // intiate mob collision handling
+      // initiate mob collision handling
       mobCollision.mobCollision(collisionParams);
       mob.draw();
-
-
-
-  })
-  //this.drawTile(this.farmerTileset.sprite, this.farmerTileset.tileSpec[1], this.mobClass.x/this.mobClass.width, this.mobClass.y/this.mobClass.height);
+  });
 };
 
 exports.Renderer = Renderer;

@@ -1,5 +1,4 @@
 // sets projectile direction, draws projectile, updates projectile, contains projectile
-
 function makeProjectile(I, canvas) {
 
   I.active = true;

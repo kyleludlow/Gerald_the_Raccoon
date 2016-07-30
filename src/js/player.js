@@ -58,7 +58,6 @@ Player.prototype.draw = function() {
         y: 0
       };
 			break;
-		default:
 	}
   this.context.drawImage(
 		this.sprite,
