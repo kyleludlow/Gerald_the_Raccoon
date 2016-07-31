@@ -82,6 +82,7 @@ function startGame() { // broke the start game into a function so it can be trig
 				farmerTileset: farmerTileset,
 				stairTileset: stairTileset,
 				pickupTileset: pickupTileset,
+				doorTileset: doorTileset,
 				tileSize: tileSize
 			};
 			renderer = new levelRenderer.Renderer(renderOptions);
@@ -89,7 +90,7 @@ function startGame() { // broke the start game into a function so it can be trig
 		}
 	};
 
-	var tilesets = 5;
+	var tilesets = 6;
 	// background tileset
 	bgTileset = new tileset.Tileset({
 			spritePath: '../img/walls.png',
@@ -117,6 +118,12 @@ function startGame() { // broke the start game into a function so it can be trig
 	// pickable items tileset
 	pickupTileset = new tileset.Tileset({
 			spritePath: '../img/trash_can.png',
+			specPath: '../spec/sprite.json',
+			onReady: loadCheck
+	});
+	//door tileset
+	doorTileset = new tileset.Tileset({
+			spritePath: '../img/door.png',
 			specPath: '../spec/sprite.json',
 			onReady: loadCheck
 	});

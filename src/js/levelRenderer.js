@@ -16,8 +16,11 @@ var Renderer = function(options) {
   this.farmerTileset = options.farmerTileset;
   this.tileSize = options.tileSize;
   this.pickupTileset = pickupTileset;
+  this.doorTileset = options.doorTileset;
   this.mobs = [];
   this.killMobs = false;
+  this.time = Date.now(); // for spawning mobs every x seconds
+  this.enemyCoords = []; // for spawning mobs in the same place
 };
 
 // general drawing function for all tiles
@@ -30,9 +33,11 @@ Renderer.prototype.drawTile = function(sprite, singleTileSpec, x, y) {
 };
 
 Renderer.prototype.render = function(levels, tileSize) {
-  // if new level, clear out mobs array
+  // if new level, clear out mobs array, previous enemy coords and resest the spawn timer;
   if (this.killMobs) {
     this.mobs = [];
+    this.enemyCoords = [];
+    this.time = Date.now();
     this.killMobs = false;
   }
   // clear the canvas
@@ -43,13 +48,18 @@ Renderer.prototype.render = function(levels, tileSize) {
       if(this.levels.map[i][j] !== 0 && this.levels.map[i][j] < 2) {
         this.drawTile(this.bgTileset.sprite, this.bgTileset.tileSpec[this.levels.map[i][j]], j, i);
       }
-      else if (this.levels.map[i][j] === 10) {
+      else if (this.levels.map[i][j] === 3) {
         this.drawTile(this.stairTileset.sprite, this.stairTileset.tileSpec[1], j, i);
       }
-      else if (this.levels.map[i][j] === 11) {
+      else if (this.levels.map[i][j] === 4) {
         this.drawTile(this.pickupTileset.sprite, this.pickupTileset.tileSpec[1], j, i);
       }
-      else if (this.levels.map[i][j] === 12) {
+      else if (this.levels.map[i][j] === 5) {
+        this.drawTile(this.doorTileset.sprite, this.doorTileset.tileSpec[1], j, i);
+      }
+
+      else if (this.levels.map[i][j] === 9) {
+        this.enemyCoords.push({x: j * 32, y: i * 32}); // save enemy coords for spawning
         this.mobs.push(new mob.Mob({
           x: j * 32,
           y: i * 32,
@@ -81,6 +91,22 @@ Renderer.prototype.render = function(levels, tileSize) {
       this.mobs.splice(mobIndex, 1);
     }
   });
+
+  // add new mob after 4 secs but not too many :D
+  if (Date.now() - this.time > 4000 && this.mobs.length < 8) {
+    this.enemyCoords.forEach(coord => {
+      this.mobs.push(new mob.Mob({
+        x: coord.x,
+        y: coord.y,
+        tileSize: this.tileSize,
+        context: this.context,
+        targetAgent: this.playerClass,
+        levels: this.levels //for astar
+      }))
+      this.time = Date.now();
+    })
+    
+  }
 
   // renders mob
   this.mobs.forEach(mob => {
