@@ -10,9 +10,18 @@
 .death {
   box-sizing: border-box;
   color: red;
-  font: 4em 'bearpawregular', cursive;
+  font: 1.8em 'Nosifer', cursive;
   left: 25%;
   position: absolute;
   top: 25%;
   transform: translate(-25% -25%);
+
+  button {
+    border: none;
+    background-color: transparent;
+    padding: 0.4em;
+    color: green;
+    cursor: pointer;
+    font: 1.5em 'Slackey', cursive;
+  }
 }

@@ -4,11 +4,10 @@ var game = require('./app');
 var init = function() {
   resizeIntro(); // make sure intro screen fills the viewport...
   textWobbler('Gerald The Raccoon', '.intro-wrapper h1');
-
+  textWobbler('Play Again?', '.death button');
   $(window).on('resize', function() {
     resizeIntro();
   })
-  
 };
 
 // broke wobbly text idea into function so it can be used across the app.
@@ -35,6 +34,7 @@ function resizeIntro() {
   var height = window.innerHeight;
 
   $('.intro-screen').css({'width' : width + "px", 'height': height + "px"});
+  $('.death-wrapper').css({'width' : width + "px", 'height': height + "px"});
 }
 
 exports.init = init;
