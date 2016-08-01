@@ -17,7 +17,17 @@ var init = function() {
     'fireball_die_down.png',
     'fireball_die_left.png',
     'fireball_die_right.png',
-    'fireball_die_up.png'
+    'fireball_die_up.png',
+    'leftFacingT.png',
+    'PonAndCon.gif',
+    'PonAndCon-backwards.png',
+    'PonAndConReverse.gif',
+    'rightFacingT.png',
+    'stairs.png',
+    'trash_can.png',
+    'tTiles.png',
+    'upsideDownT.png',
+    'walls.png'
   ])
   $(window).on('resize', function() {
     resizeIntro();
