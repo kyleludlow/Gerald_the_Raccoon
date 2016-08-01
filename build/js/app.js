@@ -92,7 +92,7 @@ function startGame() { // broke the start game into a function so it can be trig
 		}
 	};
 
-	var spec = require('../spec/farmer.json');
+	
 
 	var tilesets = 7;
 	// background tileset
@@ -193,7 +193,7 @@ function startGame() { // broke the start game into a function so it can be trig
 exports.startGame = startGame;
 exports.setGameCycle = setGameCycle;
 
-},{"../spec/farmer.json":15,"./collisionManager":2,"./levelManager":3,"./levelRenderer":4,"./mob":7,"./player":9,"./player.collision":8,"./projectile":11,"./projectile.collision":10,"./tileset":12,"./utils":13}],2:[function(require,module,exports){
+},{"./collisionManager":2,"./levelManager":3,"./levelRenderer":4,"./mob":7,"./player":9,"./player.collision":8,"./projectile":11,"./projectile.collision":10,"./tileset":12,"./utils":13}],2:[function(require,module,exports){
 function collisionDetection(options, collisionHandlers) {
     var entity = options.entity;
     var tileSize = options.tileSize;
@@ -1362,6 +1362,7 @@ var init = function() {
   resizeIntro(); // make sure intro screen fills the viewport...
   textWobbler('Gerald The Raccoon', '.intro-wrapper h1');
   textWobbler('Play Again?', '.death button');
+  var spec = require('../spec/farmer.json');
   preload([
     'img/animals.gif',
     'img/door.png',
@@ -1430,7 +1431,7 @@ function resizeIntro() {
 
 exports.init = init;
 exports.textWobbler = textWobbler;
-},{"./app":1}],14:[function(require,module,exports){
+},{"../spec/farmer.json":15,"./app":1}],14:[function(require,module,exports){
 /**
 * AStarFloodFill
 * Fork of Matthew Trost's A-Star Pathfinding Algorithm by D Neame @cham
