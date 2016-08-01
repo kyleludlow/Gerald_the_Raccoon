@@ -134,7 +134,7 @@ function startGame() { // broke the start game into a function so it can be trig
 	});
 	//door tileset
 	doorTileset = new tileset.Tileset({
-			spritePath: '../img/door.png',
+			spritePath: './img/door.png',
 			specPath: './spec/sprite.json',
 			onReady: loadCheck
 	});
