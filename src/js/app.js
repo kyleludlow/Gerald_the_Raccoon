@@ -91,7 +91,7 @@ function startGame() { // broke the start game into a function so it can be trig
 		}
 	};
 
-	var spec = require('../spec/farmer.json');
+	
 
 	var tilesets = 7;
 	// background tileset

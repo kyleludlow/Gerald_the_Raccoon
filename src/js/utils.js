@@ -5,6 +5,7 @@ var init = function() {
   resizeIntro(); // make sure intro screen fills the viewport...
   textWobbler('Gerald The Raccoon', '.intro-wrapper h1');
   textWobbler('Play Again?', '.death button');
+  var spec = require('../spec/farmer.json');
   preload([
     'img/animals.gif',
     'img/door.png',
