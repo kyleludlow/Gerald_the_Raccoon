@@ -30,7 +30,7 @@ Player.prototype.draw = function() {
 
   switch (this.facing) {
 		case 'up':
-			this.sprite.src = './img/animals.gif';
+			this.sprite.src = './img/PonAndCon-backwards.png';
       singleTileSpec = {
         x: 0,
         y: 0
