@@ -17,6 +17,7 @@ var Renderer = function(options) {
   this.tileSize = options.tileSize;
   this.pickupTileset = pickupTileset;
   this.doorTileset = options.doorTileset;
+  this.tColumnTileset = options.tColumnTileset;
   this.mobs = [];
   this.killMobs = false;
   this.time = Date.now(); // for spawning mobs every x seconds
@@ -45,8 +46,39 @@ Renderer.prototype.render = function(levels, tileSize) {
   // render level sprites (walls, stairs, trash cans)
   for (var i = 0; i<this.levelRows; i++) {
     for(var j = 0; j<this.levelCols; j++) {
-      if(this.levels.map[i][j] !== 0 && this.levels.map[i][j] < 2) {
+      if (this.levels.map[i][j] !== 0 && this.levels.map[i][j] < 2) {
         this.drawTile(this.bgTileset.sprite, this.bgTileset.tileSpec[this.levels.map[i][j]], j, i);
+      }
+      else if (this.levels.map[i][j] === 7) {
+        this.drawTile(this.bgTileset.sprite, this.bgTileset.tileSpec[4], j, i);
+      }
+      else if (this.levels.map[i][j] === 2) {
+        this.drawTile(this.bgTileset.sprite, this.bgTileset.tileSpec[2], j, i);
+      }
+      else if (this.levels.map[i][j] === 11) {
+        this.drawTile(this.bgTileset.sprite, this.bgTileset.tileSpec[6], j, i);
+      }
+      else if (this.levels.map[i][j] === 10) {
+        this.drawTile(this.bgTileset.sprite, this.bgTileset.tileSpec[7], j, i);
+      }
+      else if (this.levels.map[i][j] === 6) {
+        this.drawTile(this.bgTileset.sprite, this.bgTileset.tileSpec[3], j, i);
+      }
+      else if (this.levels.map[i][j] === 8) {
+        this.drawTile(this.bgTileset.sprite, this.bgTileset.tileSpec[5], j, i);
+      }
+      else if (this.levels.map[i][j] === 12) {
+        this.drawTile(this.bgTileset.sprite, this.bgTileset.tileSpec[8], j, i);
+      }
+      // t columns
+      else if (this.levels.map[i][j] === 13) {
+        this.drawTile(this.tColumnTileset.sprite, this.tColumnTileset.tileSpec[3], j, i);
+      }
+      else if (this.levels.map[i][j] === 14) {
+        this.drawTile(this.tColumnTileset.sprite, this.tColumnTileset.tileSpec[1], j, i);
+      }
+      else if (this.levels.map[i][j] === 15) {
+        this.drawTile(this.tColumnTileset.sprite, this.tColumnTileset.tileSpec[2], j, i);
       }
       else if (this.levels.map[i][j] === 3) {
         this.drawTile(this.stairTileset.sprite, this.stairTileset.tileSpec[1], j, i);
@@ -105,7 +137,7 @@ Renderer.prototype.render = function(levels, tileSize) {
       }))
       this.time = Date.now();
     })
-    
+
   }
 
   // renders mob

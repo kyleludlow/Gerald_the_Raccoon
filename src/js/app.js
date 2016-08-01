@@ -83,6 +83,7 @@ function startGame() { // broke the start game into a function so it can be trig
 				stairTileset: stairTileset,
 				pickupTileset: pickupTileset,
 				doorTileset: doorTileset,
+        tColumnTileset: tColumnTileset,
 				tileSize: tileSize
 			};
 			renderer = new levelRenderer.Renderer(renderOptions);
@@ -90,13 +91,21 @@ function startGame() { // broke the start game into a function so it can be trig
 		}
 	};
 
-	var tilesets = 6;
+	var tilesets = 7;
 	// background tileset
 	bgTileset = new tileset.Tileset({
 			spritePath: '../img/walls.png',
 			specPath: '../spec/gaunt.json',
 			onReady: loadCheck
 	});
+
+  // tColumn tileset
+	tColumnTileset = new tileset.Tileset({
+			spritePath: '../img/tTiles.png',
+			specPath: '../spec/tTile.json',
+			onReady: loadCheck
+	});
+
 	// player tileset
 	charTileset = new tileset.Tileset({
 			spritePath: '../img/animals.gif',
