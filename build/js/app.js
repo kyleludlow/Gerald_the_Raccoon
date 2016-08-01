@@ -91,56 +91,51 @@ function startGame() { // broke the start game into a function so it can be trig
 			updateGame();
 		}
 	};
-
-
-	$.getJSON('spec/farmer.json', function(data) {
-    var farmerSpec = data || '../spec/farmer.json'
-  })
 	
 
 	var tilesets = 7;
 	// background tileset
 	bgTileset = new tileset.Tileset({
-			spritePath: '../img/walls.png',
-			specPath: '../spec/gaunt.json',
+			spritePath: './img/walls.png',
+			specPath: './spec/gaunt.json',
 			onReady: loadCheck
 	});
 
   // tColumn tileset
 	tColumnTileset = new tileset.Tileset({
-			spritePath: '../img/tTiles.png',
-			specPath: '../spec/tTile.json',
+			spritePath: './img/tTiles.png',
+			specPath: './spec/tTile.json',
 			onReady: loadCheck
 	});
 
 	// player tileset
 	charTileset = new tileset.Tileset({
-			spritePath: '../img/animals.gif',
-			specPath: '../spec/sprite.json',//TODO
+			spritePath: './img/animals.gif',
+			specPath: './spec/sprite.json',//TODO
 			onReady: loadCheck
 	});
 	// mob tileset
 	farmerTileset = new tileset.Tileset({
-			spritePath: '../img/farmer.png',
-			specPath: farmerSpec,
+			spritePath: './img/farmer.png',
+			specPath: './spec/farmer.json',
 			onReady: loadCheck
 	});
 	// exit/stair tileset
 	stairTileset = new tileset.Tileset({
-			spritePath: '../img/stairs.png',
-			specPath: '../spec/sprite.json',
+			spritePath: './img/stairs.png',
+			specPath: './spec/sprite.json',
 			onReady: loadCheck
 	});
 	// pickable items tileset
 	pickupTileset = new tileset.Tileset({
-			spritePath: '../img/trash_can.png',
-			specPath: '../spec/sprite.json',
+			spritePath: './img/trash_can.png',
+			specPath: './spec/sprite.json',
 			onReady: loadCheck
 	});
 	//door tileset
 	doorTileset = new tileset.Tileset({
 			spritePath: '../img/door.png',
-			specPath: '../spec/sprite.json',
+			specPath: './spec/sprite.json',
 			onReady: loadCheck
 	});
 
