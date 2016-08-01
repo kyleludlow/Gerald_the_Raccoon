@@ -4,7 +4,6 @@ var gameRunning = false;
 
 document.addEventListener('DOMContentLoaded', function() {
   utils.init();
-	startGame();
 	$('.play').on('click', setGameCycle); // both intro and death screen have '.play' buttons;
 });
 
@@ -93,6 +92,10 @@ function startGame() { // broke the start game into a function so it can be trig
 		}
 	};
 
+
+	$.getJSON('spec/farmer.json', function(data) {
+    var farmerSpec = data || '../spec/farmer.json'
+  })
 	
 
 	var tilesets = 7;
@@ -119,7 +122,7 @@ function startGame() { // broke the start game into a function so it can be trig
 	// mob tileset
 	farmerTileset = new tileset.Tileset({
 			spritePath: '../img/farmer.png',
-			specPath: '../spec/farmer.json',
+			specPath: farmerSpec,
 			onReady: loadCheck
 	});
 	// exit/stair tileset
@@ -1385,15 +1388,9 @@ var init = function() {
     'img/trash_can.png',
     'img/tTiles.png',
     'img/upsideDownT.png',
-    'img/walls.png',
-    'spec/farmer.json',
-    'spec/gaunt.json',
-    'spec/sprite.json',
-    'spec/tTile.json'
+    'img/walls.png'
   ]);
-  $.getJSON('spec/farmer.json', function(data) {
-    console.log(data);
-  })
+  
   $(window).on('resize', function() {
     resizeIntro();
   })

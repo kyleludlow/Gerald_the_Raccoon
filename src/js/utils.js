@@ -27,15 +27,9 @@ var init = function() {
     'img/trash_can.png',
     'img/tTiles.png',
     'img/upsideDownT.png',
-    'img/walls.png',
-    'spec/farmer.json',
-    'spec/gaunt.json',
-    'spec/sprite.json',
-    'spec/tTile.json'
+    'img/walls.png'
   ]);
-  $.getJSON('spec/farmer.json', function(data) {
-    console.log(data);
-  })
+  
   $(window).on('resize', function() {
     resizeIntro();
   })
