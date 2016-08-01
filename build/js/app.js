@@ -68,75 +68,75 @@ function startGame() { // broke the start game into a function so it can be trig
 	// makes sure that all tilesets have been loaded before
 	// updating the game
 
-	// function loadCheck() {
-	// 	tilesets--;
-	// 	if (tilesets === 0) {
-	// 		var renderOptions = {
-	// 			canvas: canvas,
-	// 			context: context,
-	// 			levelRows: levelRows,
-	// 			levelCols: levelCols,
-	// 			levels: levels,
-	// 			playerClass: playerClass,
-	// 			bgTileset: bgTileset,
-	// 			charTileset: charTileset,
-	// 			farmerTileset: farmerTileset,
-	// 			stairTileset: stairTileset,
-	// 			pickupTileset: pickupTileset,
-	// 			doorTileset: doorTileset,
-  //       tColumnTileset: tColumnTileset,
-	// 			tileSize: tileSize
-	// 		};
-	// 		renderer = new levelRenderer.Renderer(renderOptions);
-	// 		updateGame();
-	// 	}
-	// };
+	function loadCheck() {
+		tilesets--;
+		if (tilesets === 0) {
+			var renderOptions = {
+				canvas: canvas,
+				context: context,
+				levelRows: levelRows,
+				levelCols: levelCols,
+				levels: levels,
+				playerClass: playerClass,
+				bgTileset: bgTileset,
+				charTileset: charTileset,
+				farmerTileset: farmerTileset,
+				stairTileset: stairTileset,
+				pickupTileset: pickupTileset,
+				doorTileset: doorTileset,
+        tColumnTileset: tColumnTileset,
+				tileSize: tileSize
+			};
+			renderer = new levelRenderer.Renderer(renderOptions);
+			updateGame();
+		}
+	};
 
-	// var tilesets = 7;
-	// // background tileset
-	// bgTileset = new tileset.Tileset({
-	// 		spritePath: '../img/walls.png',
-	// 		specPath: '../spec/gaunt.json',
-	// 		onReady: loadCheck
-	// });
+	var tilesets = 7;
+	// background tileset
+	bgTileset = new tileset.Tileset({
+			spritePath: '../img/walls.png',
+			specPath: '../spec/gaunt.json',
+			onReady: loadCheck
+	});
 
-  // // tColumn tileset
-	// tColumnTileset = new tileset.Tileset({
-	// 		spritePath: '../img/tTiles.png',
-	// 		specPath: '../spec/tTile.json',
-	// 		onReady: loadCheck
-	// });
+  // tColumn tileset
+	tColumnTileset = new tileset.Tileset({
+			spritePath: '../img/tTiles.png',
+			specPath: '../spec/tTile.json',
+			onReady: loadCheck
+	});
 
-	// // player tileset
-	// charTileset = new tileset.Tileset({
-	// 		spritePath: '../img/animals.gif',
-	// 		specPath: '../spec/sprite.json',//TODO
-	// 		onReady: loadCheck
-	// });
-	// // mob tileset
-	// farmerTileset = new tileset.Tileset({
-	// 		spritePath: '../img/farmer.png',
-	// 		specPath: '../spec/farmer.json',
-	// 		onReady: loadCheck
-	// });
-	// // exit/stair tileset
-	// stairTileset = new tileset.Tileset({
-	// 		spritePath: '../img/stairs.png',
-	// 		specPath: '../spec/sprite.json',
-	// 		onReady: loadCheck
-	// });
-	// // pickable items tileset
-	// pickupTileset = new tileset.Tileset({
-	// 		spritePath: '../img/trash_can.png',
-	// 		specPath: '../spec/sprite.json',
-	// 		onReady: loadCheck
-	// });
-	// //door tileset
-	// doorTileset = new tileset.Tileset({
-	// 		spritePath: '../img/door.png',
-	// 		specPath: '../spec/sprite.json',
-	// 		onReady: loadCheck
-	// });
+	// player tileset
+	charTileset = new tileset.Tileset({
+			spritePath: '../img/animals.gif',
+			specPath: '../spec/sprite.json',//TODO
+			onReady: loadCheck
+	});
+	// mob tileset
+	farmerTileset = new tileset.Tileset({
+			spritePath: '../img/farmer.png',
+			specPath: '../spec/farmer.json',
+			onReady: loadCheck
+	});
+	// exit/stair tileset
+	stairTileset = new tileset.Tileset({
+			spritePath: '../img/stairs.png',
+			specPath: '../spec/sprite.json',
+			onReady: loadCheck
+	});
+	// pickable items tileset
+	pickupTileset = new tileset.Tileset({
+			spritePath: '../img/trash_can.png',
+			specPath: '../spec/sprite.json',
+			onReady: loadCheck
+	});
+	//door tileset
+	doorTileset = new tileset.Tileset({
+			spritePath: '../img/door.png',
+			specPath: '../spec/sprite.json',
+			onReady: loadCheck
+	});
 
 	// function to handle the game itself
 	function updateGame() {
@@ -1360,79 +1360,30 @@ var init = function() {
   resizeIntro(); // make sure intro screen fills the viewport...
   textWobbler('Gerald The Raccoon', '.intro-wrapper h1');
   textWobbler('Play Again?', '.death button');
+  preload([
+    'img/animals.gif',
+    'img/door.png',
+    'img/farmer.png',
+    'img/farmerDown.png',
+    'img/farmerLeft.png',
+    'img/farmerUp.png',
+    'img/farmerRight.png',
+    'fireball.gif',
+    'fireball_die_down.png',
+    'fireball_die_left.png',
+    'fireball_die_right.png',
+    'fireball_die_up.png'
+  ])
   $(window).on('resize', function() {
     resizeIntro();
   })
-  function loadCheck() {
-		tilesets--;
-		if (tilesets === 0) {
-			var renderOptions = {
-				canvas: canvas,
-				context: context,
-				levelRows: levelRows,
-				levelCols: levelCols,
-				levels: levels,
-				playerClass: playerClass,
-				bgTileset: bgTileset,
-				charTileset: charTileset,
-				farmerTileset: farmerTileset,
-				stairTileset: stairTileset,
-				pickupTileset: pickupTileset,
-				doorTileset: doorTileset,
-        tColumnTileset: tColumnTileset,
-				tileSize: tileSize
-			};
-			renderer = new levelRenderer.Renderer(renderOptions);
-			updateGame();
-		}
-	};
-
-	var tilesets = 7;
-	// background tileset
-	bgTileset = new tileset.Tileset({
-			spritePath: '../img/walls.png',
-			specPath: '../spec/gaunt.json',
-			onReady: loadCheck
-	});
-
-  // tColumn tileset
-	tColumnTileset = new tileset.Tileset({
-			spritePath: '../img/tTiles.png',
-			specPath: '../spec/tTile.json',
-			onReady: loadCheck
-	});
-
-	// player tileset
-	charTileset = new tileset.Tileset({
-			spritePath: '../img/animals.gif',
-			specPath: '../spec/sprite.json',//TODO
-			onReady: loadCheck
-	});
-	// mob tileset
-	farmerTileset = new tileset.Tileset({
-			spritePath: '../img/farmer.png',
-			specPath: '../spec/farmer.json',
-			onReady: loadCheck
-	});
-	// exit/stair tileset
-	stairTileset = new tileset.Tileset({
-			spritePath: '../img/stairs.png',
-			specPath: '../spec/sprite.json',
-			onReady: loadCheck
-	});
-	// pickable items tileset
-	pickupTileset = new tileset.Tileset({
-			spritePath: '../img/trash_can.png',
-			specPath: '../spec/sprite.json',
-			onReady: loadCheck
-	});
-	//door tileset
-	doorTileset = new tileset.Tileset({
-			spritePath: '../img/door.png',
-			specPath: '../spec/sprite.json',
-			onReady: loadCheck
-	});
 };
+
+function preload(arrayOfImages) {
+    $(arrayOfImages).each(function(){
+        $('<img/>')[0].src = this;
+    });
+}
 
 // broke wobbly text idea into function so it can be used across the app.
 function textWobbler(text, el) {
