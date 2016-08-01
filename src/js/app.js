@@ -3,6 +3,7 @@ var gameRunning = false;
 
 document.addEventListener('DOMContentLoaded', function() {
   utils.init();
+	startGame();
 	$('.play').on('click', setGameCycle); // both intro and death screen have '.play' buttons;
 });
 
