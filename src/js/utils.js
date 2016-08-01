@@ -32,7 +32,10 @@ var init = function() {
     'spec/gaunt.json',
     'spec/sprite.json',
     'spec/tTile.json'
-  ])
+  ]);
+  $.getJSON('spec/farmer.json', function(data) {
+    console.log(data);
+  })
   $(window).on('resize', function() {
     resizeIntro();
   })
