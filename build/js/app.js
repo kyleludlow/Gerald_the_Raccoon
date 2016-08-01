@@ -4,6 +4,7 @@ var gameRunning = false;
 
 document.addEventListener('DOMContentLoaded', function() {
   utils.init();
+	startGame();
 	$('.play').on('click', setGameCycle); // both intro and death screen have '.play' buttons;
 });
 
@@ -1362,7 +1363,6 @@ var init = function() {
   resizeIntro(); // make sure intro screen fills the viewport...
   textWobbler('Gerald The Raccoon', '.intro-wrapper h1');
   textWobbler('Play Again?', '.death button');
-  var spec = require('../spec/farmer.json');
   preload([
     'img/animals.gif',
     'img/door.png',
@@ -1431,7 +1431,7 @@ function resizeIntro() {
 
 exports.init = init;
 exports.textWobbler = textWobbler;
-},{"../spec/farmer.json":15,"./app":1}],14:[function(require,module,exports){
+},{"./app":1}],14:[function(require,module,exports){
 /**
 * AStarFloodFill
 * Fork of Matthew Trost's A-Star Pathfinding Algorithm by D Neame @cham
@@ -1673,11 +1673,5 @@ module.exports = (function(){
 	return astar;
 
 })();
-
-},{}],15:[function(require,module,exports){
-module.exports={
-	"1": {"x": 0 , "y": 0},
-  "2": {"x": 34, "y": 0}
-}
 
 },{}]},{},[1]);
