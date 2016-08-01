@@ -92,6 +92,8 @@ function startGame() { // broke the start game into a function so it can be trig
 		}
 	};
 
+	var spec = require('../spec/farmer.json');
+
 	var tilesets = 7;
 	// background tileset
 	bgTileset = new tileset.Tileset({
@@ -191,7 +193,7 @@ function startGame() { // broke the start game into a function so it can be trig
 exports.startGame = startGame;
 exports.setGameCycle = setGameCycle;
 
-},{"./collisionManager":2,"./levelManager":3,"./levelRenderer":4,"./mob":7,"./player":9,"./player.collision":8,"./projectile":11,"./projectile.collision":10,"./tileset":12,"./utils":13}],2:[function(require,module,exports){
+},{"../spec/farmer.json":15,"./collisionManager":2,"./levelManager":3,"./levelRenderer":4,"./mob":7,"./player":9,"./player.collision":8,"./projectile":11,"./projectile.collision":10,"./tileset":12,"./utils":13}],2:[function(require,module,exports){
 function collisionDetection(options, collisionHandlers) {
     var entity = options.entity;
     var tileSize = options.tileSize;
@@ -1670,5 +1672,11 @@ module.exports = (function(){
 	return astar;
 
 })();
+
+},{}],15:[function(require,module,exports){
+module.exports={
+	"1": {"x": 0 , "y": 0},
+  "2": {"x": 34, "y": 0}
+}
 
 },{}]},{},[1]);
