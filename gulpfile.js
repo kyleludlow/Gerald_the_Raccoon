@@ -15,10 +15,17 @@ var gulp = require('gulp'),
 // Compile Sass task
 gulp.task('sass', function() {
   return gulp.src('src/scss/main.scss')
-    .pipe(sass())
+    .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest('build/css'));
 });
 
+// compressed output for deploy
+gulp.task('sass:prod', function() {
+  return gulp.src('src/scss/main.scss')
+    .pipe(sass({outputStyle: 'compressed'}))
+    .pipe(gulp.dest('build/css'));
+});
+ 
 // JavaScript linting task
 gulp.task('jshint', function() {
   return gulp.src('site/js/*.js')
@@ -39,7 +46,7 @@ gulp.task('scripts', function() {
     .bundle()
     .pipe(source('app.js'))
     .pipe(buffer())
-    // .pipe(uglify())
+    .pipe(uglify())
     .pipe(gulp.dest('build/js'));
 });
 
@@ -93,4 +100,4 @@ gulp.task('serve', function() {
 gulp.task('dev', ['html', 'scripts', 'sass', 'fonts', 'watch', 'serve', 'images', 'spec', 'jshint']);
 
 // Build task
-gulp.task('build', ['sass', 'html', 'scripts', 'styles', 'images', 'spec', 'jshint']);
+gulp.task('build', ['sass:prod', 'html', 'scripts', 'fonts', 'styles', 'images', 'spec']);
