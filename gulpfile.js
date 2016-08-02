@@ -10,6 +10,7 @@ var gulp = require('gulp'),
     buffer = require('vinyl-buffer'),
     gls = require('gulp-live-server');
     jshint = require('gulp-jshint');
+    mocha = require('gulp-mocha');
 
 
 // Compile Sass task
@@ -87,6 +88,12 @@ gulp.task('serve', function() {
     server.notify.apply(server, [file]);
   });
 })
+
+  gulp.task('test', () =>
+      gulp.src('test/test.js', {read: false})
+          // gulp-mocha needs filepaths so you can't have any plugins before it
+          .pipe(mocha({reporter: 'nyan'}))
+  );
 
 
 // Default task
