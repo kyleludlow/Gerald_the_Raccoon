@@ -124,12 +124,18 @@ Mob.prototype.getAStarMovement = function() {
 };
 
 //provides information for where mob should move
-Mob.prototype.moveToTarget = function() {
+Mob.prototype.moveToTarget = function(nextMove) {
 
-  var nextMove = this.getAStarMovement();
-  // console.log(nextMove);
+  var nextMove = nextMove || this.getAStarMovement();
+
+
   var dx = (nextMove.x * this.width) - this.x;
   var dy = (nextMove.y * this.height) - this.y;
+
+  if (nextMove.near) {
+    dx = (nextMove.x) - this.x;
+    dy = (nextMove.y) - this.y;
+  }
 
   var moveX = Math.sign(dx) * 1.25;
   var moveY = Math.sign(dy) * 1.25;
@@ -173,10 +179,14 @@ Mob.prototype.atTarget = function() {
 };
 
 Mob.prototype.chooseAction = function() {
-  if ( // best distance i could fine without it crashing
-    Math.abs(this.y - this.targetAgent.y) < 20 && Math.abs(this.x - this.targetAgent.x) < 20
-  ) {
-    this.atTarget();
+  if (Math.abs(this.y - this.targetAgent.y) < 32 && Math.abs(this.x - this.targetAgent.x) < 32) {
+    if ( // best distance i could fine without it crashing
+      Math.abs(this.y - this.targetAgent.y) < 16 && Math.abs(this.x - this.targetAgent.x) < 16
+    ) {
+      this.atTarget();
+    }
+    var nextMove = {x: this.targetAgent.x, y: this.targetAgent.y, near: true};
+    this.moveToTarget(nextMove);
   }
   else {
     this.moveToTarget();

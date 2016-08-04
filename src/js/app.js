@@ -178,6 +178,8 @@ function startGame() { // broke the start game into a function so it can be trig
 		// rendering
 		renderer.render(levels, tileSize);
 
+    console.log('hello');
+
 		// update the game in about 1/60 seconds
 		if (gameRunning) {
 			requestAnimFrame(function() {
