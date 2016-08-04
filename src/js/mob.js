@@ -169,7 +169,7 @@ Mob.prototype.atTarget = function() {
 
 Mob.prototype.chooseAction = function() {
   if ( // best distance i could fine without it crashing
-    Math.abs(this.y - this.targetAgent.y) < 25 && Math.abs(this.x - this.targetAgent.x) < 25
+    Math.abs(this.y - this.targetAgent.y) < 32 && Math.abs(this.x - this.targetAgent.x) < 32
   ) {
     this.atTarget();
   }
