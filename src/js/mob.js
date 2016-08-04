@@ -65,7 +65,7 @@ Mob.prototype.updateMap = function(level) {
   this.levels = level.map;
   this.walkableMap = this.levels.map(function(row) {
     return row.map(function(tile) {
-      if (tile === 11 || tile === 0) {
+      if (tile === 4 || tile === 0) {
         return 'w'
       }
       else {
