@@ -20,6 +20,13 @@ map format 2D Array:
 	["s", "w", "u", "w", "w"],
 	["u", "u", "u", "w", "w"] ]
 
+	[ ["u", "u", "u", "u", "u"],
+	["w", "w", "w", "g", "w"],
+	["w", "w", "u", "w", "w"],
+	["w", "w", "u", "w", "w"],
+	["u", "u", "u", "w", "w"] ]
+
+
 
 Following are set in the returned object:
 
