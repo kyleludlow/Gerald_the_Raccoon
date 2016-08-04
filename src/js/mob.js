@@ -93,6 +93,14 @@ Mob.prototype.getAStarMovement = function() {
       tileY = Math.floor(this.y/this.height);
       targetX = Math.floor(this.targetAgent.x/this.width);
       targetY = Math.floor(this.targetAgent.y/this.height);
+
+// if (map[tileY][tileX] === map[targetY][targetX]){
+//   return {
+//     x: this.x,
+//     y: this.y};
+//
+// }
+
   map[tileY][tileX] = 's';
   map[targetY][targetX] = 'g';
 
@@ -109,6 +117,7 @@ Mob.prototype.getAStarMovement = function() {
       y: path[1].row
     };
   }
+  console.log('I GOT HIT');
   return {
     x: this.x,
     y: this.y};
@@ -116,18 +125,14 @@ Mob.prototype.getAStarMovement = function() {
 
 //provides information for where mob should move
 Mob.prototype.moveToTarget = function() {
+
   var nextMove = this.getAStarMovement();
+  // console.log(nextMove);
   var dx = (nextMove.x * this.width) - this.x;
   var dy = (nextMove.y * this.height) - this.y;
-  var moveX = dx * 0.03;
-  var moveY = dy * 0.03;
 
-  if (moveX) {
-    moveX = Math.abs(moveX)/moveX * Math.max(moveX, 1.25);
-  }
-  if (moveY) {
-    moveY = Math.abs(moveY)/moveY * Math.max(moveY, 1.25);
-  }
+  var moveX = Math.sign(dx) * 1.25;
+  var moveY = Math.sign(dy) * 1.25;
 
   this.move(moveX, moveY);
 };
@@ -169,7 +174,7 @@ Mob.prototype.atTarget = function() {
 
 Mob.prototype.chooseAction = function() {
   if ( // best distance i could fine without it crashing
-    Math.abs(this.y - this.targetAgent.y) < 32 && Math.abs(this.x - this.targetAgent.x) < 32
+    Math.abs(this.y - this.targetAgent.y) < 20 && Math.abs(this.x - this.targetAgent.x) < 20
   ) {
     this.atTarget();
   }
