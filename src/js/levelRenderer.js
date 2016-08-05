@@ -90,8 +90,10 @@ Renderer.prototype.render = function(levels, tileSize) {
         this.drawTile(this.doorTileset.sprite, this.doorTileset.tileSpec[1], j, i);
       }
 
+      // mob spawn tile
       else if (this.levels.map[i][j] === 9) {
         this.enemyCoords.push({x: j * 32, y: i * 32}); // save enemy coords for spawning
+        // creates new mob
         this.mobs.push(new mob.Mob({
           x: j * 32,
           y: i * 32,
@@ -105,17 +107,20 @@ Renderer.prototype.render = function(levels, tileSize) {
     }
   };
 
+  // draw player on map
   this.playerClass.draw();
 
+  // checks for projectile collisions
   this.playerClass.playerProjectiles.forEach(function(projectile) {
     projectileCollision.projectileCollision({projectile: projectile, mobs: this.mobs, tileSize: tileSize}, levels);
   }, this);
 
+  // draws projectiles on map
   this.playerClass.playerProjectiles.forEach(function(projectile) {
     projectile.draw();
   });
 
-  // kills mob upon collision
+  // if mob hit by projectile and now inactive, remove from mobs array and map
   this.mobs.forEach(mob => {
     if (mob.active === false) {
       var mobIndex = this.mobs.indexOf(mob);
