@@ -1,12 +1,14 @@
 var utils = require('./utils');
 var gameRunning = false;
 
+// show intro screen on page load
 document.addEventListener('DOMContentLoaded', function() {
   utils.init();
 	$('.play').on('click', setGameCycle); // both intro and death screen have '.play' buttons;
 });
 
-function setGameCycle() { // function to start and stop game cycle.
+// function to start and stop game cycle.
+function setGameCycle() {
 	$('.intro-screen').fadeOut(500);
 	gameRunning = !gameRunning;
 	if (gameRunning) {
@@ -14,7 +16,8 @@ function setGameCycle() { // function to start and stop game cycle.
 	}
 };
 
-function startGame() { // broke the start game into a function so it can be triggered when needed.
+// breaks the start game into a function so it can be triggered when needed.
+function startGame() {
 	var canvas = document.getElementById("canvas");   // the canvas where game will be drawn
 	var context = canvas.getContext("2d");            // canvas context
 	var levelRenderer = require('./levelRenderer');
@@ -42,7 +45,7 @@ function startGame() { // broke the start game into a function so it can be trig
 	canvas.width = tileSize * levelCols;   // canvas width. Won't work without it even if you style it from CSS
 	canvas.height = tileSize * levelRows;  // canvas height. Same as before
 
-	// player stuff
+	// parameters for player
 	var playerOptions = {
 		playerXPos: playerXPos,
 		playerYPos: playerYPos,
@@ -50,10 +53,12 @@ function startGame() { // broke the start game into a function so it can be trig
 		context: context,
 	};
 
+  // creates new player and binds key events to it
 	var playerClass = new player.Player(playerOptions);
 	document.addEventListener("keydown", playerClass.moveStart.bind(playerClass));
 	document.addEventListener("keyup", playerClass.moveStop.bind(playerClass));
 
+  // displays current game score on top of page
 	utils.textWobbler(`Score: ${playerClass.score}`, '.score');
 
 	// this function will do its best to make stuff work at 60FPS - please notice I said "will do its best"
@@ -66,7 +71,6 @@ function startGame() { // broke the start game into a function so it can be trig
 
 	// makes sure that all tilesets have been loaded before
 	// updating the game
-
 	function loadCheck() {
 		tilesets--;
 		if (tilesets === 0) {
@@ -142,10 +146,7 @@ function startGame() { // broke the start game into a function so it can be trig
 		// updates player position
 		playerClass.update();
 
-		// updates mob position and has it move toward player
-		// mobClass.chooseAction();
-
-		// check for projectiles
+		// check for projectiles and updates position on map
 		playerClass.playerProjectiles.forEach(function(projectile) {
 			projectile.update();
 		});
@@ -163,17 +164,12 @@ function startGame() { // broke the start game into a function so it can be trig
 		// checks for when player reaches exit/stairs
 		var exit = playerCollision.playerCollision(collisionParams);
 
+    // if player exits level, remove mobs
 		if (exit) {
 			levels = levelManager.LevelChoice(levels.num + 1);
 			renderer.levels = levels;
 			renderer.killMobs = true;
-			// mobClass.updateMap();
 		}
-
-		// checks the collisions for the mob
-		// collisionParams.playerClass = mobClass;
-
-		// collisionManager.collisionDetection(collisionParams);
 
 		// rendering
 		renderer.render(levels, tileSize);
