@@ -9,10 +9,10 @@ You can play the game [here](http://kyleludlow.github.io/project_glove).
 ##Contributors
 
 ###Simon Attfield
-[www.simonattfield.com](https://www.simonattfield.com)
+[www.simonattfield.com](http://www.simonattfield.com)
 
 ###Connie Jew
-[www.conniejew.com](https://www.conniejew.com)
+[www.conniejew.com](http://www.conniejew.com)
 
 ###Kyle Ludlow
-[www.kyleludlow.io](https://www.kyleludlow.io)
+[www.kyleludlow.io](http://www.kyleludlow.io)
